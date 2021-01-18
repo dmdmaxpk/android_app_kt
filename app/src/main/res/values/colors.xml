@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FF212529</color>
+    <color name="darkColorPrimary">#FF212529</color>
+    <color name="bottomSheetBackground">#FF33383D</color>
+    <color name="darkColorPrimaryDark">#FF2A2E32</color>
+    <color name="darkColorAccent">#FFFFFFFF</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="blackWithTransparency">#CC000000</color>
+    <color name="green">#7a9918</color>
+    <color name="light_green">#00ffbf</color>
+    <color name="light_blue">#00B1EB</color>
+
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorRed">#FF2212</color>
+
+    <color name="greenish">#FF2F9A6A</color>
+    <color name="glowing">#FF0BB4C0</color>
+
+    <color name="blue">#37A1FB</color>
+    <color name="navy_blue">#29204B</color>
+    <color name="link_blue">#4368FF</color>
+    <color name="cloudy_gray">#B6B6B4</color>
+    <color name="hint_cloudy_gray">#33B6B6B4</color>
+    <color name="grayed_out">#D0555454</color>
+</resources>

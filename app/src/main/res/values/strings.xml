@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Goonj</string>
+    <string name="str_get_started">Stream your favourite\ntv channels</string>
+    <string name="skip">Skip</string>
+    <string name="join_now">Join Now</string>
+    <string name="login_text">We are striving to deliver a digital platform where licenced Live TV, News, Current Affairs and Sports are delivered in a personalized manner to our users.</string>
+    <string name="watch_live_tv_anytime_anywhere">watch live tv anytime, anywhere</string>
+    <string name="telenor_number">telenor number</string>
+    <string name="easypaisa_number">continue with easypaisa</string>
+    <string name="by_subscribing_you_are_giving_consent_to_renewal_ncharging">* By subscribing, you are giving consent to renewal\ncharging</string>
+    <string name="login_with">Login With</string>
+    <string name="sing_in">sign in</string>
+    <string name="next">next</string>
+    <string name="enter_your_mobile_number">Enter your mobile number</string>
+    <string name="you_will_be_charged">You will be charged from your account balance. You can deactivate anytime from settings\n\nCancel anytime from billing charged section, no cahrges at all.</string>
+</resources>

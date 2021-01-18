@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:padding="0dp"
+        android:layout_margin="0dp"
+        android:orientation="vertical"
+        android:background="@color/darkColorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="170dp">
+        <TextView
+            android:textColor="@color/colorWhite"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:text="Alert!"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+        <TextView
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:ellipsize="end"
+            android:id="@+id/text"
+            android:gravity="center"
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="70dp" />
+        <LinearLayout
+            android:gravity="center"
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <Button
+                android:id="@+id/dismiss"
+                android:background="@color/darkColorPrimary"
+                android:textColor="@color/colorWhite"
+                android:text="Ok"
+                android:layout_width="100dp"
+                android:layout_height="40dp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

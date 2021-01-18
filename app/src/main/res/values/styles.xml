@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark application theme. -->
+    <style name="DarkApplicationTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
+        <item name="colorAccent">@color/darkColorAccent</item>
+    </style>
+
+    <!-- Light application theme. -->
+
+    <style name="DarkApplicationTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="CustomAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/cloudy_gray</item>
+        <item name="android:windowBackground">@drawable/custom_dialog_round_corner</item>
+    </style>
+
+    <!-- Alert Dialog -->
+    <style name="MyAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/cloudy_gray</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
+
+    <!--- SeekBar Style -->
+    <style name="playerSeekStyle" parent="@android:style/Widget.SeekBar">
+        <item name="android:progressDrawable">@drawable/progressbar</item>
+        <item name="android:thumb">@drawable/progressbar_thumb</item>
+        <item name="android:minHeight">2dip</item>
+        <item name="android:maxHeight">3dip</item>
+    </style>
+</resources>
