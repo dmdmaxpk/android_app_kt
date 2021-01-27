@@ -110,6 +110,7 @@ class Constants {
             const val SEARCH = "search"
             const val TOPIC = "topic"
             const val PROGRAM = "program"
+            const val CATEGORY = "category"
 
             // Paywall
             const val STATUS = "payment/status"

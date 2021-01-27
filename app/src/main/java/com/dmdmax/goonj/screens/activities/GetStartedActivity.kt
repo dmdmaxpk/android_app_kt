@@ -13,8 +13,14 @@ class GetStartedActivity: BaseActivity(), GetStartedView.Listener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mView = getCompositionRoot().getViewFactory().getStarted1Impl(null);
-        setContentView(mView.getRootView());
-        initialize();
+
+        if(mView.getPrefs().isSkipped()){
+            startActivity(Intent(this, LoginActivity::class.java));
+            finish();
+        }else{
+            setContentView(mView.getRootView());
+            initialize();
+        }
     }
 
     private fun initialize(){
@@ -34,7 +40,9 @@ class GetStartedActivity: BaseActivity(), GetStartedView.Listener {
 
     override fun skip() {
         mView.getToaster().printToast(this, "Skipping intro...");
+        mView.getPrefs().setIsSkipped(true);
         startActivity(Intent(this, LoginActivity::class.java));
+        finish();
     }
 
     override fun next() {

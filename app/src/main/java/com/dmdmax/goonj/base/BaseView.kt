@@ -3,6 +3,7 @@ package com.dmdmax.goonj.base
 import android.content.Context
 import android.view.View
 import com.dmdmax.goonj.firebase.EventName
+import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Toaster
@@ -32,6 +33,10 @@ open class BaseView: BaseMvcView {
 
     override fun getToaster(): Toaster.Companion {
         return Toaster.Companion;
+    }
+
+    override fun getPrefs(): GoonjPrefs {
+        return GoonjPrefs(getContext());
     }
 
     override fun getLogger(): Logger.Companion {

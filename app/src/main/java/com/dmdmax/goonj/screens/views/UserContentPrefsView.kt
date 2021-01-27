@@ -2,13 +2,11 @@ package com.dmdmax.goonj.screens.views
 
 import com.dmdmax.goonj.base.ObservableView
 
-interface SigninView: ObservableView<SigninView.Listener> {
+interface UserContentPrefsView: ObservableView<UserContentPrefsView.Listener> {
 
     interface Listener {
-        fun next(msisdn: String);
+        fun next();
         fun goBack();
-        fun help();
-        fun viewPrivacyPolicy();
     }
 
     fun  initialize();

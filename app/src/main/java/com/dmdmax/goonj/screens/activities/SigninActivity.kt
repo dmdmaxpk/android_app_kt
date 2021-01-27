@@ -1,7 +1,9 @@
 package com.dmdmax.goonj.screens.activities
 
+import android.content.Intent
 import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.screens.views.LoginView
 import com.dmdmax.goonj.screens.views.SigninView
 
@@ -30,11 +32,21 @@ class SigninActivity : BaseActivity(), SigninView.Listener {
         mView.unregisterListener(this);
     }
 
-    override fun next() {
-        mView.getToaster().printToast(this, "Next!");
+    override fun next(msisdn: String) {
+        val intent = Intent(this, VerificationActivity::class.java)
+        intent.putExtra("msisdn", msisdn)
+        startActivity(intent);
     }
 
     override fun goBack() {
         finish();
+    }
+
+    override fun help() {
+        mView.getToaster().printToast(this, "Help!");
+    }
+
+    override fun viewPrivacyPolicy() {
+        mView.getToaster().printToast(this, "Privacy Policy!");
     }
 }

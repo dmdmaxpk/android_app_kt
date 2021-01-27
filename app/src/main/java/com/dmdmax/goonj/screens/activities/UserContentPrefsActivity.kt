@@ -1,17 +1,21 @@
 package com.dmdmax.goonj.screens.activities
 
-import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
+import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
-import com.dmdmax.goonj.screens.views.LoginView
+import com.dmdmax.goonj.screens.views.UserContentPrefsView
+import com.dmdmax.goonj.screens.views.VerificationView
 
-class LoginActivity : BaseActivity(), LoginView.Listener {
+class UserContentPrefsActivity : BaseActivity(), UserContentPrefsView.Listener {
 
-    private lateinit var mView: LoginView;
+    private lateinit var mView: UserContentPrefsView;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mView = getCompositionRoot().getViewFactory().getLoginImpl(null);
+        mView = getCompositionRoot().getViewFactory().getUserContentPrefsImpl(null);
         setContentView(mView.getRootView());
         initialize();
     }
@@ -30,15 +34,13 @@ class LoginActivity : BaseActivity(), LoginView.Listener {
         mView.unregisterListener(this);
     }
 
-    override fun goWithTelenor() {
-        startActivity(Intent(this, SigninActivity::class.java))
-    }
+    override fun next() {
 
-    override fun goWithEasypaisa() {
-        mView.getToaster().printToast(this, "Support of easypaisa not available for now!");
     }
 
     override fun goBack() {
         finish();
     }
+
+
 }

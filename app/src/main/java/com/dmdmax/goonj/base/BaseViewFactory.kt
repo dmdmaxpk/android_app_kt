@@ -2,14 +2,8 @@ package com.dmdmax.goonj.base
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.dmdmax.goonj.screens.implements.GetStartedImpl
-import com.dmdmax.goonj.screens.implements.LoginImpl
-import com.dmdmax.goonj.screens.implements.SigninImpl
-import com.dmdmax.goonj.screens.implements.SplashViewImpl
-import com.dmdmax.goonj.screens.views.GetStartedView
-import com.dmdmax.goonj.screens.views.LoginView
-import com.dmdmax.goonj.screens.views.SigninView
-import com.dmdmax.goonj.screens.views.SplashView
+import com.dmdmax.goonj.screens.implements.*
+import com.dmdmax.goonj.screens.views.*
 
 class BaseViewFactory {
     private lateinit var mLayoutInflater: LayoutInflater;
@@ -32,5 +26,13 @@ class BaseViewFactory {
 
     fun getSigninImpl(parent: ViewGroup?): SigninView {
         return SigninImpl(mLayoutInflater, parent);
+    }
+
+    fun getVerificationImpl(parent: ViewGroup?): VerificationView {
+        return VerificationImpl(mLayoutInflater, parent);
+    }
+
+    fun getUserContentPrefsImpl(parent: ViewGroup?): UserContentPrefsView {
+        return UserContentPrefsImpl(mLayoutInflater, parent);
     }
 }

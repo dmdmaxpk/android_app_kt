@@ -7,15 +7,75 @@
     android:layout_height="400dp"
     tools:context=".screens.activities.GetStartedActivity">
 
-    <ImageView
-        android:padding="10dp"
+    <LinearLayout
+        android:padding="5dp"
+        android:layout_marginTop="30dp"
         android:id="@+id/channels"
-        android:layout_width="280dp"
-        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/channels"/>
+        android:orientation="vertical">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="130dp">
+            <ImageView
+                android:src="@drawable/anchor_1"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:padding="5dp"
+                android:cropToPadding="true"/>
+            <ImageView
+                android:src="@drawable/anchor_2"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:padding="5dp"
+                android:cropToPadding="true"/>
+            <ImageView
+                android:src="@drawable/anchor_3"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:padding="5dp"
+                android:cropToPadding="true"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="130dp">
+            <ImageView
+                android:src="@drawable/anchor_4"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:padding="5dp"
+                android:cropToPadding="true"/>
+            <ImageView
+                android:src="@drawable/anchor_5"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:padding="5dp"
+                android:cropToPadding="true"/>
+            <ImageView
+                android:src="@drawable/anchor_6"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:padding="5dp"
+                android:cropToPadding="true"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:layout_marginTop="10dp"

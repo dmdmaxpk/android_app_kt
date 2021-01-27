@@ -102,6 +102,14 @@ class GoonjPrefs {
         }
     }
 
+    public fun setIsSkipped(skipped: Boolean) {
+        editor!!.putBoolean("skipped", skipped).commit()
+    }
+
+    public fun isSkipped(): Boolean {
+        return prefs!!.getBoolean("skipped", false)
+    }
+
     private fun setLiveMsisdn(number: String) {
         editor!!.putString("cellNum", number).commit()
     }

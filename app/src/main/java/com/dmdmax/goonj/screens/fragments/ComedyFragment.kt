@@ -2,9 +2,9 @@ package com.dmdmax.goonj.screens.fragments
 
 import androidx.fragment.app.Fragment
 
-class ChannelsFragment: Fragment() {
+class ComedyFragment: Fragment() {
 
     companion object{
-        val SLUG: String = "live";
+        val SLUG: String = "comedy";
     }
 }

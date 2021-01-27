@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseObservableView
@@ -12,8 +13,8 @@ import com.dmdmax.goonj.screens.views.LoginView
 
 class LoginImpl: BaseObservableView<LoginView.Listener>, LoginView, View.OnClickListener {
 
-    private lateinit var mTpLayout: FrameLayout;
-    private lateinit var mEpLayout: FrameLayout;
+    private lateinit var mTpLayout: LinearLayout;
+    private lateinit var mEpLayout: LinearLayout;
     private lateinit var mBAckArrow: ImageButton;
     private lateinit var mScreenTitle: TextView;
 
