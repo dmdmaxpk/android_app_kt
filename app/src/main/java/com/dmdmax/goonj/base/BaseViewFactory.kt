@@ -35,4 +35,8 @@ class BaseViewFactory {
     fun getUserContentPrefsImpl(parent: ViewGroup?): UserContentPrefsView {
         return UserContentPrefsImpl(mLayoutInflater, parent);
     }
+
+    fun getWelcomeView(parent: ViewGroup?): WelcomeView {
+        return Welcomelmpl(mLayoutInflater, parent);
+    }
 }

@@ -110,6 +110,14 @@ class GoonjPrefs {
         return prefs!!.getBoolean("skipped", false)
     }
 
+    public fun setIsInterestedTopicDone(skipped: Boolean) {
+        editor!!.putBoolean("interested", skipped).commit()
+    }
+
+    public fun isInterestedTopicDone(): Boolean {
+        return prefs!!.getBoolean("interested", false)
+    }
+
     private fun setLiveMsisdn(number: String) {
         editor!!.putString("cellNum", number).commit()
     }

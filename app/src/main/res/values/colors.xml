@@ -2,9 +2,10 @@
 <resources>
     <color name="colorPrimary">#FF212529</color>
     <color name="darkColorPrimary">#FF212529</color>
-    <color name="bottomSheetBackground">#FF33383D</color>
+    <color name="bottom_sheet_background">#1b1b1b</color>
     <color name="darkColorPrimaryDark">#FF2A2E32</color>
     <color name="darkColorAccent">#FFFFFFFF</color>
+    <color name="welcome_bg">#1d2132</color>
 
     <color name="white">#FFFFFF</color>
     <color name="light_white">#F1EBEB</color>
@@ -24,6 +25,8 @@
     <color name="navy_blue">#29204B</color>
     <color name="link_blue">#4368FF</color>
     <color name="cloudy_gray">#80818d</color>
+    <color name="dark_gray">#6f6f6f</color>
     <color name="hint_cloudy_gray">#33B6B6B4</color>
     <color name="grayed_out">#D0555454</color>
+    <color name="dark_navy_blue">#22254c</color>
 </resources>

@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Goonj">
+        <activity android:name=".screens.activities.WelcomeActivity"/>
         <activity android:name=".screens.activities.VerificationActivity"/>
         <activity android:name=".screens.activities.SigninActivity"/>
         <activity android:name=".screens.activities.LoginActivity"/>

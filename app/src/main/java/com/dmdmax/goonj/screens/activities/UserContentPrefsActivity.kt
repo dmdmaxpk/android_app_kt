@@ -1,5 +1,6 @@
 package com.dmdmax.goonj.screens.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -35,7 +36,9 @@ class UserContentPrefsActivity : BaseActivity(), UserContentPrefsView.Listener {
     }
 
     override fun next() {
-
+        mView.getPrefs().setIsInterestedTopicDone(true);
+        startActivity(Intent(this, WelcomeActivity::class.java));
+        finish();
     }
 
     override fun goBack() {

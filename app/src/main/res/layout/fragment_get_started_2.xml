@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="wrap_content"
     tools:context=".screens.activities.GetStartedActivity">
 
     <LinearLayout
@@ -90,14 +90,14 @@
         app:layout_constraintTop_toBottomOf="@id/channels"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="Watch top\nPrograms"/>
+        android:text="Follow favourite channels,\nprograms &amp; anchors"/>
 
     <TextView
         android:layout_marginTop="10dp"
         android:id="@+id/streamTvTicker"
         android:text="Whenever you want"
         android:textColor="@color/cloudy_gray"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"

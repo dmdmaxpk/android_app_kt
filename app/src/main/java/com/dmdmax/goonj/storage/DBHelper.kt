@@ -24,6 +24,7 @@ open class DBHelper: SQLiteOpenHelper {
             val TAG_TOPIC = 0
             val TAG_ANCHOR = 1
             val TAG_PROGRAM = 2
+            val TAG_CATEGORY = 3
         }
     }
 

@@ -17,7 +17,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:cropToPadding="true"
-                android:padding="5dp"/>
+                android:padding="30dp"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:background="@drawable/simple_focused_image_round"
+                android:id="@+id/foreground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cropToPadding="true"/>
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/tick"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cropToPadding="true"
+                android:padding="25dp"
+                android:src="@drawable/check"/>
         </FrameLayout>
         <TextView
             android:id="@+id/category"

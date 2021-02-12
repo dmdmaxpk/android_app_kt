@@ -35,6 +35,10 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
     override fun onCompleted() {
         Logger.println("onCompleted - SplashActivity");
         if(mView.getPrefs().isOtpValidated()){
+            if(mView.getPrefs().isInterestedTopicDone()){
+                startActivity(Intent(this, WelcomeActivity::class.java));
+                return;
+            }
             startActivity(Intent(this, UserContentPrefsActivity::class.java));
         }else{
             startActivity(Intent(this, GetStartedActivity::class.java));

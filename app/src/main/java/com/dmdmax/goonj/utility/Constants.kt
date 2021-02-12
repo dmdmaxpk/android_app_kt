@@ -31,6 +31,7 @@ class Constants {
         val LIVE_LOGO = "live/logo/"
         val ANCHOR_PIC = "anchor/"
         val PROGRAMS_PIC = "programs/"
+        val CATEGORY_PIC = "categories/"
         val VOD_END_URL = ".urlset/master.m3u8"
         val GOONJ_URL = "goonj.pk/"
         val CHANNEL = "channel/"
@@ -251,7 +252,7 @@ class Constants {
             } catch (e: UnsupportedEncodingException) {
                 e.printStackTrace()
             }
-            return if (tag == DBHelper.Companion.Tags.TAG_ANCHOR) Constants.CDN_STATIC_URL + Constants.ANCHOR_PIC + nameForUrl + PIC_EXTENSION else if (tag == DBHelper.Companion.Tags.TAG_PROGRAM) Constants.CDN_STATIC_URL + PROGRAMS_PIC + nameForUrl + PIC_EXTENSION else "";
+            return if (tag == DBHelper.Companion.Tags.TAG_ANCHOR) Constants.CDN_STATIC_URL + Constants.ANCHOR_PIC + nameForUrl + PIC_EXTENSION else if (tag == DBHelper.Companion.Tags.TAG_PROGRAM) Constants.CDN_STATIC_URL + PROGRAMS_PIC + nameForUrl + PIC_EXTENSION else if (tag == DBHelper.Companion.Tags.TAG_CATEGORY) Constants.CDN_STATIC_URL + Constants.CATEGORY_PIC + name+".png" else "";
         }
     }
 }

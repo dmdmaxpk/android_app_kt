@@ -6,10 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.network.responses.Category
+import com.dmdmax.goonj.storage.DBHelper
 import com.dmdmax.goonj.storage.GoonjPrefs
+import com.dmdmax.goonj.utility.Constants
+import com.dmdmax.goonj.utility.Logger
+import com.dmdmax.goonj.utility.Utility
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -28,6 +34,8 @@ class UserPrefsContentGridAdapter: BaseAdapter {
 
     class LiveViewHolder internal constructor(view: View) {
         val thumbnail: CircleImageView = view.findViewById(R.id.thumb)
+        val tick: ImageView = view.findViewById(R.id.tick)
+        val foreground: ImageView = view.findViewById(R.id.foreground)
         val category: TextView = view.findViewById(R.id.category)
     }
 
@@ -55,12 +63,19 @@ class UserPrefsContentGridAdapter: BaseAdapter {
         }
 
         val item: Category = getItem(position);
+        val link: String = Constants.ThumbnailManager.getIconThumbs(item.getName().toLowerCase(), DBHelper.Companion.Tags.TAG_CATEGORY);
+        Logger.println("URL - "+link)
+        Picasso.get().load(link).into(holder.thumbnail);
+        holder.thumbnail.setBackgroundResource(R.drawable.category_not_selected_bg);
+
         if(item.isSelected()){
-            Picasso.get().load(R.drawable.category_selected_bg).into(holder.thumbnail);
+            holder.foreground.visibility = View.VISIBLE;
+            holder.tick.visibility = View.VISIBLE;
             holder.category.setTextColor(Color.WHITE)
         }else{
-            Picasso.get().load(R.drawable.category_not_selected_bg).into(holder.thumbnail);
-            holder.category.setTextColor(mContext.getColor(R.color.cloudy_gray))
+            holder.category.setTextColor(ContextCompat.getColor(mContext, R.color.cloudy_gray));
+            holder.tick.visibility = View.GONE;
+            holder.foreground.visibility = View.GONE;
         }
 
         holder.category.text = item.getName().capitalize();
