@@ -1,13 +1,15 @@
-package com.dmdmax.goonj.network.responses
+package com.dmdmax.goonj.models
 
-class SubCategory {
+class Category {
     private lateinit var id: String;
     private lateinit var name: String;
+    private lateinit var subCats: ArrayList<SubCategory>;
     private var isSelected = false
 
-    constructor(id: String, name: String) {
-        this.name = name
+    constructor(id: String, name: String, subCategory: ArrayList<SubCategory>) {
+        this.name = name;
         this.id = id;
+        this.subCats = subCategory;
     }
 
     fun isSelected(): Boolean {
@@ -24,5 +26,9 @@ class SubCategory {
 
     fun getName(): String {
         return name
+    }
+
+    fun getSubCats(): ArrayList<SubCategory>{
+        return this.subCats;
     }
 }

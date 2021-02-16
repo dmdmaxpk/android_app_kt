@@ -3,6 +3,7 @@ package com.dmdmax.goonj.screens.activities
 import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.screens.views.WelcomeView
+import com.dmdmax.goonj.utility.Logger
 
 class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
 
@@ -18,6 +19,7 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
     private fun initialize(){
         mView.initialize();
         mView.bindBottomAdapter()
+        onBottomClick(0);
     }
 
     override fun onStart() {
@@ -39,6 +41,10 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
     }
 
     override fun onBottomClick(position: Number) {
-
+        when(position) {
+            0 -> {
+                getCompositionRoot().getViewFactory().toHomePage(null);
+            }
+        }
     }
 }

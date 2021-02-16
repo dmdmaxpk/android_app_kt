@@ -1,4 +1,4 @@
-package com.dmdmax.goonj.network.responses
+package com.dmdmax.goonj.models
 
 import com.dmdmax.goonj.utility.Constants
 import com.google.gson.annotations.SerializedName
@@ -13,7 +13,7 @@ class Video: Serializable {
     private var guests: Array<String>? = null;
 
     @SerializedName("topics")
-    private var topics: Array<String>? = null;
+    private var topics: Array<String?>? = null;
 
     @SerializedName("title")
     private var title: String? = null
@@ -106,7 +106,7 @@ class Video: Serializable {
         this.guests = guests
     }
 
-    fun setTopics(topics: Array<String>) {
+    fun setTopics(topics: Array<String?>?) {
         this.topics = topics
     }
 
@@ -205,7 +205,7 @@ class Video: Serializable {
         return guests
     }
 
-    fun getTopics(): Array<String>? {
+    fun getTopics(): Array<String?>? {
         return topics
     }
 

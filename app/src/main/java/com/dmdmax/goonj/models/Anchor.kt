@@ -1,4 +1,4 @@
-package com.dmdmax.goonj.network.responses
+package com.dmdmax.goonj.models
 
 import com.dmdmax.goonj.storage.DBHelper
 import com.dmdmax.goonj.utility.Constants

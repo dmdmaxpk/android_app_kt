@@ -1,12 +1,10 @@
 package com.dmdmax.goonj.payments
 
 import android.content.Context
-import android.content.Intent
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
-import com.dmdmax.goonj.network.responses.Params
-import com.dmdmax.goonj.network.responses.PaywallPackage
-import com.dmdmax.goonj.screens.activities.UserContentPrefsActivity
+import com.dmdmax.goonj.models.Params
+import com.dmdmax.goonj.models.PaywallPackage
 import com.dmdmax.goonj.screens.fragments.ChannelsFragment
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants

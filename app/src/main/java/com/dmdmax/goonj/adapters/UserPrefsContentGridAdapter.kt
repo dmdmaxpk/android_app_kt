@@ -10,12 +10,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.dmdmax.goonj.R
-import com.dmdmax.goonj.network.responses.Category
+import com.dmdmax.goonj.models.Category
 import com.dmdmax.goonj.storage.DBHelper
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
-import com.dmdmax.goonj.utility.Utility
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 

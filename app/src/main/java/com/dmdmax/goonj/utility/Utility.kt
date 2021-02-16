@@ -11,9 +11,9 @@ import android.util.TypedValue
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import com.dmdmax.goonj.network.responses.Channel
-import com.dmdmax.goonj.network.responses.Params
-import com.dmdmax.goonj.network.responses.PaywallPackage
+import com.dmdmax.goonj.models.Channel
+import com.dmdmax.goonj.models.Params
+import com.dmdmax.goonj.models.PaywallPackage
 import com.dmdmax.goonj.screens.activities.SplashActivity
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -306,7 +306,7 @@ class Utility {
             Constants.HE_URL = `object`.getString("he_url")
             Constants.VOD_ADTAG_SOURCE = `object`.getString("vod_adtag_source")
             Constants.IS_PAYWALL_ENABLED = `object`.getBoolean("is_paywall_enabled")
-            Constants.CATEGORIES_STRING_JSON = `object`.getString("categories_json")
+            Constants.CATEGORIES_STRING_JSON = `object`.getString("v2_home_categories")
             Constants.COMEDY_CATEGORIES_STRING_JSON = `object`.getString("comedy_categories_json")
             Constants.COMEDY_BASE_URL = `object`.getString("comedy_base_url")
             Constants.COMEDY_API_KEY = `object`.getString("comedy_api_key")

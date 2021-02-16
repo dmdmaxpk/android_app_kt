@@ -3,10 +3,9 @@ package com.dmdmax.goonj.adapters
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.dmdmax.goonj.base.BaseFragment
-import com.dmdmax.goonj.screens.fragments.GetStartedFragment1
-import com.dmdmax.goonj.screens.fragments.GetStartedFragment2
-import com.dmdmax.goonj.screens.fragments.GetStartedFragment3
+import com.dmdmax.goonj.screens.fragments.getstarted.GetStartedFragment1
+import com.dmdmax.goonj.screens.fragments.getstarted.GetStartedFragment2
+import com.dmdmax.goonj.screens.fragments.getstarted.GetStartedFragment3
 import com.dmdmax.goonj.utility.Logger
 
 class GetStartedViewPagerAdapter: FragmentStateAdapter {

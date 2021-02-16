@@ -2,6 +2,7 @@ package com.dmdmax.goonj.base
 
 import android.content.Context
 import android.view.View
+import androidx.fragment.app.FragmentActivity
 import com.dmdmax.goonj.firebase.EventName
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
@@ -49,5 +50,9 @@ open class BaseView: BaseMvcView {
 
     override fun getEventNames(): EventName? {
         return EventName();
+    }
+
+    override fun getBaseController(): BaseController? {
+        return BaseController(getContext() as FragmentActivity);
     }
 }

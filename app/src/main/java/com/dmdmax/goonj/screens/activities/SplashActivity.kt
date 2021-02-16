@@ -37,12 +37,14 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
         if(mView.getPrefs().isOtpValidated()){
             if(mView.getPrefs().isInterestedTopicDone()){
                 startActivity(Intent(this, WelcomeActivity::class.java));
+                finish();
                 return;
             }
             startActivity(Intent(this, UserContentPrefsActivity::class.java));
+            finish();
         }else{
             startActivity(Intent(this, GetStartedActivity::class.java));
+            finish();
         }
-        finish();
     }
 }

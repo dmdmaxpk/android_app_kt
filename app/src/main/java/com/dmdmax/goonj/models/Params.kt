@@ -1,4 +1,4 @@
-package com.dmdmax.goonj.network.responses
+package com.dmdmax.goonj.models
 
 class Params {
     private var key: String? = null;

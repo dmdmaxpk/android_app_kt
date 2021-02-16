@@ -2,21 +2,10 @@ package com.dmdmax.goonj.screens.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.SyncStateContract
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.EditText
-import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
-import com.dmdmax.goonj.network.client.NetworkOperationListener
-import com.dmdmax.goonj.network.client.RestClient
-import com.dmdmax.goonj.network.responses.Params
 import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.fragments.ChannelsFragment
 import com.dmdmax.goonj.screens.views.VerificationView
-import com.dmdmax.goonj.utility.Constants
-import com.dmdmax.goonj.utility.Logger
-import org.json.JSONObject
 
 class VerificationActivity : BaseActivity(), VerificationView.Listener {
 

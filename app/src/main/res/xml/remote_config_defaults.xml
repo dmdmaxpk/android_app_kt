@@ -45,8 +45,49 @@
         <value>http://he.goonj.pk/he</value>
     </entry>
     <entry>
-        <key>categories_json</key>
-        <value>[{"tabName":"My Feed","category":"myfeed","carousel":"myfeed"},{"tabName":"News","category":"news","carousel":"anchor"},{"tabName":"COVID-19 Updates","category":"corona","carousel":"null"},{"tabName":"Entertainment","category":"entertainment","carousel":"null"},{"tabName":"Sports","category":"sports","carousel":"null"},{"tabName":"Viral","category":"viral","carousel":"null"}]</value>
+        <key>v2_home_categories</key>
+        <value>[
+            {
+            "tabName": "LIVE TV",
+            "category": "live-tv",
+            "carousel": "null"
+            },
+            {
+            "tabName": "NEWS",
+            "category": "news",
+            "carousel": "null"
+            },
+            {
+            "tabName": "ENTERTAINMENT",
+            "category": "entertainment",
+            "carousel": "null"
+            },
+            {
+            "tabName": "KIDS",
+            "category": "kids",
+            "carousel": "null"
+            },
+            {
+            "tabName": "RELIGIOUS",
+            "category": "religious",
+            "carousel": "null"
+            },
+            {
+            "tabName": "SPORTS",
+            "category": "sports",
+            "carousel": "null"
+            },
+            {
+            "tabName": "VIRAL",
+            "category": "viral",
+            "carousel": "null"
+            },
+            {
+            "tabName": "FOOD",
+            "category": "food",
+            "carousel": "null"
+            }
+            ]</value>
     </entry>
     <entry>
         <key>comedy_categories_json</key>

@@ -7,7 +7,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.JsonRequest
 import com.android.volley.toolbox.StringRequest
-import com.dmdmax.goonj.network.responses.Params
+import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.screens.fragments.ComedyFragment
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants

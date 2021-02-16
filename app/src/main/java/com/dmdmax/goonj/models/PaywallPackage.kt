@@ -1,4 +1,4 @@
-package com.dmdmax.goonj.network.responses
+package com.dmdmax.goonj.models
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable

@@ -1,7 +1,6 @@
 package com.dmdmax.goonj.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.dmdmax.goonj.R
-import com.dmdmax.goonj.network.responses.BottomMenu
+import com.dmdmax.goonj.models.BottomMenu
 
 
 class BottomGridAdapter: BaseAdapter {

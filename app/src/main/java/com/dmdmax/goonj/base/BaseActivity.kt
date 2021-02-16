@@ -9,7 +9,7 @@ open class BaseActivity: FragmentActivity() {
 
     protected open fun getCompositionRoot(): BaseController {
         if (mBaseController == null) {
-            mBaseController = BaseController(this);
+            mBaseController = BaseController(this)
         }
         return mBaseController!!;
     }

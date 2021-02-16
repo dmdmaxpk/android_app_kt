@@ -1,15 +1,22 @@
 package com.dmdmax.goonj.base
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
+import com.dmdmax.goonj.screens.fragments.HomeCategoryFragment
+import com.dmdmax.goonj.screens.fragments.HomeFragment
 import com.dmdmax.goonj.screens.implements.*
 import com.dmdmax.goonj.screens.views.*
+import com.dmdmax.goonj.utility.FragmentFrameHelper
 
 class BaseViewFactory {
-    private lateinit var mLayoutInflater: LayoutInflater;
+    private var mLayoutInflater: LayoutInflater;
+    private var mFragmentFrameHelper: FragmentFrameHelper
 
-    constructor(layoutInflater: LayoutInflater) {
+    constructor(layoutInflater: LayoutInflater, fragmentHelper: FragmentFrameHelper) {
         mLayoutInflater = layoutInflater
+        mFragmentFrameHelper = fragmentHelper;
     }
 
     fun getSplashViewImpl(parent: ViewGroup?): SplashView {
@@ -38,5 +45,17 @@ class BaseViewFactory {
 
     fun getWelcomeView(parent: ViewGroup?): WelcomeView {
         return Welcomelmpl(mLayoutInflater, parent);
+    }
+
+    fun getHomeView(parent: ViewGroup, childFragmentManager: FragmentManager): HomeView {
+        return HomeViewImpl(mLayoutInflater, parent, childFragmentManager);
+    }
+
+    fun getLiveTvView(parent: ViewGroup): LiveTvView {
+        return LiveTvImpl(mLayoutInflater, parent);
+    }
+
+    fun toHomePage(bundle: Bundle?) {
+        mFragmentFrameHelper.replaceFragmentDontAddToBackstack(HomeFragment.newInstance(bundle))
     }
 }

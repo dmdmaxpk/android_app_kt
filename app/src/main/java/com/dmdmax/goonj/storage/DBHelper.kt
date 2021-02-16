@@ -4,9 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.dmdmax.goonj.network.responses.Anchor
-import com.dmdmax.goonj.network.responses.Program
-import com.dmdmax.goonj.network.responses.Topic
+import com.dmdmax.goonj.models.Anchor
+import com.dmdmax.goonj.models.Program
+import com.dmdmax.goonj.models.Topic
 import com.dmdmax.goonj.utility.Logger
 import java.net.URLEncoder
 import java.util.*

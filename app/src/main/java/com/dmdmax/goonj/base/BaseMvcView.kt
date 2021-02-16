@@ -14,4 +14,5 @@ interface BaseMvcView {
     fun getLogger(): Logger.Companion
     fun getConstants(): Constants?
     fun getEventNames(): EventName?
+    fun getBaseController(): BaseController?
 }

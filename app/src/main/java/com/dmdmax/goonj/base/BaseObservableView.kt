@@ -16,7 +16,6 @@ abstract class BaseObservableView<ListenerType>: BaseView(), ObservableView<List
     }
 
     fun getListeners(): Set<ListenerType> {
-        Logger.println("Listner list: "+mListeners.size);
         return Collections.unmodifiableSet(mListeners);
     }
 }

@@ -1,4 +1,4 @@
-package com.dmdmax.goonj.network.responses
+package com.dmdmax.goonj.models
 
 class BitRatesModel: java.io.Serializable {
     private var bitrate: String? = null

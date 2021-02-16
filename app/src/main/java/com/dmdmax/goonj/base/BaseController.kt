@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import com.dmdmax.goonj.utility.FragmentFrameHelper
 
 class BaseController {
 
@@ -30,7 +31,6 @@ class BaseController {
     }
 
     fun getViewFactory(): BaseViewFactory {
-        return BaseViewFactory(getLayoutInflater())
+        return BaseViewFactory(getLayoutInflater(), FragmentFrameHelper(getActivity(), getFragmentManager()));
     }
-
 }

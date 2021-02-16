@@ -1,4 +1,4 @@
-package com.dmdmax.goonj.screens.fragments
+package com.dmdmax.goonj.screens.fragments.getstarted
 
 import android.os.Bundle
 import android.view.LayoutInflater

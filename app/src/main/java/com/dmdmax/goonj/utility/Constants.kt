@@ -1,7 +1,7 @@
 package com.dmdmax.goonj.utility
 
 import android.content.Context
-import com.dmdmax.goonj.network.responses.BitRatesModel
+import com.dmdmax.goonj.models.BitRatesModel
 import com.dmdmax.goonj.storage.DBHelper
 import com.dmdmax.goonj.storage.GoonjPrefs
 import java.io.UnsupportedEncodingException
@@ -112,6 +112,7 @@ class Constants {
             const val TOPIC = "topic"
             const val PROGRAM = "program"
             const val CATEGORY = "category"
+            const val BANNER = "banner/list"
 
             // Paywall
             const val STATUS = "payment/status"

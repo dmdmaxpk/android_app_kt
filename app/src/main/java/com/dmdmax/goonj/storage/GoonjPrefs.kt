@@ -3,7 +3,7 @@ package com.dmdmax.goonj.storage
 import android.content.Context
 import android.content.SharedPreferences
 import android.provider.MediaStore
-import com.dmdmax.goonj.network.responses.*
+import com.dmdmax.goonj.models.*
 import com.dmdmax.goonj.screens.fragments.ChannelsFragment
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
@@ -100,6 +100,14 @@ class GoonjPrefs {
         } else {
             getComedyMsisdn()
         }
+    }
+
+    public fun setCity(city: String) {
+        editor!!.putString("city", city).commit()
+    }
+
+    public fun getCity(): String? {
+        return prefs!!.getString("city", "");
     }
 
     public fun setIsSkipped(skipped: Boolean) {

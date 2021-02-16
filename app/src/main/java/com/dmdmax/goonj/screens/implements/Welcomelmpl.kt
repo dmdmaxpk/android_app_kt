@@ -10,8 +10,9 @@ import android.widget.ImageView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.adapters.BottomGridAdapter
 import com.dmdmax.goonj.base.BaseObservableView
-import com.dmdmax.goonj.network.responses.BottomMenu
+import com.dmdmax.goonj.models.BottomMenu
 import com.dmdmax.goonj.screens.views.WelcomeView
+import java.util.logging.Logger
 
 class Welcomelmpl: BaseObservableView<WelcomeView.Listener>, WelcomeView, View.OnClickListener {
 
@@ -49,6 +50,10 @@ class Welcomelmpl: BaseObservableView<WelcomeView.Listener>, WelcomeView, View.O
         mBottomGrid.onItemClickListener = object: AdapterView.OnItemClickListener{
             override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 mAdapter.markSelection(position);
+
+                for (listener in getListeners()) {
+                    listener.onBottomClick(position);
+                }
             }
         }
     }
