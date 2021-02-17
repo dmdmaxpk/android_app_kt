@@ -3,14 +3,19 @@ package com.dmdmax.goonj.gps
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.provider.Settings
+import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.screens.dialogs.DialogManager
 import com.dmdmax.goonj.utility.Logger
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import java.io.IOException
+import java.util.*
 
 
 class GPSHelper {
@@ -50,7 +55,7 @@ class GPSHelper {
     }
 
     fun displaySwitchOnSettingsDialog(){
-        DialogManager().displayLocationOffDialog(mContext, object: DialogManager.LocationPermissionClickListener{
+        DialogManager().displayLocationOffDialog(mContext, object : DialogManager.LocationPermissionClickListener {
             override fun onPositiveButtonClick() {
                 mContext.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
             }
@@ -59,6 +64,18 @@ class GPSHelper {
                 Logger.println("displaySwitchOnSettingsDialog - onNegativeButtonClick")
             }
         });
+    }
+
+    fun getCity(): String? {
+        val gCoder = Geocoder(mContext as BaseActivity, Locale.getDefault())
+        try {
+            val addresses: List<Address> = gCoder.getFromLocation(latitude, longitude, 1)
+            val cityName = addresses[0].locality + ", " + addresses[0].countryName
+            return cityName;
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return null;
     }
 
 }

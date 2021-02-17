@@ -54,7 +54,7 @@ class LiveTvFragment: BaseFragment() {
                 // Location permission has already been granted
                 mView.displayPrayerTime();
             }
-        }, 2000);
+        }, 1000);
     }
 
     private fun openLocationPermissionDialog(){
@@ -76,7 +76,7 @@ class LiveTvFragment: BaseFragment() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            1 -> {
+            REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (
                             (ContextCompat.checkSelfPermission(context as BaseActivity, Manifest.permission.ACCESS_FINE_LOCATION).equals(PackageManager.PERMISSION_GRANTED)) &&

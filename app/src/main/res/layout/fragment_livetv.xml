@@ -16,24 +16,71 @@
             android:paddingBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/slider"
+            android:orientation="vertical">
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:paddingLeft="24dp"
-                android:paddingRight="12dp"
-                android:layout_weight="1" />
-
-            <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
-                android:id="@+id/slider_indicator"
-                android:layout_marginTop="20dp"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:dotsColor="#00a4bb"
-                app:dotsStrokeColor="#686569"
-                app:dotsSize="10dp" />
+                android:gravity="center">
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_weight="1" />
+                <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
+                    android:id="@+id/slider_indicator"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:dotsColor="#00a4bb"
+                    app:dotsStrokeColor="#686569"
+                    app:dotsSize="7dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/namaz_time_bg"
+                android:weightSum="2">
+                <LinearLayout
+                    android:paddingLeft="10dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:src="@drawable/mosque"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"/>
+                    <TextView
+                        android:paddingLeft="10dp"
+                        android:id="@+id/city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|end">
+                    <ImageView
+                        android:src="@drawable/clock"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp" />
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="5dp"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

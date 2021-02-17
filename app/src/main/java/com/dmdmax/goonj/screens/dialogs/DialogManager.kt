@@ -3,6 +3,9 @@ package com.dmdmax.goonj.screens.dialogs
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
 import com.dmdmax.goonj.R
 
 class DialogManager {
@@ -21,17 +24,20 @@ class DialogManager {
     }
 
     fun grantLocationPermission(context: Context, listener: LocationPermissionClickListener?) {
+        val view: View = LayoutInflater.from(context).inflate(R.layout.dialog_message, null);
+        view.findViewById<TextView>(R.id.title).text = "Location Permission"
+        view.findViewById<TextView>(R.id.message).text = "${context.resources.getString(R.string.app_name)} wants location permission in order to show you the Namaz time. Would you like to give that permission?"
+
         val builder = AlertDialog.Builder(context, R.style.MyAlertDialogTheme)
-        builder.setTitle("Location Permission!")
-        builder.setMessage("${context.resources.getString(R.string.app_name)} wants location permission in order to show you the Namaz time. Would you like to give that permission?");
         builder.setCancelable(false)
-        builder.setNegativeButton("No", object: DialogInterface.OnClickListener{
+        builder.setView(view);
+        builder.setNegativeButton("No", object : DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 dialog!!.dismiss()
                 listener!!.onNegativeButtonClick();
             }
         });
-        builder.setPositiveButton("Yes, sure", object: DialogInterface.OnClickListener{
+        builder.setPositiveButton("Yes, sure", object : DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 dialog!!.dismiss()
                 listener!!.onPositiveButtonClick();
@@ -41,17 +47,20 @@ class DialogManager {
     }
 
     fun displayLocationOffDialog(context: Context, listener: LocationPermissionClickListener?) {
+        val view: View = LayoutInflater.from(context).inflate(R.layout.dialog_message, null);
+        view.findViewById<TextView>(R.id.title).text = "GPS Disabled"
+        view.findViewById<TextView>(R.id.message).text = "GPS on your device is disabled, please click Switch On GPS button in order to switch it on."
+
         val builder = AlertDialog.Builder(context, R.style.MyAlertDialogTheme)
-        builder.setTitle("Location")
-        builder.setMessage("GPS is not enabled, please click below to switch your GPS on");
-        builder.setCancelable(false)
-        builder.setNegativeButton("No", object: DialogInterface.OnClickListener{
+        builder.setCancelable(false);
+        builder.setView(view);
+        builder.setNegativeButton("No, thanks", object : DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 dialog!!.dismiss()
                 listener!!.onNegativeButtonClick();
             }
         });
-        builder.setPositiveButton("Sure", object: DialogInterface.OnClickListener{
+        builder.setPositiveButton("Switch On GPS", object : DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 dialog!!.dismiss()
                 listener!!.onPositiveButtonClick();

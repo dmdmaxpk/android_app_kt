@@ -32,7 +32,7 @@ class HomeSliderAdapter: PagerAdapter {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val banner  = ImageView(mContext);
-
+        banner.scaleType = ImageView.ScaleType.FIT_XY;
         Picasso.get().load(mList[position].getThumb()).into(banner);
         container.addView(banner);
         return banner
