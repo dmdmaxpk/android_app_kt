@@ -13,7 +13,6 @@ import java.net.CookieManager
 class BaseApplication: Application() {
 
     protected var userAgent: String? = null
-    private lateinit var mInstance: BaseApplication;
     private var defaultCookieManager: CookieManager? = null
 
     override fun onCreate() {
@@ -23,7 +22,6 @@ class BaseApplication: Application() {
         FirebaseApp.initializeApp(applicationContext);
         Logger.println("Firebase App Initialized!");
 
-        this.mInstance = this
         userAgent = Util.getUserAgent(this, "ExoPlayerDemo")
     }
 
@@ -36,10 +34,13 @@ class BaseApplication: Application() {
         if (defaultCookieManager != null) defaultCookieManager!!.getCookieStore().removeAll()
     }
 
-    @Synchronized
-    fun getInstance(): BaseApplication {
-        return this.mInstance
+    companion object {
+        @Synchronized
+        fun getInstance(): BaseApplication {
+            return BaseApplication();
+        }
     }
+
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)

@@ -45,6 +45,10 @@
         <value>http://he.goonj.pk/he</value>
     </entry>
     <entry>
+        <key>v2_channel_categories</key>
+        <value>[             {             "cat_name": "news", "url": "news"            },             {             "cat_name": "entertainment", "url": "entertainment"             },             {             "cat_name": "religious",  "url": "islam"              }             ]</value>
+    </entry>
+    <entry>
         <key>v2_home_categories</key>
         <value>[
             {

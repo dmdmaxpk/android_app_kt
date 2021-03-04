@@ -8,6 +8,7 @@ import com.dmdmax.goonj.models.Video
 import com.dmdmax.goonj.utility.Constants.ThumbnailManager.getLiveThumbnail
 import org.json.JSONArray
 import java.util.*
+import kotlin.collections.ArrayList
 
 class JSONParser {
 
@@ -22,9 +23,10 @@ class JSONParser {
                         val model = Channel()
                         model.setId(rootArray.getJSONObject(i).getString("_id"))
                         model.setName(rootArray.getJSONObject(i).getString("name"))
-                        model.setThumbnail(getLiveThumbnail(rootArray.getJSONObject(i).getString("thumbnail")))
+                        model.setThumbnail((rootArray.getJSONObject(i).getString("thumbnail")))
                         model.setHlsLink(Constants.LIVE_URL + rootArray.getJSONObject(i).getString("hls_link"))
                         model.setSlug(rootArray.getJSONObject(i).getString("slug"))
+                        model.setCategory(rootArray.getJSONObject(i).getString("category"))
                         list.add(model)
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -34,6 +36,11 @@ class JSONParser {
                 e.printStackTrace()
             }
             return list
+        }
+
+        fun getCategoryWiseChannel(json: String?, category: String): ArrayList<Channel> {
+            val list = getLiveChannels(json);
+            return list!!.filter { s -> s.getCategory() == category } as ArrayList<Channel>
         }
 
         fun getSlider(json: String?): ArrayList<SliderModel> {
@@ -80,8 +87,8 @@ class JSONParser {
             return list
         }
 
-        fun getFeed(json: String?): List<Video>? {
-            val list: MutableList<Video> = ArrayList()
+        fun getFeed(json: String?): ArrayList<Video>? {
+            val list: ArrayList<Video> = ArrayList()
             try {
                 val rootArray = JSONArray(json)
                 for (i in 0 until rootArray.length()) {

@@ -21,6 +21,7 @@ class DialogManager {
     interface LocationPermissionClickListener{
         fun onPositiveButtonClick();
         fun onNegativeButtonClick();
+        fun onDontAskClick();
     }
 
     fun grantLocationPermission(context: Context, listener: LocationPermissionClickListener?) {
@@ -43,6 +44,13 @@ class DialogManager {
                 listener!!.onPositiveButtonClick();
             }
         });
+
+        builder.setNeutralButton("Don't Ask", object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                dialog!!.dismiss()
+                listener!!.onDontAskClick();
+            }
+        });
         builder.show();
     }
 
@@ -54,18 +62,14 @@ class DialogManager {
         val builder = AlertDialog.Builder(context, R.style.MyAlertDialogTheme)
         builder.setCancelable(false);
         builder.setView(view);
-        builder.setNegativeButton("No, thanks", object : DialogInterface.OnClickListener {
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                dialog!!.dismiss()
-                listener!!.onNegativeButtonClick();
-            }
-        });
+
         builder.setPositiveButton("Switch On GPS", object : DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 dialog!!.dismiss()
                 listener!!.onPositiveButtonClick();
             }
         });
+
         builder.show();
     }
 }

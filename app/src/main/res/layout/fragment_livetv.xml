@@ -11,11 +11,12 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:scrollbars="none">
         <LinearLayout
             android:paddingBottom="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
             <LinearLayout
                 android:orientation="vertical"
@@ -56,12 +57,17 @@
                         android:layout_width="15dp"
                         android:layout_height="15dp"/>
                     <TextView
-                        android:paddingLeft="10dp"
+                        android:visibility="gone"
+                        android:layout_marginLeft="10dp"
                         android:id="@+id/city"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/black"
+                        android:textAllCaps="true"
+                        android:textStyle="bold"
+                        android:padding="5dp"
+                        android:background="@drawable/city_bg"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -78,8 +84,17 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
                         android:textStyle="bold"
-                        android:layout_marginLeft="5dp"/>
+                        android:layout_marginLeft="5dp"
+                        android:paddingRight="10dp"/>
                 </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/category_wise_live_channels"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

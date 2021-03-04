@@ -33,6 +33,17 @@ class GoonjPrefs {
 
 
     // Setters
+    fun setCity(city: String) {
+        editor!!.putString("KEY_CITY", city).commit()
+    }
+
+    fun setCoords(lat: Double, lng: Double, alt: Double) {
+        Logger.println("setCoords - LAT: "+lat+" - Str: "+ lat.toString());
+        editor!!.putString("KEY_LAT", lat.toString()).commit()
+        editor!!.putString("KEY_LNG", lng.toString()).commit()
+        editor!!.putString("KEY_ALT", alt.toString()).commit()
+    }
+
     fun setAnchors(anchors: List<Anchor?>?) {
         editor!!.putString(KEY_ANCHORS, getString(anchors)).commit()
     }
@@ -58,6 +69,22 @@ class GoonjPrefs {
     }
 
     // Getters
+    fun getCity(): String {
+        return prefs!!.getString("KEY_CITY", "").toString();
+    }
+
+    fun getLat(): Double {
+        return prefs!!.getString("KEY_LAT", "0.0")!!.toDouble();
+    }
+
+    fun getLng(): Double {
+        return prefs!!.getString("KEY_LNG", "0.0")!!.toDouble();
+    }
+
+    fun getAlt(): Double {
+        return prefs!!.getString("KEY_ALT", "0.0")!!.toDouble();
+    }
+
     fun getAnchors(): List<Anchor?>? {
         return getAnchorsList(prefs!!.getString(KEY_ANCHORS, ""))
     }
@@ -102,12 +129,12 @@ class GoonjPrefs {
         }
     }
 
-    public fun setCity(city: String) {
-        editor!!.putString("city", city).commit()
+    public fun setDontAsk(value: Boolean) {
+        editor!!.putBoolean("dont-ask", value).commit()
     }
 
-    public fun getCity(): String? {
-        return prefs!!.getString("city", "");
+    public fun isDontAsk(): Boolean {
+        return prefs!!.getBoolean("dont-ask", false);
     }
 
     public fun setIsSkipped(skipped: Boolean) {

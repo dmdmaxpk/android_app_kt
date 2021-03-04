@@ -11,6 +11,7 @@ import android.os.Build
 import android.provider.Settings
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.screens.dialogs.DialogManager
+import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Logger
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -32,13 +33,21 @@ class GPSHelper {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext)
     }
 
-    @SuppressLint("MissingPermission")
-    fun updateLocation() {
-        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            latitude = location!!.latitude;
-            longitude = location.longitude;
-            altitude = location.altitude;
+    public interface LocationUpdatedListener{
+        fun onUpdated(lat: Double, lng: Double, alt: Double);
+    }
 
+    @SuppressLint("MissingPermission")
+    fun updateLocation(listener: LocationUpdatedListener?) {
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            if(location != null){
+                latitude = location.latitude;
+                longitude = location.longitude;
+                altitude = location.altitude;
+                listener?.onUpdated(this.latitude, this.longitude, this.altitude);
+            }else{
+                listener?.onUpdated(0.0, 0.0, 0.0);
+            }
         }
     }
 
@@ -63,15 +72,24 @@ class GPSHelper {
             override fun onNegativeButtonClick() {
                 Logger.println("displaySwitchOnSettingsDialog - onNegativeButtonClick")
             }
+
+            override fun onDontAskClick() {
+                GoonjPrefs(mContext).setDontAsk(true);
+            }
         });
     }
 
     fun getCity(): String? {
         val gCoder = Geocoder(mContext as BaseActivity, Locale.getDefault())
         try {
-            val addresses: List<Address> = gCoder.getFromLocation(latitude, longitude, 1)
-            val cityName = addresses[0].locality + ", " + addresses[0].countryName
-            return cityName;
+            val addresses: List<Address> = gCoder.getFromLocation(latitude, longitude, 1);
+            Logger.println("Address: "+addresses);
+            if(addresses.size > 0){
+                val cityName = addresses[0].locality + ", " + addresses[0].countryName
+                return cityName;
+            }else{
+                return "Error";
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }

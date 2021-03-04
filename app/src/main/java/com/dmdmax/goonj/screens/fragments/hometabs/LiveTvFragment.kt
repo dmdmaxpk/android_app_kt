@@ -44,17 +44,26 @@ class LiveTvFragment: BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        Handler().postDelayed(Runnable{
-            if (
-                    !ContextCompat.checkSelfPermission(context as BaseActivity, Manifest.permission.ACCESS_FINE_LOCATION).equals(PackageManager.PERMISSION_GRANTED) ||
-                    !ContextCompat.checkSelfPermission(context as BaseActivity, Manifest.permission.ACCESS_COARSE_LOCATION).equals(PackageManager.PERMISSION_GRANTED)
-            ) {
-                openLocationPermissionDialog();
-            }else{
-                // Location permission has already been granted
-                mView.displayPrayerTime();
-            }
-        }, 1000);
+        mView.getLogger().println("onStart")
+        if(!mView.getPrefs().isDontAsk()){
+            Handler().postDelayed(Runnable{
+                if (
+                        !ContextCompat.checkSelfPermission(context as BaseActivity, Manifest.permission.ACCESS_FINE_LOCATION).equals(PackageManager.PERMISSION_GRANTED) ||
+                        !ContextCompat.checkSelfPermission(context as BaseActivity, Manifest.permission.ACCESS_COARSE_LOCATION).equals(PackageManager.PERMISSION_GRANTED)
+                ) {
+                    openLocationPermissionDialog();
+                }else{
+                    // Location permission has already been granted
+                    mView.displayPrayerTime();
+                }
+            }, 1000);
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mView.cancelTimer();
+        mView.getLogger().println("onStop")
     }
 
     private fun openLocationPermissionDialog(){
@@ -66,15 +75,20 @@ class LiveTvFragment: BaseFragment() {
             override fun onNegativeButtonClick() {
                 mView.getToaster().printToast(context, "Location permission cancelled");
             }
+
+            override fun onDontAskClick() {
+                mView.getPrefs().setDontAsk(true);
+            }
         });
     }
 
     private fun requestLocationPermission(){
-        ActivityCompat.requestPermissions(context as BaseActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE);
+        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE);
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        mView.getLogger().println("onRequestPermissionsResult - Fragment");
         when (requestCode) {
             REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -89,7 +103,6 @@ class LiveTvFragment: BaseFragment() {
                 } else {
                     mView.getToaster().printToast(context, "Location permission not granted");
                 }
-                return
             }
         }
     }

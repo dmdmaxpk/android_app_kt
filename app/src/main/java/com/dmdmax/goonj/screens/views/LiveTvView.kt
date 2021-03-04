@@ -11,4 +11,5 @@ interface LiveTvView: ObservableView<LiveTvView.Listener> {
     fun  initialize();
     fun  displaySlider();
     fun displayPrayerTime();
+    fun cancelTimer();
 }

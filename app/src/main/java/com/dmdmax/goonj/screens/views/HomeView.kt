@@ -6,7 +6,9 @@ interface HomeView: ObservableView<HomeView.Listener> {
 
     interface Listener {
         fun goBack();
+        fun  onCompleted();
     }
 
     fun  initialize();
+    fun getRemoteConfigs();
 }

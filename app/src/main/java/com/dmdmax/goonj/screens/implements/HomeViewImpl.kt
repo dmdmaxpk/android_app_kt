@@ -15,11 +15,10 @@ import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.screens.fragments.HomeCategoryFragment
 import com.dmdmax.goonj.screens.fragments.hometabs.LiveTvFragment
 import com.dmdmax.goonj.screens.views.HomeView
-import com.dmdmax.goonj.utility.Constants
-import com.dmdmax.goonj.utility.CustomViewPager
-import com.dmdmax.goonj.utility.JSONParser
-import com.dmdmax.goonj.utility.Logger
+import com.dmdmax.goonj.utility.*
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 
 class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
 
@@ -28,6 +27,7 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
     private var mTabsLayout: TabLayout;
 
     private var mTopBar: FrameLayout? = null
+    private lateinit var mFirebaseRemoteConfig: FirebaseRemoteConfig;
 
     constructor(inflater: LayoutInflater, parent: ViewGroup, childFragmentManager: FragmentManager) {
         setRootView(inflater.inflate(R.layout.fragment_home, parent, false));
@@ -42,6 +42,32 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
     override fun initialize() {
         val mList: ArrayList<BaseFragment> = getChildFragments();
         bindViewPager(mList);
+    }
+
+    override fun getRemoteConfigs() {
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+        mFirebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        mFirebaseRemoteConfig.setConfigSettingsAsync(FirebaseRemoteConfigSettings.Builder().build())
+        mFirebaseRemoteConfig.fetch(Constants.CONFIG_EXPIRATION_TIME_IN_SEC)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful()) {
+                        Utility.setConstants(mFirebaseRemoteConfig)
+                        getLogger().println("Fetch successful")
+                        mFirebaseRemoteConfig.activate();
+                        workingCompleted();
+                    }
+                }.addOnFailureListener { e ->
+                    getLogger().println("Fetch failed: " + e.message)
+                    e.printStackTrace()
+                    Utility.setConstants(mFirebaseRemoteConfig)
+                    workingCompleted();
+                }
+    }
+
+    private fun workingCompleted() {
+        for (listener in getListeners()) {
+            listener.onCompleted()
+        }
     }
 
 

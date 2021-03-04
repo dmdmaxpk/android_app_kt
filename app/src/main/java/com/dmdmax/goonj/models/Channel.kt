@@ -2,13 +2,15 @@ package com.dmdmax.goonj.models
 
 import com.dmdmax.goonj.utility.Constants
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class Channel {
+class Channel: Serializable {
     private lateinit var id: String;
     private lateinit var name: String;
     private lateinit var slug: String;
     private lateinit var hlsLink: String;
     private lateinit var thumbnail: String;
+    private var category: String = "";
 
     fun setId(id: String) {
         this.id = id
@@ -16,6 +18,10 @@ class Channel {
 
     fun setSlug(slug: String) {
         this.slug = slug
+    }
+
+    fun setCategory(category: String) {
+        this.category = category
     }
 
     fun setName(name: String) {
@@ -29,6 +35,10 @@ class Channel {
 
     fun getId(): String {
         return id
+    }
+
+    fun getCategory(): String {
+        return category
     }
 
     fun getName(): String {

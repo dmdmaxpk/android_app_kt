@@ -4,10 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.screens.views.HomeView
+import com.dmdmax.goonj.utility.Constants
+import com.dmdmax.goonj.utility.Utility
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 
-class HomeFragment: BaseFragment() {
+class HomeFragment: BaseFragment(), HomeView.Listener {
 
     private lateinit var mView: HomeView;
 
@@ -26,8 +31,22 @@ class HomeFragment: BaseFragment() {
         return mView.getRootView();
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onStart() {
+        super.onStart()
+        mView.getRemoteConfigs();
+        mView.registerListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mView.unregisterListener(this);
+    }
+
+    override fun goBack() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onCompleted() {
         mView.initialize();
     }
 }

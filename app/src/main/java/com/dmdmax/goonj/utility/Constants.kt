@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.util.*
 
-class Constants {
+public class Constants {
 
     companion object {
 
@@ -57,11 +57,12 @@ class Constants {
         var IS_PAYWALL_ENABLED = false
         var HE_URL: String? = null
         var CATEGORIES_STRING_JSON: String? = null
+        var CATEGORIES_CHANNEL_JSON: String? = null
         var COMEDY_CATEGORIES_STRING_JSON: String? = null
         var COMEDY_BASE_URL: String? = null
         var COMEDY_API_KEY: String? = null
         var VOD_POSTFIX_URL: String? = null
-        var DEFAULT_AKAMAI_TOKEN: String? = null
+        lateinit var DEFAULT_AKAMAI_TOKEN: String;
         var IS_LIVE_PRE_ROLL_ENABLED = false
         var LANDING_PAGE_320x100_AD_UNIT_ID: String? = null
         var SECURITY_ACL: String? = null

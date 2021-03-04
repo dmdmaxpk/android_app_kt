@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -18,10 +17,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Goonj">
-        <activity android:name=".screens.activities.WelcomeActivity"/>
-        <activity android:name=".screens.activities.VerificationActivity"/>
-        <activity android:name=".screens.activities.SigninActivity"/>
-        <activity android:name=".screens.activities.LoginActivity"/>
+        <activity android:name=".screens.activities.PlayerActivity"></activity>
+        <activity android:name=".screens.activities.WelcomeActivity" />
+        <activity android:name=".screens.activities.VerificationActivity" />
+        <activity android:name=".screens.activities.SigninActivity" />
+        <activity android:name=".screens.activities.LoginActivity" />
         <activity android:name=".screens.activities.GetStartedActivity" />
         <activity android:name=".screens.activities.UserContentPrefsActivity" />
         <activity android:name=".screens.activities.SplashActivity">

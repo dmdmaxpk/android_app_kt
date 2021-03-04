@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.screens.views.WelcomeView
 import com.dmdmax.goonj.utility.Logger
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
 class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
 
@@ -13,7 +14,7 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
         super.onCreate(savedInstanceState)
         mView = getCompositionRoot().getViewFactory().getWelcomeView(null);
         setContentView(mView.getRootView());
-        initialize();
+        initialize()
     }
 
     private fun initialize(){
@@ -46,5 +47,10 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
                 getCompositionRoot().getViewFactory().toHomePage(null);
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        mView.getLogger().println("onRequestPermissionsResult - Activity")
     }
 }

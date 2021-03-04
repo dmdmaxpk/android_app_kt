@@ -58,4 +58,8 @@ class BaseViewFactory {
     fun toHomePage(bundle: Bundle?) {
         mFragmentFrameHelper.replaceFragmentDontAddToBackstack(HomeFragment.newInstance(bundle))
     }
+
+    fun getPlayerViewImpl(parent: ViewGroup?): PlayerView {
+        return PlayerViewImpl(mLayoutInflater, parent);
+    }
 }

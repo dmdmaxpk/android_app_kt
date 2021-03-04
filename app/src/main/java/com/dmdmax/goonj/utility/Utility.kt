@@ -62,9 +62,9 @@ class Utility {
 
         fun getAgoTime(datetime: String): String? {
             return DateUtils.getRelativeTimeSpanString(
-                getTimeInMillis(datetime),
-                System.currentTimeMillis(),
-                DateUtils.SECOND_IN_MILLIS
+                    getTimeInMillis(datetime),
+                    System.currentTimeMillis(),
+                    DateUtils.SECOND_IN_MILLIS
             ) as String
         }
 
@@ -99,9 +99,9 @@ class Utility {
             val displayMetrics = context.resources.displayMetrics
             val fullHeight = displayMetrics.heightPixels / displayMetrics.density
             return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                fullHeight,
-                context.resources.displayMetrics
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    fullHeight,
+                    context.resources.displayMetrics
             )
                 .toInt()
         }
@@ -122,9 +122,9 @@ class Utility {
 
         fun isAutoRotateOn(context: Context): Boolean {
             return Settings.System.getInt(
-                context.contentResolver,
-                Settings.System.ACCELEROMETER_ROTATION,
-                0
+                    context.contentResolver,
+                    Settings.System.ACCELEROMETER_ROTATION,
+                    0
             ) == 1
         }
 
@@ -171,11 +171,11 @@ class Utility {
                 return ""
             }
             return if (bitrate == Constants.NewBitRates.BITRATE_AUTO) getChannelPrefix(url) + ".m3u8" else if (bitrate == Constants.NewBitRates.BITRATE_DATA_SAVER) getChannelPrefix(
-                url
+                    url
             ) + "_144p/index.m3u8" else if (bitrate == Constants.NewBitRates.BITRATE_MEDIUM) getChannelPrefix(
-                url
+                    url
             ) + "_360p/index.m3u8" else if (bitrate == Constants.NewBitRates.BITRATE_HIGH) getChannelPrefix(
-                url
+                    url
             ) + "_480p/index.m3u8" else getChannelPrefix(url) + ".m3u8"
         }
 
@@ -206,13 +206,13 @@ class Utility {
         }
 
         fun shootReportingParams(
-            context: Context?,
-            vodId: String?,
-            title: String?,
-            isLive: Boolean,
-            source: String?,
-            durationInSec: Int,
-            category: String?
+                context: Context?,
+                vodId: String?,
+                title: String?,
+                isLive: Boolean,
+                source: String?,
+                durationInSec: Int,
+                category: String?
         ) {
             val ssoId: String = DeviceInfo.getDeviceId(context)!!;
             val calendar = Calendar.getInstance()
@@ -228,10 +228,10 @@ class Utility {
             arrayList.add(Params("year", calendar[Calendar.YEAR]))
             arrayList.add(Params("day", calendar[Calendar.DAY_OF_MONTH]))
             if (category != null) arrayList.add(Params("category", category)) else arrayList.add(
-                Params(
-                    "category",
-                    ""
-                )
+                    Params(
+                            "category",
+                            ""
+                    )
             )
             val obj = getJSONObject(arrayList)
 //        if (!isLive && durationInSec > 3) RestClient(
@@ -283,17 +283,17 @@ class Utility {
         fun getFormattedStringFromSec(sec: Int): String? {
             val millis = (sec * 1000).toLong()
             return String.format(
-                "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
-                    TimeUnit.MILLISECONDS.toHours(
-                        millis
+                    "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                    TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
+                            TimeUnit.MILLISECONDS.toHours(
+                                    millis
+                            )
+                    ),
+                    TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
+                            TimeUnit.MILLISECONDS.toMinutes(
+                                    millis
+                            )
                     )
-                ),
-                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
-                    TimeUnit.MILLISECONDS.toMinutes(
-                        millis
-                    )
-                )
             )
         }
 
@@ -307,6 +307,7 @@ class Utility {
             Constants.VOD_ADTAG_SOURCE = `object`.getString("vod_adtag_source")
             Constants.IS_PAYWALL_ENABLED = `object`.getBoolean("is_paywall_enabled")
             Constants.CATEGORIES_STRING_JSON = `object`.getString("v2_home_categories")
+            Constants.CATEGORIES_CHANNEL_JSON = `object`.getString("v2_channel_categories")
             Constants.COMEDY_CATEGORIES_STRING_JSON = `object`.getString("comedy_categories_json")
             Constants.COMEDY_BASE_URL = `object`.getString("comedy_base_url")
             Constants.COMEDY_API_KEY = `object`.getString("comedy_api_key")
@@ -418,6 +419,45 @@ class Utility {
                 if (p.getId().equals(packageId)) return p.getPricePoint()
             }
             return ""
+        }
+
+        fun getNextNamazTime(response: String): String {
+            val rootObj = JSONObject(response);
+
+            lateinit var imSak: String;
+
+            if(rootObj.getInt("code") == 200){
+                val timesObj: JSONObject = rootObj.getJSONObject("results").getJSONArray("datetime").getJSONObject(0).getJSONObject("times");
+
+                imSak = "Imsak " + timesObj.getString("Imsak");
+                val sunrise = "Sunrise " + timesObj.getString("Sunrise");
+                val fajr = "Fajr " + timesObj.getString("Fajr");
+                val dhuhr = "Dhuhr " + timesObj.getString("Dhuhr");
+                val asr = "Asr " + timesObj.getString("Asr");
+                val sunset = "Sunset " + timesObj.getString("Sunset");
+                val maghrib = "Maghrib " + timesObj.getString("Maghrib");
+                val isha = "Isha " + timesObj.getString("Isha");
+
+                val timesArray = arrayOf(imSak, sunrise, fajr, dhuhr, asr, sunset, maghrib, isha);
+
+                for (i in 0..timesArray.size){
+                    if(hourOf(timesArray[i]).timeInMillis > Calendar.getInstance().timeInMillis){
+                        val namazName = timesArray[i].split(" ")[0];
+                        val date: Date = hourOf(timesArray[i]).time;
+                        val sdf = SimpleDateFormat("hh:mm aa")
+                        return namazName +" " + sdf.format(date);
+                    }
+                }
+            }
+
+            return imSak;
+        }
+
+        private fun hourOf(time: String): Calendar {
+            val mCal: Calendar = Calendar.getInstance();
+            mCal.set(Calendar.HOUR_OF_DAY, time.split(' ')[1].split(":")[0].toIntOrNull()!!);
+            mCal.set(Calendar.MINUTE, time.split(' ')[1].split(":")[1].toIntOrNull()!!);
+            return mCal;
         }
     }
 }
