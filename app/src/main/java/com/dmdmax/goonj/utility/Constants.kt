@@ -114,6 +114,7 @@ public class Constants {
             const val PROGRAM = "program"
             const val CATEGORY = "category"
             const val BANNER = "banner/list"
+            const val CITIES = "city"
 
             // Paywall
             const val STATUS = "payment/status"

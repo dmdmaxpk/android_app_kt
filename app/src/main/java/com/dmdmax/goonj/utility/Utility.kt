@@ -441,7 +441,8 @@ class Utility {
 
                 val timesArray = arrayOf(imSak, sunrise, fajr, dhuhr, asr, sunset, maghrib, isha);
 
-                for (i in 0..timesArray.size){
+                for (i in timesArray.indices){
+                    Logger.println("------------"+timesArray[i]);
                     if(hourOf(timesArray[i]).timeInMillis > Calendar.getInstance().timeInMillis){
                         val namazName = timesArray[i].split(" ")[0];
                         val date: Date = hourOf(timesArray[i]).time;

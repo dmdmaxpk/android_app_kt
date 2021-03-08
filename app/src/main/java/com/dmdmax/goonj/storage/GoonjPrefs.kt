@@ -37,11 +37,9 @@ class GoonjPrefs {
         editor!!.putString("KEY_CITY", city).commit()
     }
 
-    fun setCoords(lat: Double, lng: Double, alt: Double) {
-        Logger.println("setCoords - LAT: "+lat+" - Str: "+ lat.toString());
-        editor!!.putString("KEY_LAT", lat.toString()).commit()
-        editor!!.putString("KEY_LNG", lng.toString()).commit()
-        editor!!.putString("KEY_ALT", alt.toString()).commit()
+    fun setCoords(lat: String, lng: String) {
+        editor!!.putString("KEY_LAT", lat).commit()
+        editor!!.putString("KEY_LNG", lng).commit()
     }
 
     fun setAnchors(anchors: List<Anchor?>?) {
@@ -79,10 +77,6 @@ class GoonjPrefs {
 
     fun getLng(): Double {
         return prefs!!.getString("KEY_LNG", "0.0")!!.toDouble();
-    }
-
-    fun getAlt(): Double {
-        return prefs!!.getString("KEY_ALT", "0.0")!!.toDouble();
     }
 
     fun getAnchors(): List<Anchor?>? {

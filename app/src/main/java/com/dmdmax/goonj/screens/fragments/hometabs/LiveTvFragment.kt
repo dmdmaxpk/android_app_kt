@@ -40,12 +40,13 @@ class LiveTvFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mView.initialize();
+        mView.displayPrayerTime();
     }
 
     override fun onStart() {
         super.onStart()
         mView.getLogger().println("onStart")
-        if(!mView.getPrefs().isDontAsk()){
+        /*if(!mView.getPrefs().isDontAsk()){
             Handler().postDelayed(Runnable{
                 if (
                         !ContextCompat.checkSelfPermission(context as BaseActivity, Manifest.permission.ACCESS_FINE_LOCATION).equals(PackageManager.PERMISSION_GRANTED) ||
@@ -57,13 +58,12 @@ class LiveTvFragment: BaseFragment() {
                     mView.displayPrayerTime();
                 }
             }, 1000);
-        }
+        }*/
     }
 
     override fun onStop() {
         super.onStop()
         mView.cancelTimer();
-        mView.getLogger().println("onStop")
     }
 
     private fun openLocationPermissionDialog(){

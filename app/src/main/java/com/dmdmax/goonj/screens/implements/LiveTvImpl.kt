@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,9 +16,11 @@ import com.dmdmax.goonj.adapters.HomeSliderAdapter
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.gps.GPSHelper
 import com.dmdmax.goonj.models.Channel
+import com.dmdmax.goonj.models.City
 import com.dmdmax.goonj.models.SliderModel
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
+import com.dmdmax.goonj.screens.dialogs.DialogManager
 import com.dmdmax.goonj.screens.views.LiveTvView
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.JSONParser
@@ -37,12 +40,16 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
 
     private lateinit var mCity: TextView;
     private lateinit var mTime: TextView;
+    private lateinit var mNoCitySelection: TextView;
 
     private lateinit var mTimer: Timer;
 
     private lateinit var mCatWiseLiveChannels: LinearLayout;
 
     private var currentItem: Int = 0;
+
+    private lateinit var mProgressBar: ProgressBar;
+    private lateinit var mNamezTimeLayout: LinearLayout;
 
     constructor(inflater: LayoutInflater, parent: ViewGroup) {
         setRootView(inflater.inflate(R.layout.fragment_livetv, parent, false));
@@ -53,6 +60,9 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
         mIndicator = findViewById(R.id.slider_indicator)
 
         mCity = findViewById(R.id.city);
+        mNoCitySelection = findViewById(R.id.click_here);
+        mProgressBar = findViewById(R.id.progress_bar);
+        mNamezTimeLayout = findViewById(R.id.namaz_time_layout);
         mTime = findViewById(R.id.time);
         mTimer = Timer();
 
@@ -169,10 +179,25 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
     }
 
     override fun displayPrayerTime() {
-        getLogger().println("displayPrayerTime")
+
         if(getPrefs().getCity().isEmpty()){
-            getLogger().println("isEmpty")
-            val mHelper = GPSHelper(getContext());
+            mNoCitySelection.visibility = View.VISIBLE;
+            mNoCitySelection.setOnClickListener(object: View.OnClickListener {
+                override fun onClick(v: View?) {
+                    DialogManager().displayCityDialog(getContext(), object : DialogManager.CitySelectionListener {
+                        override fun onCitySelected(city: City) {
+                            mCity.text = city.getCity();
+                            mCity.visibility = View.VISIBLE;
+                            getPrefs().setCity(city.getCity());
+                            getPrefs().setCoords(city.getLatitude(), city.getLongitude());
+                            mNoCitySelection.visibility = View.GONE;
+                            fetchTodayNamazTimeAndSet(getPrefs().getLat(), getPrefs().getLng());
+                        }
+                    });
+                }
+            });
+
+            /*val mHelper = GPSHelper(getContext());
             if(!mHelper.isLocationEnabled()){
                 getLogger().println("isLocationEnabled - not")
                 mHelper.displaySwitchOnSettingsDialog();
@@ -189,26 +214,26 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
                         fetchTodayNamazTimeAndSet(lat, lng, alt);
                     }
                 });
-            }
+            }*/
         }else{
-            getLogger().println("isEmpty - not")
-            mCity.text = getPrefs().getCity().split(",")[0];
+            mNoCitySelection.visibility = View.GONE;
+            mCity.text = getPrefs().getCity();
             mCity.visibility = View.VISIBLE;
-
-            getLogger().println("This is double: "+getPrefs().getLat())
-            fetchTodayNamazTimeAndSet(getPrefs().getLat(), getPrefs().getLng(), getPrefs().getAlt());
+            fetchTodayNamazTimeAndSet(getPrefs().getLat(), getPrefs().getLng());
         }
     }
 
-    private fun fetchTodayNamazTimeAndSet(lat: Double, lng: Double, alt: Double){
+    private fun fetchTodayNamazTimeAndSet(lat: Double, lng: Double){
         RestClient(
-                getContext(), "https://api.pray.zone/v2/times/today.json?latitude=${lat}&longitude=${lng}&elevation=${alt}",
+                getContext(), "https://api.pray.zone/v2/times/today.json?latitude=${lat}&longitude=${lng}&elevation=62.75",
                 RestClient.Companion.Method.GET,
                 null,
                 object : NetworkOperationListener {
                     override fun onSuccess(response: String?) {
                         val nextNamaz = Utility.getNextNamazTime(response!!);
                         mTime.text = nextNamaz;
+                        mProgressBar.visibility = View.GONE;
+                        mNamezTimeLayout.visibility = View.VISIBLE
                     }
 
                     override fun onFailed(code: Int, reason: String?) {

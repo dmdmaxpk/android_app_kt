@@ -67,26 +67,51 @@
                         android:textAllCaps="true"
                         android:textStyle="bold"
                         android:padding="5dp"
-                        android:background="@drawable/city_bg"/>
+                        android:background="@drawable/city_bg"
+                        android:clickable="true"/>
                 </LinearLayout>
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|end">
-                    <ImageView
-                        android:src="@drawable/clock"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp" />
-                    <TextView
-                        android:id="@+id/time"
-                        android:layout_width="wrap_content"
+                    android:layout_weight="1">
+                    <LinearLayout
+                        android:id="@+id/namaz_time_layout"
+                        android:visibility="gone"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="5dp"
-                        android:paddingRight="10dp"/>
-                </LinearLayout>
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical|end">
+                        <ImageView
+                            android:src="@drawable/clock"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp" />
+                        <TextView
+                            android:id="@+id/time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="5dp"
+                            android:paddingRight="10dp"/>
+                    </LinearLayout>
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </FrameLayout>
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/click_here"
+                    android:gravity="center"
+                    android:text="Click here to see local namaz time"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:textSize="13sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/category_wise_live_channels"
