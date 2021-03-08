@@ -65,43 +65,10 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
         mPlayerManager = ExoPlayerManager();
         mPrefs = GoonjPrefs(getContext());
 
-        mPlayerManager.init(getContext());
-        mPlayer.player = mPlayerManager.getPlayer();
-        mPlayer.player.playWhenReady = true;
-        mPlayer.useController = false;
-        mPlayer.player.addListener(object : Player.EventListener {
-            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                super.onPlayerStateChanged(playWhenReady, playbackState)
+        // init player
+        mPlayerManager.init(getContext(), mPlayer);
 
-                // Loading Time
-                if (playbackState == Player.STATE_READY) {
-                    mPlayer.useController = true;
-                    Logger.println("STATE_READY");
-                    if(mPlayer.player.playWhenReady){
-                        // Currently playing
-                        mPlayer.findViewById<ImageButton>(R.id.exo_pause).visibility = View.VISIBLE;
-                        mPlayer.findViewById<ImageButton>(R.id.exo_play).visibility = View.GONE;
-                    }else{
-                        // Stopped
-                        mPlayer.findViewById<ImageButton>(R.id.exo_pause).visibility = View.GONE;
-                        mPlayer.findViewById<ImageButton>(R.id.exo_play).visibility = View.VISIBLE;
-                    }
-                    mPlayer.findViewById<ProgressBar>(R.id.exo_buffering).visibility = View.GONE;
-                }else if(playbackState == Player.STATE_BUFFERING) {
-                    Logger.println("STATE_BUFFERING");
-                    mPlayer.findViewById<ImageButton>(R.id.exo_pause).visibility = View.GONE;
-                    mPlayer.findViewById<ImageButton>(R.id.exo_play).visibility = View.GONE;
-                    mPlayer.findViewById<ProgressBar>(R.id.exo_buffering).visibility = View.VISIBLE;
-                }else{
-                    Logger.println("ELSE");
-                    mPlayer.findViewById<ImageButton>(R.id.exo_pause).visibility = View.GONE;
-                    mPlayer.findViewById<ImageButton>(R.id.exo_play).visibility = View.VISIBLE;
-                    mPlayer.findViewById<ProgressBar>(R.id.exo_buffering).visibility = View.GONE;
-                }
-            }
-        })
-
-
+        // play media
         val model = MediaModel();
         model.setLive(true)
         model.setId(id);

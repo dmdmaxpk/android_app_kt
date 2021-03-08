@@ -401,8 +401,8 @@ class GoonjPrefs {
     fun getGlobalBitrate(): String? {
         return if (prefs != null) prefs!!.getString(
             "globalBitrate",
-            Constants.NewBitRates.BITRATE_AUTO
-        ) else Constants.NewBitRates.BITRATE_AUTO
+            Constants.Companion.NewBitRates.BITRATE_AUTO
+        ) else Constants.Companion.NewBitRates.BITRATE_AUTO
     }
 
     fun setFcmToken(token: String?) {

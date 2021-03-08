@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
+    <!--    HEADER STARTS-->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -13,20 +14,29 @@
         android:layout_gravity="top"
         android:padding="5dp"
         android:gravity="end">
-        <ImageView
-            android:src="@drawable/music"
+        <ImageButton
+            android:id="@+id/exo_volume"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:padding="3dp"
-            android:cropToPadding="true"/>
-        <ImageView
+            android:padding="2dp"
+            android:cropToPadding="true"
+            android:scaleType="fitXY"
+            style="@style/ExoMediaButton.Play"
+            android:layout_marginRight="5dp"/>
+        <ImageButton
+            android:id="@+id/exo_settings"
             android:src="@drawable/setting"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:padding="5dp"
-            android:cropToPadding="true"/>
+            android:cropToPadding="true"
+            android:scaleType="fitXY"
+            style="@style/ExoMediaButton.Play"
+            android:layout_marginRight="5dp"/>
     </LinearLayout>
+    <!--    HEADER ENDS-->
 
+    <!--    MIDDLE STARTS-->
     <LinearLayout
         android:id="@+id/middle"
         android:layout_width="match_parent"
@@ -37,9 +47,29 @@
         android:orientation="horizontal">
         <ImageButton android:scaleType="fitXY" android:layout_height="80dp" android:layout_width="80dp" android:visibility="gone" android:id="@id/exo_play" style="@style/ExoMediaButton.Play" android:src="@drawable/play"/>
         <ImageButton android:scaleType="fitXY" android:layout_height="80dp" android:layout_width="80dp" android:visibility="gone" android:id="@id/exo_pause" style="@style/ExoMediaButton.Pause" android:src="@drawable/pause"/>
-
     </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:background="@color/black"
+        android:orientation="vertical"
+        android:id="@+id/exo_bitrate_layout"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:gravity="center">
+        <GridView
+            android:numColumns="4"
+            android:id="@+id/exo_bitrate_grid"
+            android:layout_width="match_parent"
+            android:layout_height="48dp" />
+    </LinearLayout>
+    <!--    MIDDLE ENDS-->
 
+    <!--    FOOTER STARTS-->
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
@@ -49,5 +79,6 @@
         android:layout_gravity="bottom">
 
     </LinearLayout>
+    <!--    FOOTER ENDS-->
 
 </FrameLayout>

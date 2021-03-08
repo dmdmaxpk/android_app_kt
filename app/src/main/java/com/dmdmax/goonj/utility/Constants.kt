@@ -143,6 +143,85 @@ public class Constants {
 
         private var currentWindow = 0
         private var playbackPos: Long = 0
+
+
+        object NewBitRates {
+            const val BITRATE_AUTO = "Auto"
+            const val BITRATE_DATA_SAVER = "Data Saver"
+            const val BITRATE_MEDIUM = "Medium"
+            const val BITRATE_HIGH = "High"
+        }
+
+        fun getBitrates(context: Context?): ArrayList<BitRatesModel> {
+            val prefs = GoonjPrefs(context)
+            val bitRates: ArrayList<BitRatesModel> = ArrayList<BitRatesModel>()
+            bitRates.add(
+                    BitRatesModel(
+                            0,
+                            NewBitRates.BITRATE_AUTO,
+                            prefs.getGlobalBitrate().equals(NewBitRates.BITRATE_AUTO)
+                    )
+            )
+            bitRates.add(
+                    BitRatesModel(
+                            1,
+                            NewBitRates.BITRATE_DATA_SAVER,
+                            prefs.getGlobalBitrate().equals(NewBitRates.BITRATE_DATA_SAVER)
+                    )
+            )
+            bitRates.add(
+                    BitRatesModel(
+                            2,
+                            NewBitRates.BITRATE_MEDIUM,
+                            prefs.getGlobalBitrate().equals(NewBitRates.BITRATE_MEDIUM)
+                    )
+            )
+            bitRates.add(
+                    BitRatesModel(
+                            3,
+                            NewBitRates.BITRATE_HIGH,
+                            prefs.getGlobalBitrate().equals(NewBitRates.BITRATE_HIGH)
+                    )
+            )
+            return bitRates
+        }
+
+        fun getVodStreamingLink(filename: String): String {
+            Logger.println("filename: $filename")
+            return VOD_URL + "/smil:" + removeFileExtension(filename) + "/playlist.m3u8"
+        }
+
+        fun getNewVodStreamingLink(filename: String): String? {
+            return VOD_URL + removeNewFileExtension(filename) + VOD_POSTFIX_URL + getNewFileExtension(
+                    filename
+            ) + VOD_END_URL
+        }
+
+        fun getNewFileExtension(filename: String): String {
+            return "." + filename.split("\\.").toTypedArray()[filename.split("\\.")
+                    .toTypedArray().size - 1]
+        }
+
+        fun getExtension(filename: String?): String {
+            if (filename != null) {
+                val splitString = filename.split("\\.").toTypedArray()
+                return "." + splitString[splitString.size - 1]
+            }
+            return ".m3u8"
+        }
+
+        private fun removeFileExtension(filename: String?): String {
+            return if (filename != null) {
+                val splitString = filename.split("\\.").toTypedArray()
+                filename.replace(splitString[splitString.size - 1], "smil")
+            } else {
+                ""
+            }
+        }
+
+        private fun removeNewFileExtension(filename: String?): String {
+            return filename?.split("\\.")?.toTypedArray()?.get(0) ?: ""
+        }
     }
 
     fun setPlayerState(currentWindow: Int, playbackPos: Long) {
@@ -158,84 +237,6 @@ public class Constants {
         return playbackPos
     }
 
-
-    fun getVodStreamingLink(filename: String): String? {
-        Logger.println("filename: $filename")
-        return VOD_URL + "/smil:" + removeFileExtension(filename) + "/playlist.m3u8"
-    }
-
-    fun getNewVodStreamingLink(filename: String): String? {
-        return VOD_URL + removeNewFileExtension(filename) + VOD_POSTFIX_URL + getNewFileExtension(
-            filename
-        ) + VOD_END_URL
-    }
-
-    fun getNewFileExtension(filename: String): String {
-        return "." + filename.split("\\.").toTypedArray()[filename.split("\\.")
-            .toTypedArray().size - 1]
-    }
-
-    fun getExtension(filename: String?): String? {
-        if (filename != null) {
-            val splitString = filename.split("\\.").toTypedArray()
-            return "." + splitString[splitString.size - 1]
-        }
-        return ".m3u8"
-    }
-
-    private fun removeFileExtension(filename: String?): String {
-        return if (filename != null) {
-            val splitString = filename.split("\\.").toTypedArray()
-            filename.replace(splitString[splitString.size - 1], "smil")
-        } else {
-            ""
-        }
-    }
-
-    private fun removeNewFileExtension(filename: String?): String {
-        return filename?.split("\\.")?.toTypedArray()?.get(0) ?: ""
-    }
-
-    object NewBitRates {
-        const val BITRATE_AUTO = "Auto"
-        const val BITRATE_DATA_SAVER = "Data Saver"
-        const val BITRATE_MEDIUM = "Medium"
-        const val BITRATE_HIGH = "High"
-    }
-
-    fun getNewBitrates(context: Context?): ArrayList<BitRatesModel>? {
-        val prefs = GoonjPrefs(context)
-        val bitRates: ArrayList<BitRatesModel> = ArrayList<BitRatesModel>()
-        bitRates.add(
-            BitRatesModel(
-                0,
-                NewBitRates.BITRATE_AUTO,
-                prefs.getGlobalBitrate().equals(NewBitRates.BITRATE_AUTO)
-            )
-        )
-        bitRates.add(
-            BitRatesModel(
-                1,
-                NewBitRates.BITRATE_DATA_SAVER,
-                prefs.getGlobalBitrate().equals(NewBitRates.BITRATE_DATA_SAVER)
-            )
-        )
-        bitRates.add(
-            BitRatesModel(
-                2,
-                NewBitRates.BITRATE_MEDIUM,
-                prefs.getGlobalBitrate().equals(NewBitRates.BITRATE_MEDIUM)
-            )
-        )
-        bitRates.add(
-            BitRatesModel(
-                3,
-                NewBitRates.BITRATE_HIGH,
-                prefs.getGlobalBitrate().equals(NewBitRates.BITRATE_HIGH)
-            )
-        )
-        return bitRates
-    }
 
     object ThumbnailManager {
         fun getVodThumbnail(filename: String?): String {

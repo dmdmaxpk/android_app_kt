@@ -142,13 +142,13 @@ class Utility {
         // Function to generate selected bitrate URL for VOD
         fun generateVodUrl(selectedBitrate: String, url: String, extensionOfFile: String): String? {
             var url = url
-            if (selectedBitrate == Constants.NewBitRates.BITRATE_AUTO) {
+            if (selectedBitrate == Constants.Companion.NewBitRates.BITRATE_AUTO) {
                 return url
-            } else if (selectedBitrate == Constants.NewBitRates.BITRATE_DATA_SAVER) {
+            } else if (selectedBitrate == Constants.Companion.NewBitRates.BITRATE_DATA_SAVER) {
                 url = parseVodUrl(url, "baseline_144$extensionOfFile")
-            } else if (selectedBitrate == Constants.NewBitRates.BITRATE_MEDIUM) {
+            } else if (selectedBitrate == Constants.Companion.NewBitRates.BITRATE_MEDIUM) {
                 url = parseVodUrl(url, "main_360$extensionOfFile")
-            } else if (selectedBitrate == Constants.NewBitRates.BITRATE_HIGH) {
+            } else if (selectedBitrate == Constants.Companion.NewBitRates.BITRATE_HIGH) {
                 url = parseVodUrl(url, "main_480$extensionOfFile")
             }
             return url
@@ -156,6 +156,7 @@ class Utility {
 
         // Function to generate selected bitrate URL for live
         fun generateLiveUrl(selectedBitrate: String, url: String): String? {
+            Logger.println("Selected Bitrates: "+selectedBitrate)
             return parseLiveUrl(url, selectedBitrate)
         }
 
@@ -170,11 +171,11 @@ class Utility {
             if (getChannelPrefix(url).isEmpty()) {
                 return ""
             }
-            return if (bitrate == Constants.NewBitRates.BITRATE_AUTO) getChannelPrefix(url) + ".m3u8" else if (bitrate == Constants.NewBitRates.BITRATE_DATA_SAVER) getChannelPrefix(
+            return if (bitrate == Constants.Companion.NewBitRates.BITRATE_AUTO) getChannelPrefix(url) + ".m3u8" else if (bitrate == Constants.Companion.NewBitRates.BITRATE_DATA_SAVER) getChannelPrefix(
                     url
-            ) + "_144p/index.m3u8" else if (bitrate == Constants.NewBitRates.BITRATE_MEDIUM) getChannelPrefix(
+            ) + "_144p/index.m3u8" else if (bitrate == Constants.Companion.NewBitRates.BITRATE_MEDIUM) getChannelPrefix(
                     url
-            ) + "_360p/index.m3u8" else if (bitrate == Constants.NewBitRates.BITRATE_HIGH) getChannelPrefix(
+            ) + "_360p/index.m3u8" else if (bitrate == Constants.Companion.NewBitRates.BITRATE_HIGH) getChannelPrefix(
                     url
             ) + "_480p/index.m3u8" else getChannelPrefix(url) + ".m3u8"
         }

@@ -4,6 +4,7 @@ class MediaModel {
 
     private var vodId: String? = null
     private var url: String? = null
+    private lateinit var filename: String;
 
     fun isLive(): Boolean {
         return isLive
@@ -22,6 +23,15 @@ class MediaModel {
 
     fun setId(vodId: String?) {
         this.vodId = vodId
+    }
+
+
+    fun getFilename(): String {
+        return filename
+    }
+
+    fun setFilename(name: String) {
+        this.filename = name;
     }
 
     fun getUrl(): String? {
