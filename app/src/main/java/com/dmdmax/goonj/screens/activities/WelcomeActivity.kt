@@ -46,6 +46,10 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
             0 -> {
                 getCompositionRoot().getViewFactory().toHomePage(null);
             }
+
+            1 -> {
+                getCompositionRoot().getViewFactory().toBottomLiveTvPage(null);
+            }
         }
     }
 

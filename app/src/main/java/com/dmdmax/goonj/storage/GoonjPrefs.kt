@@ -98,7 +98,7 @@ class GoonjPrefs {
         return getTopics(prefs!!.getString(KEY_TOPICS, ""))
     }
 
-    fun getChannels(): List<Channel?>? {
+    fun getChannels(): ArrayList<Channel> {
         return getChannels(prefs!!.getString(KEY_CHANNELS, ""))
     }
 
@@ -479,12 +479,12 @@ class GoonjPrefs {
         return gson.fromJson<List<Topic?>>(json, object : TypeToken<List<Topic?>?>() {}.type)
     }
 
-    private fun getChannels(json: String?): List<Channel?>? {
+    private fun getChannels(json: String?): ArrayList<Channel> {
         return if (json != null && !json.isEmpty()) {
             val gson = Gson()
-            gson.fromJson<List<Channel?>>(json, object : TypeToken<List<Channel?>?>() {}.type)
+            gson.fromJson(json, object : TypeToken<List<Channel>>() {}.type)
         } else {
-            ArrayList<Channel?>()
+            ArrayList()
         }
     }
 }

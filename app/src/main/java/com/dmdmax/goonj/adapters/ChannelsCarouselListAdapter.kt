@@ -20,13 +20,21 @@ class ChannelsCarouselListAdapter: RecyclerView.Adapter<ChannelsCarouselListAdap
 
     private var list: ArrayList<Channel>? = null
     private var context: Context? = null
+    private var listener: OnItemClickListener? = null;
 
-    constructor(
-        list: ArrayList<Channel>?,
-        context: Context?
-    ) {
+    constructor(list: ArrayList<Channel>?, context: Context?) {
         this.list = list
         this.context = context;
+    }
+
+    interface OnItemClickListener{
+        fun onClick(channel: Channel, position: Int)
+    }
+
+    constructor(list: ArrayList<Channel>?, context: Context?, listener: OnItemClickListener?) {
+        this.list = list
+        this.context = context;
+        this.listener = listener;
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -47,24 +55,29 @@ class ChannelsCarouselListAdapter: RecyclerView.Adapter<ChannelsCarouselListAdap
                 }
             }
             )
+
         holder.thumbnail.setOnClickListener {
-            if(!(context as BaseActivity is PlayerActivity)){
-                val intent = Intent(context, PlayerActivity::class.java)
-                intent.putExtra(PlayerActivity.ARGS_NAME, list!![holder.adapterPosition].getName())
-                intent.putExtra(PlayerActivity.ARGS_ID, list!![holder.adapterPosition].getId())
-                intent.putExtra(PlayerActivity.ARGS_HLS, list!![holder.adapterPosition].getHlsLink())
-                intent.putExtra(PlayerActivity.ARGS_THUMBNAIL, list!![holder.adapterPosition].getThumbnail())
-                intent.putExtra(PlayerActivity.ARGS_CHANNELS, list);
-                context!!.startActivity(intent)
+            if(listener != null){
+                listener?.onClick(list!![holder.adapterPosition], holder.adapterPosition);
             }else{
-                val intent = Intent(context, PlayerActivity::class.java)
-                intent.putExtra(PlayerActivity.ARGS_NAME, list!![holder.adapterPosition].getName())
-                intent.putExtra(PlayerActivity.ARGS_ID, list!![holder.adapterPosition].getId())
-                intent.putExtra(PlayerActivity.ARGS_HLS, list!![holder.adapterPosition].getHlsLink())
-                intent.putExtra(PlayerActivity.ARGS_THUMBNAIL, list!![holder.adapterPosition].getThumbnail())
-                intent.putExtra(PlayerActivity.ARGS_CHANNELS, list);
-                context!!.startActivity(intent)
-                (context as BaseActivity).finish()
+                if(!(context as BaseActivity is PlayerActivity)){
+                    val intent = Intent(context, PlayerActivity::class.java)
+                    intent.putExtra(PlayerActivity.ARGS_NAME, list!![holder.adapterPosition].getName())
+                    intent.putExtra(PlayerActivity.ARGS_ID, list!![holder.adapterPosition].getId())
+                    intent.putExtra(PlayerActivity.ARGS_HLS, list!![holder.adapterPosition].getHlsLink())
+                    intent.putExtra(PlayerActivity.ARGS_THUMBNAIL, list!![holder.adapterPosition].getThumbnail())
+                    intent.putExtra(PlayerActivity.ARGS_CHANNELS, list);
+                    context!!.startActivity(intent)
+                }else{
+                    val intent = Intent(context, PlayerActivity::class.java)
+                    intent.putExtra(PlayerActivity.ARGS_NAME, list!![holder.adapterPosition].getName())
+                    intent.putExtra(PlayerActivity.ARGS_ID, list!![holder.adapterPosition].getId())
+                    intent.putExtra(PlayerActivity.ARGS_HLS, list!![holder.adapterPosition].getHlsLink())
+                    intent.putExtra(PlayerActivity.ARGS_THUMBNAIL, list!![holder.adapterPosition].getThumbnail())
+                    intent.putExtra(PlayerActivity.ARGS_CHANNELS, list);
+                    context!!.startActivity(intent)
+                    (context as BaseActivity).finish()
+                }
             }
         }
     }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
+import com.dmdmax.goonj.screens.fragments.BottomMenuLiveTvFragment
 import com.dmdmax.goonj.screens.fragments.HomeCategoryFragment
 import com.dmdmax.goonj.screens.fragments.HomeFragment
 import com.dmdmax.goonj.screens.implements.*
@@ -55,8 +56,16 @@ class BaseViewFactory {
         return LiveTvImpl(mLayoutInflater, parent);
     }
 
+    fun getBottomMenuLiveTvView(parent: ViewGroup): BottomMenuLiveTvView {
+        return BottomMenuLiveTvImpl(mLayoutInflater, parent);
+    }
+
     fun toHomePage(bundle: Bundle?) {
         mFragmentFrameHelper.replaceFragmentDontAddToBackstack(HomeFragment.newInstance(bundle))
+    }
+
+    fun toBottomLiveTvPage(bundle: Bundle?) {
+        mFragmentFrameHelper.replaceFragmentDontAddToBackstack(BottomMenuLiveTvFragment.newInstance(bundle))
     }
 
     fun getPlayerViewImpl(parent: ViewGroup?): PlayerView {
