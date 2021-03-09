@@ -179,8 +179,8 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
     }
 
     override fun displayPrayerTime() {
-
         if(getPrefs().getCity().isEmpty()){
+            mProgressBar.visibility = View.GONE;
             mNoCitySelection.visibility = View.VISIBLE;
             mNoCitySelection.setOnClickListener(object: View.OnClickListener {
                 override fun onClick(v: View?) {
@@ -220,6 +220,22 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
             mCity.text = getPrefs().getCity();
             mCity.visibility = View.VISIBLE;
             fetchTodayNamazTimeAndSet(getPrefs().getLat(), getPrefs().getLng());
+
+            mCity.setOnClickListener(object: View.OnClickListener {
+                override fun onClick(v: View?) {
+                    DialogManager().displayCityDialog(getContext(), object : DialogManager.CitySelectionListener {
+                        override fun onCitySelected(city: City) {
+                            mCity.text = city.getCity();
+                            mCity.visibility = View.VISIBLE;
+                            mProgressBar.visibility = View.VISIBLE;
+
+                            getPrefs().setCity(city.getCity());
+                            getPrefs().setCoords(city.getLatitude(), city.getLongitude());
+                            fetchTodayNamazTimeAndSet(getPrefs().getLat(), getPrefs().getLng());
+                        }
+                    });
+                }
+            });
         }
     }
 
