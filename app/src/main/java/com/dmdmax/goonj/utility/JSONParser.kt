@@ -1,10 +1,12 @@
 package com.dmdmax.goonj.utility
 
+import android.content.Context
 import android.util.Log
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.SliderModel
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.models.Video
+import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants.ThumbnailManager.getLiveThumbnail
 import org.json.JSONArray
 import java.util.*
@@ -36,11 +38,6 @@ class JSONParser {
                 e.printStackTrace()
             }
             return list
-        }
-
-        fun getCategoryWiseChannel(json: String?, category: String): ArrayList<Channel> {
-            val list = getLiveChannels(json);
-            return list!!.filter { s -> s.getCategory() == category } as ArrayList<Channel>
         }
 
         fun getSlider(json: String?): ArrayList<SliderModel> {
@@ -87,7 +84,7 @@ class JSONParser {
             return list
         }
 
-        fun getFeed(json: String?): ArrayList<Video>? {
+        fun getFeed(json: String?): ArrayList<Video> {
             val list: ArrayList<Video> = ArrayList()
             try {
                 val rootArray = JSONArray(json)

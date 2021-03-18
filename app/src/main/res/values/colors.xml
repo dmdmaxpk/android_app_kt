@@ -28,5 +28,6 @@
     <color name="dark_gray">#6f6f6f</color>
     <color name="hint_cloudy_gray">#33B6B6B4</color>
     <color name="grayed_out">#D0555454</color>
-    <color name="dark_navy_blue">#22254c</color>
+    <color name="dark_navy_blue">#212448</color>
+    <color name="light_navy_blue">#26284b</color>
 </resources>

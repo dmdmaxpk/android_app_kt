@@ -101,6 +101,7 @@ public class Constants {
             const val POST_VIDEO_VIEWS = "video/views"
             const val POST_LIVE_VIEWS = "live/views"
             const val GET_ANCHOR_VIDEOS = "video?anchor="
+            const val GET_USER_PROFILE = "user?msisdn="
             const val GET_PROGRAM_VIDEOS = "video?program="
             const val GET_TOPIC_VIDEOS = "video?topics="
             const val GET_CHANNEL_VIDEOS = "video?source="

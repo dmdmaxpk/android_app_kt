@@ -50,6 +50,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
 
     private lateinit var mProgressBar: ProgressBar;
     private lateinit var mNamezTimeLayout: LinearLayout;
+    private lateinit var mLeftLayout: LinearLayout;
 
     constructor(inflater: LayoutInflater, parent: ViewGroup) {
         setRootView(inflater.inflate(R.layout.fragment_livetv, parent, false));
@@ -63,6 +64,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
         mNoCitySelection = findViewById(R.id.click_here);
         mProgressBar = findViewById(R.id.progress_bar);
         mNamezTimeLayout = findViewById(R.id.namaz_time_layout);
+        mLeftLayout = findViewById(R.id.left_layout);
         mTime = findViewById(R.id.time);
         mTimer = Timer();
 
@@ -134,7 +136,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
             override fun onSuccess(response: String?) {
                 getPrefs().setChannels(JSONParser.getLiveChannels(response));
                 for (i in 0 until rootObj.length()) {
-                    displaySingleCategoryChannel(rootObj.getJSONObject(i).getString("cat_name"), JSONParser.getCategoryWiseChannel(response, rootObj.getJSONObject(i).getString("url")));
+                    displaySingleCategoryChannel(rootObj.getJSONObject(i).getString("cat_name"), Utility.getCategoryWiseChannel(response, rootObj.getJSONObject(i).getString("url"), null));
                 }
             }
 
@@ -220,23 +222,23 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
             mCity.text = getPrefs().getCity();
             mCity.visibility = View.VISIBLE;
             fetchTodayNamazTimeAndSet(getPrefs().getLat(), getPrefs().getLng());
-
-            mCity.setOnClickListener(object: View.OnClickListener {
-                override fun onClick(v: View?) {
-                    DialogManager().displayCityDialog(getContext(), object : DialogManager.CitySelectionListener {
-                        override fun onCitySelected(city: City) {
-                            mCity.text = city.getCity();
-                            mCity.visibility = View.VISIBLE;
-                            mProgressBar.visibility = View.VISIBLE;
-
-                            getPrefs().setCity(city.getCity());
-                            getPrefs().setCoords(city.getLatitude(), city.getLongitude());
-                            fetchTodayNamazTimeAndSet(getPrefs().getLat(), getPrefs().getLng());
-                        }
-                    });
-                }
-            });
         }
+
+        mCity.setOnClickListener(object: View.OnClickListener {
+            override fun onClick(v: View?) {
+                DialogManager().displayCityDialog(getContext(), object : DialogManager.CitySelectionListener {
+                    override fun onCitySelected(city: City) {
+                        mCity.text = city.getCity();
+                        mCity.visibility = View.VISIBLE;
+                        mProgressBar.visibility = View.VISIBLE;
+
+                        getPrefs().setCity(city.getCity());
+                        getPrefs().setCoords(city.getLatitude(), city.getLongitude());
+                        fetchTodayNamazTimeAndSet(getPrefs().getLat(), getPrefs().getLng());
+                    }
+                });
+            }
+        });
     }
 
     private fun fetchTodayNamazTimeAndSet(lat: Double, lng: Double){
@@ -250,6 +252,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
                         mTime.text = nextNamaz;
                         mProgressBar.visibility = View.GONE;
                         mNamezTimeLayout.visibility = View.VISIBLE
+                        mLeftLayout.visibility = View.VISIBLE
                     }
 
                     override fun onFailed(code: Int, reason: String?) {

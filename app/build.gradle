@@ -13,8 +13,8 @@ android {
         applicationId "com.dmdmax.goonj"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 10
-        versionName "1.0"
+        versionCode 2605
+        versionName "2.6.0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -81,4 +81,6 @@ dependencies {
 
     // MultiDex
     implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 }

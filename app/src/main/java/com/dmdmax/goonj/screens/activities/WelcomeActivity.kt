@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.screens.views.WelcomeView
 import com.dmdmax.goonj.utility.Logger
+import com.dmdmax.goonj.utility.Utility
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
 class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
@@ -49,6 +50,10 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
 
             1 -> {
                 getCompositionRoot().getViewFactory().toBottomLiveTvPage(null);
+            }
+
+            4 -> {
+                getCompositionRoot().getViewFactory().toBottomSettings(null);
             }
         }
     }

@@ -47,6 +47,7 @@
                 android:background="@drawable/namaz_time_bg"
                 android:weightSum="2">
                 <LinearLayout
+                    android:id="@+id/left_layout"
                     android:paddingLeft="10dp"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

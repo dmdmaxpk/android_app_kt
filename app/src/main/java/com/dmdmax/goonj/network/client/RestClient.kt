@@ -56,6 +56,7 @@ class RestClient {
         object Method {
             const val GET = "GET"
             const val POST = "POST"
+            const val PUT = "PUT"
         }
     }
 
@@ -131,6 +132,18 @@ class RestClient {
                 addRequest(jRequest);
             } else if (Method.POST.equals(mMethod)) {
                 val jRequest: JsonRequest<*> = object : JsonObjectRequest(Method.POST, mLink, mBody, JsonSuccessListener(), ErrorListener()) {
+                    override fun getHeaders(): Map<String, String> {
+                        if (mPrefs!!.getAccessToken() != null) {
+                            return getAuthHeaders(category)
+                        } else if (category != null && category == ComedyFragment.SLUG) {
+                            return getAuthHeaders(ComedyFragment.SLUG)
+                        }
+                        return HashMap()
+                    }
+                }
+                addRequest(jRequest);
+            } else if (Method.PUT.equals(mMethod)) {
+                val jRequest: JsonRequest<*> = object : JsonObjectRequest(Method.PUT, mLink, mBody, JsonSuccessListener(), ErrorListener()) {
                     override fun getHeaders(): Map<String, String> {
                         if (mPrefs!!.getAccessToken() != null) {
                             return getAuthHeaders(category)

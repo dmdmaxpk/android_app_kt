@@ -39,6 +39,7 @@ class BottomMenuLiveTvFragment: BaseFragment(), BottomMenuLiveTvView.Listener {
     override fun onStop() {
         super.onStop()
         mView.unregisterListener(this);
+        mView.pauseStreaming();
     }
 
     override fun goBack() {

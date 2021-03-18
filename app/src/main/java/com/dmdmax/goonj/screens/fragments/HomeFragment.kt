@@ -18,7 +18,7 @@ class HomeFragment: BaseFragment(), HomeView.Listener {
 
     companion object {
         fun newInstance(args: Bundle?): HomeFragment {
-            val fragment: HomeFragment = HomeFragment();
+            val fragment = HomeFragment();
             if (args != null) {
                 fragment.arguments = args;
             }

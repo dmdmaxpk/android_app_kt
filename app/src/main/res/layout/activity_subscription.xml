@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/back_gradient">
+
+    <FrameLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:src="@drawable/back_arrow"
+            android:layout_gravity="center_vertical"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:padding="12dp"
+            android:cropToPadding="true"/>
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="subscriptions"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"/>
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:paddingLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="live paywall"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textAllCaps="true"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/live_paywall_layout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.dmdmax.goonj.utility.WrapContentListView
+                    android:id="@+id/live_paywall_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dp"/>
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:paddingLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="comedy paywall"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textAllCaps="true"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/comedy_paywall_layout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.dmdmax.goonj.utility.WrapContentListView
+                    android:id="@+id/comedy_paywall_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:paddingLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="contact us"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textAllCaps="true"/>
+            </LinearLayout>
+
+            <FrameLayout
+                android:paddingLeft="15dp"
+                android:id="@+id/contact_us_layout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/light_navy_blue">
+                <TextView
+                    android:text="Click here to contact us"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"/>
+
+                <TextView
+                    android:id="@+id/contact_us_mobile_number"
+                    android:text="03xxxxxxxxxx"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:paddingRight="15dp"/>
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:paddingLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="about"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textAllCaps="true"/>
+            </LinearLayout>
+
+            <FrameLayout
+                android:paddingLeft="15dp"
+                android:id="@+id/about_layout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/light_navy_blue">
+                <TextView
+                    android:text="App Version"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"/>
+
+                <TextView
+                    android:layout_marginTop="2dp"
+                    android:id="@+id/app_version"
+                    android:text="03xxxxxxxxxx"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:paddingRight="15dp"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_marginTop="2dp"
+                android:paddingLeft="15dp"
+                android:id="@+id/view_privacy_policy"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/light_navy_blue">
+                <TextView
+                    android:text="View Privacy Policy"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_marginTop="2dp"
+                android:paddingLeft="15dp"
+                android:id="@+id/view_terms_conditions"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/light_navy_blue">
+                <TextView
+                    android:text="View Terms &amp; Conditions"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"/>
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+
+

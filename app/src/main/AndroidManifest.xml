@@ -17,7 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Goonj">
-        <activity android:name=".screens.activities.PlayerActivity"></activity>
+        <activity android:name=".screens.activities.SubscriptionActivity"></activity>
+        <activity android:name=".screens.activities.MyProfileActivity" />
+        <activity android:name=".screens.activities.WebViewActivity" />
+        <activity android:name=".screens.activities.PlayerActivity" />
         <activity android:name=".screens.activities.WelcomeActivity" />
         <activity android:name=".screens.activities.VerificationActivity" />
         <activity android:name=".screens.activities.SigninActivity" />

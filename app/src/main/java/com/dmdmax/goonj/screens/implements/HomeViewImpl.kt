@@ -13,6 +13,7 @@ import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.screens.fragments.HomeCategoryFragment
+import com.dmdmax.goonj.screens.fragments.hometabs.GenericCategoryFragment
 import com.dmdmax.goonj.screens.fragments.hometabs.LiveTvFragment
 import com.dmdmax.goonj.screens.views.HomeView
 import com.dmdmax.goonj.utility.*
@@ -98,11 +99,11 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
 
         for (tab in tabsModelList) {
             val bundle = Bundle()
-            bundle.putSerializable(HomeCategoryFragment.ARGS_TAB, tab)
+            bundle.putSerializable(GenericCategoryFragment.ARGS_TAB, tab)
             if(tab.getTabName()!!.toLowerCase().equals("live tv")){
                 fragmentList.add(LiveTvFragment.newInstance(bundle))
             }else{
-                fragmentList.add(HomeCategoryFragment.newInstance(bundle))
+                fragmentList.add(GenericCategoryFragment.newInstance(bundle))
             }
         }
         return fragmentList;
@@ -119,8 +120,8 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
 
         override fun getPageTitle(position: Int): CharSequence? {
             val bundle = categoryFragments[position].arguments
-            return if (bundle != null && bundle.containsKey(HomeCategoryFragment.ARGS_TAB)) {
-                (bundle.getSerializable(HomeCategoryFragment.ARGS_TAB) as TabModel?)!!.getTabName();
+            return if (bundle != null && bundle.containsKey(GenericCategoryFragment.ARGS_TAB)) {
+                (bundle.getSerializable(GenericCategoryFragment.ARGS_TAB) as TabModel?)!!.getTabName();
             } else ""
         }
     }

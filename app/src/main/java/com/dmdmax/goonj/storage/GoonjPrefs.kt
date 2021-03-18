@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.provider.MediaStore
 import com.dmdmax.goonj.models.*
 import com.dmdmax.goonj.screens.fragments.ChannelsFragment
+import com.dmdmax.goonj.screens.fragments.ComedyFragment
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import com.google.gson.Gson
@@ -115,11 +116,11 @@ class GoonjPrefs {
         }
     }
 
-    fun getMsisdn(slug: String): String? {
-        return if (slug == ChannelsFragment.SLUG) {
-            getLiveMsisdn()
+    fun getMsisdn(slug: String?): String? {
+        return if (slug == ComedyFragment.SLUG) {
+            getComedyMsisdn();
         } else {
-            getComedyMsisdn()
+            getLiveMsisdn();
         }
     }
 
@@ -311,6 +312,14 @@ class GoonjPrefs {
 
     fun getUserId(): String? {
         return prefs!!.getString("user_id", "null")
+    }
+
+    fun setUsername(value: String?) {
+        editor!!.putString("username_full", value).commit()
+    }
+
+    fun getUsername(): String? {
+        return prefs!!.getString("username_full", "")
     }
 
     fun setSubscribedPackageId(value: String?, slug: String) {

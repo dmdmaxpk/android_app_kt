@@ -24,6 +24,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 class Utility {
 
@@ -60,7 +61,7 @@ class Utility {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         }
 
-        fun getAgoTime(datetime: String): String? {
+        fun getAgoTime(datetime: String): String {
             return DateUtils.getRelativeTimeSpanString(
                     getTimeInMillis(datetime),
                     System.currentTimeMillis(),
@@ -460,6 +461,17 @@ class Utility {
             mCal.set(Calendar.HOUR_OF_DAY, time.split(' ')[1].split(":")[0].toIntOrNull()!!);
             mCal.set(Calendar.MINUTE, time.split(' ')[1].split(":")[1].toIntOrNull()!!);
             return mCal;
+        }
+
+        fun getCategoryWiseChannel(json: String?, category: String, context: Context?): ArrayList<Channel> {
+            var list: ArrayList<Channel>;
+            if(json != null){
+                list = JSONParser.getLiveChannels(json);
+            }else{
+                list = GoonjPrefs(context).getChannels();
+            }
+
+            return list!!.filter { s -> s.getCategory() == category } as ArrayList<Channel>
         }
     }
 }

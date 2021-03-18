@@ -46,7 +46,7 @@ class Video: Serializable {
     private var added_dtm: String? = null
 
     @SerializedName("publish_dtm")
-    private var publishDtm: String? = null
+    private lateinit var publishDtm: String
 
     @SerializedName("views_count")
     private var viewsCount = 0
@@ -150,7 +150,7 @@ class Video: Serializable {
         this.added_dtm = added_dtm
     }
 
-    fun setPublishDtm(publishDtm: String?) {
+    fun setPublishDtm(publishDtm: String) {
         this.publishDtm = publishDtm
     }
 
@@ -158,8 +158,16 @@ class Video: Serializable {
         this.viewsCount = viewsCount
     }
 
-    fun setmAnchorsList(mAnchorsList: List<Anchor>?) {
+    fun setmAnchorsList(mAnchorsList: List<Anchor>) {
         this.mAnchorsList = mAnchorsList
+    }
+
+    fun setChannelsList(mChannelsList: ArrayList<Channel>) {
+        this.mChannelsList = mChannelsList
+    }
+
+    fun getChannelsList(): ArrayList<Channel> {
+       return this.mChannelsList;
     }
 
     fun setmProgramsList(mProgramsList: List<Program>?) {
@@ -170,13 +178,14 @@ class Video: Serializable {
         this.tag = tag
     }
 
-    private var mAnchorsList: List<Anchor>? = null
+    private lateinit var mChannelsList: ArrayList<Channel>;
+    private lateinit var mAnchorsList: List<Anchor>;
     private var mProgramsList: List<Program>? = null
 
     private var tag: Int? = null
 
     enum class TileType {
-        TILE_TYPE_AD, TILE_TYPE_THUMBNAIL, TILE_TYPE_PROGRAMS, TILE_TYPE_SHOW, TILE_TYPE_EPISODE, TILE_TYPE_PRANKS, TILE_TYPE_ANCHORS, TILE_TYPE_TOPICS, TILE_TYPE_FOOTER, TILE_TYPE_SEARCH_RESULT_LAYOUT, TILE_TYPE_CUSTOM_AD
+         TILE_TYPE_THUMBNAIL, TILE_TYPE_RELATED_CHANNELS,TILE_TYPE_PROGRAMS, TILE_TYPE_SHOW, TILE_TYPE_EPISODE, TILE_TYPE_PRANKS, TILE_TYPE_ANCHORS, TILE_TYPE_TOPICS, TILE_TYPE_FOOTER, TILE_TYPE_SEARCH_RESULT_LAYOUT, TILE_TYPE_CUSTOM_AD
     }
 
     private var tileType = TileType.TILE_TYPE_THUMBNAIL
@@ -250,7 +259,7 @@ class Video: Serializable {
         return added_dtm
     }
 
-    fun getPublishDtm(): String? {
+    fun getPublishDtm(): String {
         return publishDtm
     }
 
@@ -268,10 +277,6 @@ class Video: Serializable {
 
     fun getAnchorsList(): List<Anchor>? {
         return mAnchorsList
-    }
-
-    fun setAnchorsList(mAnchors: List<Anchor>?) {
-        mAnchorsList = mAnchors
     }
 
     fun issPremiumVideo(): Boolean {
