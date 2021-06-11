@@ -5,15 +5,14 @@ import android.net.Uri
 import android.os.Handler
 import android.view.View
 import android.widget.*
-import android.widget.AdapterView.OnItemClickListener
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.adapters.BitrateAdapter
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseApplication
 import com.dmdmax.goonj.models.BitRatesModel
 import com.dmdmax.goonj.models.MediaModel
-import com.dmdmax.goonj.screens.fragments.ChannelsFragment
-import com.dmdmax.goonj.screens.fragments.ComedyFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
@@ -27,11 +26,13 @@ import com.google.android.exoplayer2.source.hls.DefaultHlsDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import java.util.*
 
 
 class ExoPlayerManager: View.OnClickListener {
@@ -51,6 +52,10 @@ class ExoPlayerManager: View.OnClickListener {
     private lateinit var mExoBuffering: ProgressBar;
     private lateinit var mExoVolume: ImageButton;
     private lateinit var mExoSettings: ImageButton;
+    private lateinit var mTimeBar: DefaultTimeBar;
+
+    private lateinit var mPositionView: TextView;
+    private lateinit var mDurationView: TextView;
 
     private lateinit var mMediaModel: MediaModel;
 
@@ -69,14 +74,16 @@ class ExoPlayerManager: View.OnClickListener {
         this.mPlayerView = playerView;
         mPrefs = GoonjPrefs(context);
         this.mContext = context;
-
         this.mPlayerView.player = getPlayer();
 
         mExoPause = this.mPlayerView.findViewById(R.id.exo_pause);
+        mPositionView = this.mPlayerView.findViewById(R.id.exo_position);
+        mDurationView = this.mPlayerView.findViewById(R.id.exo_duration);
         mExoPlay = this.mPlayerView.findViewById(R.id.exo_play);
         mExoBuffering = this.mPlayerView.findViewById(R.id.exo_buffering);
         mExoVolume = this.mPlayerView.findViewById(R.id.exo_volume);
         mExoSettings = this.mPlayerView.findViewById(R.id.exo_settings);
+        mTimeBar = this.mPlayerView.findViewById(R.id.exo_progress)
 
         mExoBitrateLayout = this.mPlayerView.findViewById(R.id.exo_bitrate_layout);
         mExoBitrateGrid = this.mPlayerView.findViewById(R.id.exo_bitrate_grid);
@@ -84,6 +91,16 @@ class ExoPlayerManager: View.OnClickListener {
         setIconsOnPlayers();
 
         addListeners();
+    }
+
+    fun hideControllers(){
+        mPlayerView.useController = false;
+        mPlayerView.hideController();
+    }
+
+    fun showController(){
+        mPlayerView.useController = true;
+        mPlayerView.showController();
     }
 
     fun setIconsOnPlayers(){
@@ -96,22 +113,26 @@ class ExoPlayerManager: View.OnClickListener {
         mBitrateList = Constants.getBitrates(mContext);
         val mAdapter = BitrateAdapter(mBitrateList, mContext);
         mExoBitrateGrid.adapter = mAdapter;
-        mExoBitrateGrid.setOnItemClickListener(object : OnItemClickListener {
-            override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                mBitrateList.get(mAdapter.getCurrentSelected()).setSelected(false)
-                mBitrateList.get(position).setSelected(true)
-                mAdapter.notifyDataSetChanged()
-                Handler().postDelayed({ mExoBitrateLayout.visibility = View.GONE; isDefaultBitrateGridOn = true }, 700);
+        mExoBitrateGrid.setOnItemClickListener { parent, view, position, id ->
+            Logger.println("POSITION: $position")
+            mBitrateList.get(mAdapter.currentSelected).setSelected(false);
+            mAdapter.currentSelected = position;
 
-                // Play media
-                if (mMediaModel.isLive()) {
-                    mMediaModel.setUrl(Utility.generateLiveUrl(mBitrateList.get(position-1).getBitrate()!!, mMediaModel.getUrl()!!));
-                } else {
-                    mMediaModel.setUrl(Utility.generateVodUrl(mBitrateList.get(position-1).getBitrate()!!, Constants.getVodStreamingLink(mMediaModel.getFilename()), Constants.getExtension(mMediaModel.getFilename())));
-                }
-                playMedia(mMediaModel);
+            mBitrateList.get(mAdapter.currentSelected).setSelected(true)
+            mAdapter.notifyDataSetChanged()
+            Handler().postDelayed({
+                mExoBitrateLayout.visibility = View.GONE; isDefaultBitrateGridOn = true
+            }, 1000);
+
+            // Play media
+            if (mMediaModel.isLive) {
+                mMediaModel.url = (Utility.generateLiveUrl(mBitrateList[mAdapter.currentSelected].getBitrate()!!, mMediaModel.url!!));
+            } else {
+                mMediaModel.url = (Utility.generateVodUrl(mBitrateList[mAdapter.currentSelected].getBitrate()!!, mMediaModel.filename!!));
             }
-        });
+            mMediaModel.shouldMaintainState = true;
+            playMedia(mMediaModel);
+        };
     }
 
     fun playMedia(mediaModel: MediaModel){
@@ -122,11 +143,11 @@ class ExoPlayerManager: View.OnClickListener {
         BaseApplication.getInstance().setCookies()
 
         var url: String
-        if (!mediaModel.isLive()) url =
-            mediaModel.getUrl() + "?uid=" + Utility.getDeviceId(mContext)  + "&media_id=" + mediaModel.getId() else {
+        if (!mediaModel.isLive) url =
+            mediaModel.url + "?uid=" + Utility.getDeviceId(mContext)  + "&media_id=" + mediaModel.id else {
             try {
                 url =
-                    mediaModel.getUrl() + "?user_id=" + mPrefs.getUserId() + "&uid=" + Utility.getDeviceId(mContext) + "&media_id=" + mediaModel.getId()
+                    mediaModel.url + "?user_id=" + mPrefs.getUserId(PaywallGoonjFragment.SLUG) + "&uid=" + Utility.getDeviceId(mContext) + "&media_id=" + mediaModel.id
                 val commands = arrayOf(
                         "-k",
                         Constants.SECURITY_KEY,
@@ -147,23 +168,30 @@ class ExoPlayerManager: View.OnClickListener {
         url = url.replace(" ".toRegex(), "%20")
         Logger.println("Stream URL: $url")
 
-        val msisdn = if (mPrefs.getMsisdn(ChannelsFragment.SLUG) != null) mPrefs.getMsisdn(ChannelsFragment.SLUG) else if (mPrefs.getMsisdn(ComedyFragment.SLUG) != null) mPrefs.getMsisdn(ComedyFragment.SLUG) else "null"
-        val userAgent = "msisdn_" + msisdn + "_ua:goonjlive"
-        val hlsDataSourceFactory: HlsDataSourceFactory = DefaultHlsDataSourceFactory(DefaultDataSourceFactory(mContext, Util.getUserAgent(mContext, userAgent), DefaultBandwidthMeter()))
-        val mediaSource: MediaSource? =
-            HlsMediaSource.Factory(hlsDataSourceFactory).createMediaSource(
-                    Uri.parse(url)
-            )
+        var mediaSource: MediaSource? = buildMediaSource(Uri.parse(url), null, mediaModel.isLive)
+
         if (mediaSource != null) {
-            if (!mediaModel.isLive()) {
-                mPlayer.prepare(mediaSource, true, false)
-            } else {
+            if(mMediaModel.shouldMaintainState){
                 mPlayer.prepare(mediaSource, false, true)
+            }else{
+                if (!mediaModel.isLive) {
+                    mPlayer.prepare(mediaSource, true, false)
+
+                    mTimeBar.visibility = View.VISIBLE
+                    mDurationView.setVisibility(View.VISIBLE)
+                    mPositionView.setVisibility(View.VISIBLE)
+                } else {
+                    mTimeBar.visibility = View.INVISIBLE
+                    mDurationView.setVisibility(View.GONE)
+                    mPositionView.setVisibility(View.GONE)
+
+                    mPlayer.prepare(mediaSource, false, true)
+
+                }
             }
         }
-
+        hideControllers();
         this.mPlayerView.player.playWhenReady = true;
-        this.mPlayerView.useController = false;
     }
 
     fun getPlayer(): SimpleExoPlayer {
@@ -175,7 +203,7 @@ class ExoPlayerManager: View.OnClickListener {
     }
 
     fun resume(){
-        mPlayer.playWhenReady = true;
+        mPlayer?.playWhenReady = true;
     }
 
     fun mute(){
@@ -201,7 +229,11 @@ class ExoPlayerManager: View.OnClickListener {
 
                 // Loading Time
                 if (playbackState == Player.STATE_READY) {
-                    mPlayerView.useController = true;
+                    Logger.println("USE CONTROLLER: ${!mMediaModel.isLive}")
+
+                    showController();
+                    //mPlayerView.useController = !mMediaModel.isLive();
+
                     Logger.println("STATE_READY");
                     if (mPlayerView.player.playWhenReady) {
                         // Currently playing
@@ -239,22 +271,20 @@ class ExoPlayerManager: View.OnClickListener {
             }
 
             mExoSettings -> {
-                if (isDefaultBitrateGridOn) {
+                if (!isDefaultBitrateGridOn) {
                     mExoBitrateLayout.visibility = View.VISIBLE;
-                    isDefaultBitrateGridOn = false;
+                    isDefaultBitrateGridOn = true;
                 } else {
                     mExoBitrateLayout.visibility = View.GONE;
-                    isDefaultBitrateGridOn = true;
+                    isDefaultBitrateGridOn = false;
                 }
             }
         }
     }
 
-    private fun buildMediaSource(uri: Uri, adTag: String?): MediaSource? {
-        val msisdn = if (mPrefs.getMsisdn(ChannelsFragment.SLUG) != null) mPrefs.getMsisdn(
-                ChannelsFragment.SLUG
-        ) else if (mPrefs.getMsisdn(ComedyFragment.SLUG) != null) mPrefs.getMsisdn(ComedyFragment.SLUG) else "null"
-        val userAgent = "msisdn_" + msisdn + "_ua:goonjvod"
+    private fun buildMediaSource(uri: Uri, adTag: String?, live: Boolean): MediaSource? {
+        val msisdn = if (mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) != null) mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) else if (mPrefs.getMsisdn(PaywallComedyFragment.SLUG) != null) mPrefs.getMsisdn(PaywallComedyFragment.SLUG) else "null"
+        val userAgent = "msisdn_" + msisdn + (if(live) "_ua:goonjlive" else "_ua:goonjvod")
 
         val mHlsDsFactory: HlsDataSourceFactory = DefaultHlsDataSourceFactory(
                 DefaultDataSourceFactory(
@@ -285,5 +315,4 @@ class ExoPlayerManager: View.OnClickListener {
         }
         return null
     }
-
 }

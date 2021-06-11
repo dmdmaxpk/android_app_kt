@@ -19,7 +19,7 @@ class LoginImpl: BaseObservableView<LoginView.Listener>, LoginView, View.OnClick
     private lateinit var mScreenTitle: TextView;
 
     constructor(inflater: LayoutInflater, parent: ViewGroup?) {
-        setRootView(inflater.inflate(R.layout.activity_login, parent, false));
+        setRootView(inflater.inflate(R.layout.paywall_goonj_fragment, parent, false));
     }
 
     override fun initialize() {

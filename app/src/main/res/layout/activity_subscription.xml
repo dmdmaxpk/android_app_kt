@@ -38,61 +38,15 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:paddingLeft="15dp"
+                android:id="@+id/paywallDetails"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:orientation="vertical"
-                android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="live paywall"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textAllCaps="true"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/live_paywall_layout"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.dmdmax.goonj.utility.WrapContentListView
-                    android:id="@+id/live_paywall_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dp"/>
-            </LinearLayout>
-
-
-
-            <LinearLayout
-                android:paddingLeft="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:orientation="vertical"
-                android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="comedy paywall"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textAllCaps="true"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/comedy_paywall_layout"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.dmdmax.goonj.utility.WrapContentListView
-                    android:id="@+id/comedy_paywall_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ProgressBar
+                    android:layout_gravity="center"
+                    android:id="@+id/packagesPb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
             <LinearLayout

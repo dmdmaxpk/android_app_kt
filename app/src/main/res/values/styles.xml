@@ -25,12 +25,4 @@
         <item name="android:textColor">@color/light_blue</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
-
-    <!--- SeekBar Style -->
-    <style name="playerSeekStyle" parent="@android:style/Widget.SeekBar">
-        <item name="android:progressDrawable">@drawable/progressbar</item>
-        <item name="android:thumb">@drawable/progressbar_thumb</item>
-        <item name="android:minHeight">2dip</item>
-        <item name="android:maxHeight">3dip</item>
-    </style>
 </resources>

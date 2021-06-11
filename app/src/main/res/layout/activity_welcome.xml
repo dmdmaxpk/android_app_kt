@@ -22,7 +22,7 @@
             android:layout_height="match_parent"/>
         <LinearLayout
             android:layout_gravity="right"
-            android:layout_width="120dp"
+            android:layout_width="70dp"
             android:layout_height="match_parent"
             android:gravity="center">
 
@@ -36,6 +36,7 @@
                 android:clickable="true"/>
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/search"
                 android:layout_marginRight="5dp"
                 android:cropToPadding="true"
@@ -59,7 +60,6 @@
             android:padding="5dp"
             android:background="@color/bottom_sheet_background"
             android:id="@+id/bottom_grid"
-            android:numColumns="5"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:gravity="center_vertical"/>

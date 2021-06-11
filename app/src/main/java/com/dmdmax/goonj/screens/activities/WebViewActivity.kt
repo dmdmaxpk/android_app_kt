@@ -32,7 +32,7 @@ class WebViewActivity : BaseActivity() {
         if (page == "terms") {
             startWebView(Constants.TERMS_URL)
         }
-        if (page == "privacy policy") {
+        if (page == "privacy-policy") {
             startWebView(Constants.PRIVACY_POLICY_URL)
         }
     }

@@ -14,7 +14,6 @@ import com.dmdmax.goonj.models.City
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.utility.Constants
-import com.dmdmax.goonj.utility.Logger
 import org.json.JSONArray
 
 
@@ -27,6 +26,8 @@ class DialogManager {
         builder.setCancelable(false)
         return builder
     }
+
+
 
     interface LocationPermissionClickListener{
         fun onPositiveButtonClick();
@@ -152,6 +153,29 @@ class DialogManager {
         }).exec();
 
         mDialog.show();
+    }
+
+    fun getUnSubDialog(context: Context?, message: String?): AlertDialog {
+        val view: View = LayoutInflater.from(context).inflate(R.layout.custom_unsub_dialog, null)
+        val messageTxtView = view.findViewById<TextView>(R.id.message)
+        messageTxtView.text = message
+        val builder = AlertDialog.Builder(context, R.style.CustomAlertDialogTheme)
+        builder.setCancelable(false)
+        builder.setView(view)
+        builder.setPositiveButton("Yes", null)
+        builder.setNegativeButton("Cancel", null)
+        return builder.create()
+    }
+
+    fun getSubscriptionDialog(context: Context?): AlertDialog {
+        val view: View =
+            LayoutInflater.from(context).inflate(R.layout.custom_subscription_dialog, null)
+        val builder = AlertDialog.Builder(context, R.style.CustomAlertDialogTheme)
+        builder.setCancelable(false)
+        builder.setView(view)
+        builder.setPositiveButton("Subscribe", null)
+        builder.setNegativeButton("Cancel", null)
+        return builder.create()
     }
 
     private inner class CityAdapter: BaseAdapter, Filterable {

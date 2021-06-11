@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorPrimary">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_layout"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/logo_include"
+            layout="@layout/binjee_header_logo"/>
+
+
+        <TextView
+            android:id="@+id/watch_live_tv_anytime_anywhere"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/logo_include"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="@string/shows_web_series_darama_action_ncomedy_and_pranks"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/package_name"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@id/watch_live_tv_anytime_anywhere"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="subscribe to package"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/package_price"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/package_name"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="Rs. 3 + tax / DAY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorRed"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/consent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/package_price"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="Daily charges of Rs. 3+tax will be\ndeducted from your mobile balance."
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
+
+
+        <LinearLayout
+            android:id="@+id/subscribe_now"
+            android:background="@drawable/simple_focused_button_selector"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/consent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="30dp"
+            android:clickable="true"
+            android:gravity="center">
+            <TextView
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:text="@string/subscribe_now"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <TextView
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@string/by_subscribing_you_are_giving_consent_to_renewal_ncharging"
+            android:textColor="@color/white"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

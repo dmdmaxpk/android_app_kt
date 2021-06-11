@@ -3,9 +3,10 @@ package com.dmdmax.goonj.screens.activities
 import android.content.Intent
 import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
-import com.dmdmax.goonj.network.client.RestClient
-import com.dmdmax.goonj.screens.views.LoginView
+import com.dmdmax.goonj.models.Channel
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.SigninView
+import com.dmdmax.goonj.utility.Constants
 
 class SigninActivity : BaseActivity(), SigninView.Listener {
 
@@ -19,7 +20,10 @@ class SigninActivity : BaseActivity(), SigninView.Listener {
     }
 
     private fun initialize(){
-        mView.initialize();
+        mView.initialize(
+                intent.extras?.getString(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE),
+                intent.extras?.getString(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE)
+        );
     }
 
     override fun onStart() {
@@ -34,8 +38,13 @@ class SigninActivity : BaseActivity(), SigninView.Listener {
 
     override fun next(msisdn: String) {
         val intent = Intent(this, VerificationActivity::class.java)
+
         intent.putExtra("msisdn", msisdn)
+        intent.putExtra(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE, getIntent().extras?.getString(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE));
+        intent.putExtra(PaywallGoonjFragment.ARG_PAYMENT_SOURCE, getIntent().extras?.getString(PaywallGoonjFragment.ARG_PAYMENT_SOURCE));
+        intent.putExtra(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE, getIntent().extras?.getString(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE));
         startActivity(intent);
+        finish();
     }
 
     override fun goBack() {
@@ -47,6 +56,8 @@ class SigninActivity : BaseActivity(), SigninView.Listener {
     }
 
     override fun viewPrivacyPolicy() {
-        mView.getToaster().printToast(this, "Privacy Policy!");
+        val intent = Intent(this, WebViewActivity::class.java)
+        intent.putExtra("page", "privacy-policy")
+        startActivity(intent);
     }
 }

@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseObservableView
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.screens.views.VerificationView
 
 class VerificationImpl: BaseObservableView<VerificationView.Listener>, VerificationView, View.OnClickListener {
@@ -24,13 +25,15 @@ class VerificationImpl: BaseObservableView<VerificationView.Listener>, Verificat
     private lateinit var mEt2: EditText;
     private lateinit var mEt3: EditText;
     private lateinit var mEt4: EditText;
+    private lateinit var mEt5: EditText;
+    private lateinit var mEt6: EditText;
     private lateinit var mWatcher: MyTextWathcer;
 
     constructor(inflater: LayoutInflater, parent: ViewGroup?) {
         setRootView(inflater.inflate(R.layout.activity_verification, parent, false));
     }
 
-    override fun initialize(msisdn: String) {
+    override fun initialize(msisdn: String, subscriptionSource: String?) {
         mVerificationCodeText = findViewById(R.id.verification_code_txt);
         mVerify = findViewById(R.id.verify);
         mVerify.setOnClickListener(this);
@@ -44,19 +47,29 @@ class VerificationImpl: BaseObservableView<VerificationView.Listener>, Verificat
         mEt2 = findViewById(R.id.et2);
         mEt3 = findViewById(R.id.et3);
         mEt4 = findViewById(R.id.et4);
+        mEt5 = findViewById(R.id.et5);
+        mEt6 = findViewById(R.id.et6);
 
         mWatcher = MyTextWathcer();
         mEt1.addTextChangedListener(mWatcher)
         mEt2.addTextChangedListener(mWatcher)
         mEt3.addTextChangedListener(mWatcher)
         mEt4.addTextChangedListener(mWatcher)
+
+        if(subscriptionSource?.equals(PaywallBinjeeFragment.SLUG) == true){
+            mEt5.addTextChangedListener(mWatcher)
+            mEt6.addTextChangedListener(mWatcher)
+        }else{
+            mEt5.visibility = View.GONE;
+            mEt6.visibility = View.GONE;
+        }
     }
 
     override fun onClick(v: View?) {
         when(v){
             mVerify -> {
                 if (mEt1.text != null && mEt1.length() == 1 && mEt2.text != null && mEt2.length() == 1 && mEt3.text != null && mEt3.length() == 1 && mEt4.text != null && mEt4.length() == 1) {
-                    val strOtp: String = mEt1.text.toString() + mEt2.text.toString() + mEt3.text.toString() + mEt4.text.toString()
+                    val strOtp: String = mEt1.text.toString() + mEt2.text.toString() + mEt3.text.toString() + mEt4.text.toString() + mEt5.text.toString() + mEt6.text.toString()
                     for (listener in getListeners()) {
                         listener.verify(strOtp);
                     }
@@ -87,7 +100,19 @@ class VerificationImpl: BaseObservableView<VerificationView.Listener>, Verificat
                 if (mEt3.length() == 1) {
                     mEt4.requestFocus()
                 }
+                if (mEt4.length() == 1) {
+                    mEt5.requestFocus()
+                }
+                if (mEt5.length() == 1) {
+                    mEt6.requestFocus()
+                }
             } else if (editable.isEmpty()) {
+                if (mEt6.length() == 0) {
+                    mEt5.requestFocus()
+                }
+                if (mEt5.length() == 0) {
+                    mEt4.requestFocus()
+                }
                 if (mEt4.length() == 0) {
                     mEt3.requestFocus()
                 }

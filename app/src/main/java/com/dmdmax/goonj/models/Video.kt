@@ -2,9 +2,12 @@ package com.dmdmax.goonj.models
 
 import com.dmdmax.goonj.utility.Constants
 import com.google.gson.annotations.SerializedName
+import org.json.JSONArray
 import java.io.Serializable
 
 class Video: Serializable {
+
+    private var key: String? = null;
 
     @SerializedName("_id")
     private var id: String? = null;
@@ -57,6 +60,15 @@ class Video: Serializable {
     private var slug: String? = null
     private var posterUrl: String? = null
     private var thumbnailUrl: String? = null
+    private var isLive: Boolean = false
+
+    fun setLive(live: Boolean){
+        this.isLive = live;
+    }
+
+    fun getLive(): Boolean {
+        return this.isLive;
+    }
 
     fun getVideoUrl(): String? {
         return videoUrl
@@ -74,6 +86,14 @@ class Video: Serializable {
 
     fun setSlug(slug: String?) {
         this.slug = slug
+    }
+
+    fun getKey(): String? {
+        return key
+    }
+
+    fun setKey(key: String?) {
+        this.key = key
     }
 
     fun getPosterUrl(): String? {
@@ -188,7 +208,7 @@ class Video: Serializable {
          TILE_TYPE_THUMBNAIL, TILE_TYPE_RELATED_CHANNELS,TILE_TYPE_PROGRAMS, TILE_TYPE_SHOW, TILE_TYPE_EPISODE, TILE_TYPE_PRANKS, TILE_TYPE_ANCHORS, TILE_TYPE_TOPICS, TILE_TYPE_FOOTER, TILE_TYPE_SEARCH_RESULT_LAYOUT, TILE_TYPE_CUSTOM_AD
     }
 
-    private var tileType = TileType.TILE_TYPE_THUMBNAIL
+    private lateinit var tileType: TileType;
 
     fun getTileType(): TileType {
         return tileType
@@ -250,7 +270,14 @@ class Video: Serializable {
         return duration
     }
 
-    fun getThumbnail(): String? {
+    fun getThumbnail(slug: String?): String? {
+        /*return if(slug != null){
+            Constants.ThumbnailManager.getSlugBaseImageUrl(slug, thumbnail!!);
+        }else{
+            if (getTileType() == TileType.TILE_TYPE_THUMBNAIL) Constants.ThumbnailManager.getVodThumbnail(thumbnail);
+            else thumbnail
+        }*/
+
         return if (getTileType() == TileType.TILE_TYPE_THUMBNAIL) Constants.ThumbnailManager.getVodThumbnail(thumbnail);
         else thumbnail
     }

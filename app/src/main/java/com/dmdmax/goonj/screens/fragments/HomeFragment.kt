@@ -31,9 +31,14 @@ class HomeFragment: BaseFragment(), HomeView.Listener {
         return mView.getRootView();
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mView.initialize();
+    }
+
     override fun onStart() {
         super.onStart()
-        mView.getRemoteConfigs();
+        //mView.getRemoteConfigs();
         mView.registerListener(this)
     }
 
@@ -44,9 +49,5 @@ class HomeFragment: BaseFragment(), HomeView.Listener {
 
     override fun goBack() {
         TODO("Not yet implemented")
-    }
-
-    override fun onCompleted() {
-        mView.initialize();
     }
 }

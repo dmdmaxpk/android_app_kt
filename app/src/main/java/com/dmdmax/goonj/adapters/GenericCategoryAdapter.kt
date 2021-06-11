@@ -6,15 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
-import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.models.Video
 import com.dmdmax.goonj.models.Video.TileType
-import com.dmdmax.goonj.screens.fragments.ComedyFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
+import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Utility
 import com.github.ybq.android.spinkit.SpinKitView
 import com.squareup.picasso.Callback
@@ -23,18 +22,18 @@ import com.squareup.picasso.Picasso
 class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     interface OnItemClickListener {
-        fun onVideoClick(position: Int, video: Video, tabModel: TabModel);
+        fun onVideoClick(position: Int, video: Video, tabModel: TabModel?);
     }
 
     private var mListener: OnItemClickListener? = null;
     private lateinit var mContext: Context;
     private lateinit var mListItems: ArrayList<Video>;
-    private lateinit var mTabModel: TabModel;
+    private var mTabModel: TabModel?;
 
     constructor(
         context: Context,
         listItems: ArrayList<Video>,
-        tabModel: TabModel,
+        tabModel: TabModel?,
         listener: OnItemClickListener?
     ) {
         this.mContext = context;
@@ -75,6 +74,7 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return when (mListItems[position].getTileType()) {
             TileType.TILE_TYPE_THUMBNAIL -> 0
             TileType.TILE_TYPE_RELATED_CHANNELS -> 1
+            TileType.TILE_TYPE_EPISODE -> 2
             else -> 0
         }
     }
@@ -95,6 +95,14 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     parent,
                     false
                 )
+            )
+
+            2 -> ThumbsViewHolder(
+                    LayoutInflater.from(mContext).inflate(
+                            R.layout.generic_category_item,
+                            parent,
+                            false
+                    )
             )
 
             else -> ThumbsViewHolder(
@@ -119,6 +127,11 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 bindCarouselView(viewHolder, viewHolder.adapterPosition, mListener)
             }
 
+            2 -> {
+                val episodeViewHolder = holder as ThumbsViewHolder
+                bindEpisodeViewHolder(episodeViewHolder, episodeViewHolder.adapterPosition, mListener)
+            }
+
             else -> {
                 val thumbsViewHolder = holder as ThumbsViewHolder
                 bindThumbsView(thumbsViewHolder, thumbsViewHolder.adapterPosition, mListener)
@@ -128,12 +141,36 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private fun bindThumbsView(thumbsViewHolder: ThumbsViewHolder, position: Int, listener: OnItemClickListener?) {
         thumbsViewHolder.mTitle.text = mListItems[position].getTitle();
-        thumbsViewHolder.mCount.text = mListItems[position].getViewsCount().toString() + " views";
+        //thumbsViewHolder.mCount.text = mListItems[position].getViewsCount().toString() + " views";
+
+        thumbsViewHolder.mCount.text = ((100..1000).random().toString() + " views");
 
         thumbsViewHolder.mTimeAgo.text = Utility.getAgoTime(mListItems.get(position).getPublishDtm());
 
         Picasso.get().load(
-            if (mTabModel.getSlug() == ComedyFragment.SLUG) mListItems[position].getThumbnailUrl() else mListItems[position].getThumbnail()).into(thumbsViewHolder.mThumbnail, object : Callback {
+            if (mTabModel?.getSlug() == PaywallComedyFragment.SLUG) mListItems[position].getThumbnailUrl() else mListItems[position].getThumbnail(mListItems[position].getSlug())).into(thumbsViewHolder.mThumbnail, object : Callback {
+            override fun onSuccess() {
+                thumbsViewHolder.mSpinKitView.visibility = View.GONE;
+            }
+
+            override fun onError(e: Exception) {
+                thumbsViewHolder.mThumbnail.setImageResource(R.drawable.no_image_found)
+                thumbsViewHolder.mSpinKitView.visibility = View.GONE;
+            }
+        });
+
+        thumbsViewHolder.mThumbnail.setOnClickListener(View.OnClickListener {
+            listener?.onVideoClick(position, mListItems[position], mTabModel)
+        })
+    }
+
+    private fun bindEpisodeViewHolder(thumbsViewHolder: ThumbsViewHolder, position: Int, listener: OnItemClickListener?) {
+        thumbsViewHolder.mTitle.text = mListItems[position].getTitle();
+        //thumbsViewHolder.mCount.text = mListItems[position].getViewsCount().toString() + " views";
+
+        //thumbsViewHolder.mTimeAgo.text = Utility.getAgoTime(mListItems.get(position).getPublishDtm());
+
+        Picasso.get().load(mListItems[position].getThumbnailUrl()).into(thumbsViewHolder.mThumbnail, object : Callback {
             override fun onSuccess() {
                 thumbsViewHolder.mSpinKitView.visibility = View.GONE;
             }
@@ -151,7 +188,7 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private fun bindCarouselView(viewHolder: CarouselViewHolder, position: Int, listener: OnItemClickListener?) {
         setRecyclerView(viewHolder.mCarousel);
-        viewHolder.mTitle.text = mTabModel.getCategory() + " CHANNELS";
+        viewHolder.mTitle.text = mTabModel?.getCategory() + " CHANNELS";
         viewHolder.mCarousel.adapter = ChannelsCarouselListAdapter(mListItems[position].getChannelsList(), mContext);
     }
 

@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.provider.MediaStore
 import com.dmdmax.goonj.models.*
-import com.dmdmax.goonj.screens.fragments.ChannelsFragment
-import com.dmdmax.goonj.screens.fragments.ComedyFragment
+import com.dmdmax.goonj.payments.ComedyPaymentHelper
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import com.google.gson.Gson
@@ -109,18 +111,22 @@ class GoonjPrefs {
 
     fun setMsisdn(number: String, slug: String) {
         Logger.println("Prefs - setMsisdn - $number - $slug")
-        if (slug == ChannelsFragment.SLUG) {
+        if (slug.equals(PaywallGoonjFragment.SLUG)) {
             setLiveMsisdn(number)
-        } else {
+        } else if(slug.equals(PaywallComedyFragment.SLUG)) {
             setComedyMsisdn(number)
+        }else{
+            setBinjeeMsisdn(number);
         }
     }
 
     fun getMsisdn(slug: String?): String? {
-        return if (slug == ComedyFragment.SLUG) {
-            getComedyMsisdn();
-        } else {
-            getLiveMsisdn();
+        return if (slug.equals(PaywallGoonjFragment.SLUG)) {
+            getLiveMsisdn()
+        } else if(slug.equals(PaywallComedyFragment.SLUG)){
+            getComedyMsisdn()
+        }else{
+            getBinjeeMsisdn();
         }
     }
 
@@ -156,12 +162,20 @@ class GoonjPrefs {
         editor!!.putString("comedyCellNum", number).commit()
     }
 
+    private fun setBinjeeMsisdn(number: String) {
+        editor!!.putString("binjeeCellNum", number).commit()
+    }
+
     private fun getLiveMsisdn(): String? {
         return prefs!!.getString("cellNum", null)
     }
 
     private fun getComedyMsisdn(): String? {
         return prefs!!.getString("comedyCellNum", null)
+    }
+
+    private fun getBinjeeMsisdn(): String? {
+        return prefs!!.getString("binjeeCellNum", null)
     }
 
     fun getLocationPermissionCounter(): Int {
@@ -177,19 +191,56 @@ class GoonjPrefs {
     }
 
     fun setSubscriptionStatus(value: String?, slug: String) {
-        if (slug == ChannelsFragment.SLUG) {
+        if (slug == PaywallGoonjFragment.SLUG) {
             setLiveSubscriptionStatus(value)
-        } else {
+        } else if(slug == PaywallComedyFragment.SLUG) {
             setComedySubscriptionStatus(value)
+        }else{
+            setCBinjeeSubscriptionStatus(value)
         }
     }
 
-    fun getSubscriptionStatus(slug: String): String? {
-        return if (slug == ChannelsFragment.SLUG) {
-            getLiveSubscriptionStatus()
-        } else {
-            getComedySubscriptionStatus()
+    fun setStreamable(value: Boolean, slug: String) {
+        if (slug == PaywallGoonjFragment.SLUG) {
+            setLiveStreamable(value);
+        }else if(slug == PaywallBinjeeFragment.SLUG){
+            setBinjeeStreamable(value);
         }
+    }
+
+    fun getStreamable(slug: String): Boolean {
+        if(slug == PaywallGoonjFragment.SLUG){
+            return getLiveStreamable();
+        }else {
+            return getBinjeeStreamable();
+        }
+
+    }
+
+    fun getSubscriptionStatus(slug: String): String? {
+        return if (slug == PaywallGoonjFragment.SLUG) {
+            getLiveSubscriptionStatus()
+        } else if(slug == PaywallComedyFragment.SLUG) {
+            getComedySubscriptionStatus()
+        }else{
+            getBinjeeSubscriptionStatus();
+        }
+    }
+
+    fun setLiveStreamable(value: Boolean) {
+        editor!!.putBoolean("liveStreamable", value).commit()
+    }
+
+    fun setBinjeeStreamable(value: Boolean) {
+        editor!!.putBoolean("binjeeStreamable", value).commit()
+    }
+
+    fun getLiveStreamable(): Boolean {
+        return prefs!!.getBoolean("liveStreamable", false);
+    }
+
+    fun getBinjeeStreamable(): Boolean {
+        return prefs!!.getBoolean("binjeeStreamable", false);
     }
 
     fun setLiveSubscriptionStatus(value: String?) {
@@ -204,114 +255,60 @@ class GoonjPrefs {
         editor!!.putString("ComedySubscriptionStatus", value).commit()
     }
 
+    fun setCBinjeeSubscriptionStatus(value: String?) {
+        editor!!.putString("BinjeeSubscriptionStatus", value).commit()
+    }
+
     fun getComedySubscriptionStatus(): String? {
         return prefs!!.getString("ComedySubscriptionStatus", "");
     }
 
-    fun setPaymentProcessing(value: Boolean, slug: String) {
-        if (slug == ChannelsFragment.SLUG) {
-            setLivePaymentProcessing(value)
-        } else {
-            setComedyPaymentProcessing(value)
+    fun getBinjeeSubscriptionStatus(): String? {
+        return prefs!!.getString("BinjeeSubscriptionStatus", "");
+    }
+
+    fun setUserId(value: String, slug: String) {
+        if(slug.equals(PaywallGoonjFragment.SLUG)){
+            return setGoonjUserId(value);
+        }else if(slug.equals(PaywallComedyFragment.SLUG)){
+            return setComedyUserId(value);
+        }else{
+            return setBinjeeUserId(value);
         }
     }
 
-    fun isPaymentProcessing(slug: String): Boolean {
-        return if (slug == ChannelsFragment.SLUG) {
-            isLivePaymentProcessing()
-        } else {
-            isComedyPaymentProcessing()
-        }
-    }
-
-    fun setLivePaymentProcessing(value: Boolean) {
-        editor!!.putBoolean("isProcessing", value).commit()
-    }
-
-    fun isLivePaymentProcessing(): Boolean {
-        return prefs!!.getBoolean("isProcessing", false)
-    }
-
-    fun setComedyPaymentProcessing(value: Boolean) {
-        editor!!.putBoolean("isComedyProcessing", value).commit()
-    }
-
-    fun isComedyPaymentProcessing(): Boolean {
-        return prefs!!.getBoolean("isComedyProcessing", false)
-    }
-
-
-    fun setAutoRenewal(value: Boolean, slug: String) {
-        if (slug == ChannelsFragment.SLUG) {
-            setLiveAutoRenewal(value)
-        } else {
-            setComedyAutoRenewal(value)
-        }
-    }
-
-    fun isAutoRenewal(slug: String): Boolean {
-        return if (slug == ChannelsFragment.SLUG) {
-            isLiveAutoRenewal()
-        } else {
-            isComedyAutoRenewal()
-        }
-    }
-
-    fun setLiveAutoRenewal(value: Boolean) {
-        editor!!.putBoolean("autoRenewal", value).commit()
-    }
-
-    fun isLiveAutoRenewal(): Boolean {
-        return prefs!!.getBoolean("autoRenewal", false)
-    }
-
-    fun setComedyAutoRenewal(value: Boolean) {
-        editor!!.putBoolean("comedyAutoRenewal", value).commit()
-    }
-
-    fun isComedyAutoRenewal(): Boolean {
-        return prefs!!.getBoolean("comedyAutoRenewal", false)
-    }
-
-
-    fun setStreamable(value: Boolean, slug: String) {
-        if (slug == ChannelsFragment.SLUG) {
-            setLiveStreamable(value)
-        } else {
-            setComedyStreamable(value)
-        }
-    }
-
-    fun isStreamable(slug: String): Boolean {
-        return if (slug == ChannelsFragment.SLUG) {
-            isLiveStreamable()
-        } else {
-            isComedyStreamable()
-        }
-    }
-
-    fun setLiveStreamable(value: Boolean) {
-        editor!!.putBoolean("isStreamable", value).commit()
-    }
-
-    fun isLiveStreamable(): Boolean {
-        return prefs!!.getBoolean("isStreamable", false)
-    }
-
-    fun setComedyStreamable(value: Boolean) {
-        editor!!.putBoolean("isComedyStreamable", value).commit()
-    }
-
-    fun isComedyStreamable(): Boolean {
-        return prefs!!.getBoolean("isComedyStreamable", false)
-    }
-
-    fun setUserId(value: String?) {
+    private fun setGoonjUserId(value: String){
         editor!!.putString("user_id", value).commit()
     }
 
-    fun getUserId(): String? {
+    private fun setComedyUserId(value: String){
+        editor!!.putString("comedy_user_id", value).commit()
+    }
+
+    private fun setBinjeeUserId(value: String){
+        editor!!.putString("binjee_user_id", value).commit()
+    }
+
+    fun getUserId(slug: String): String? {
+        if(slug.equals(PaywallGoonjFragment.SLUG)){
+            return getGoonjUserId();
+        }else if(slug.equals(PaywallComedyFragment.SLUG)){
+            return getComedyUserId();
+        }else{
+            return geBinjeetUserId();
+        }
+    }
+
+    fun getGoonjUserId(): String? {
         return prefs!!.getString("user_id", "null")
+    }
+
+    fun getComedyUserId(): String? {
+        return prefs!!.getString("comedy_user_id", "null")
+    }
+
+    fun geBinjeetUserId(): String? {
+        return prefs!!.getString("binjee_user_id", "null")
     }
 
     fun setUsername(value: String?) {
@@ -323,34 +320,22 @@ class GoonjPrefs {
     }
 
     fun setSubscribedPackageId(value: String?, slug: String) {
-        if (slug == ChannelsFragment.SLUG) {
+        if (slug == PaywallGoonjFragment.SLUG) {
             setLiveSubscribedPackageId(value)
-        } else {
+        } else if(slug == PaywallComedyFragment.SLUG) {
             setComedySubscribedPackageId(value)
+        }else{
+            setBinjeeSubscribedPackageId(value);
         }
     }
 
     fun getSubscribedPackageId(slug: String): String? {
-        return if (slug == ChannelsFragment.SLUG) {
+        return if (slug == PaywallGoonjFragment.SLUG) {
             getLiveSubscribedPackageId()
-        } else {
+        } else if(slug == PaywallComedyFragment.SLUG) {
             getComedySubscribedPackageId()
-        }
-    }
-
-    fun setPaymentSource(value: String?, slug: String) {
-        if (slug == ChannelsFragment.SLUG) {
-            setLivePaymentSource(value)
-        } else {
-            setComedyPaymentSource(value)
-        }
-    }
-
-    fun getPaymentSource(slug: String): String? {
-        return if (slug == ChannelsFragment.SLUG) {
-            getLivePaymentSource()
-        } else {
-            getComedyPaymentSource()
+        }else{
+            getBinjeeSubscribedPackageId();
         }
     }
 
@@ -368,8 +353,16 @@ class GoonjPrefs {
         editor!!.putString("comedySubPackageId", value).commit()
     }
 
+    fun setBinjeeSubscribedPackageId(value: String?) {
+        editor!!.putString("binjeeSubPackageId", value).commit()
+    }
+
     fun getComedySubscribedPackageId(): String? {
         return prefs!!.getString("comedySubPackageId", "")
+    }
+
+    fun getBinjeeSubscribedPackageId(): String? {
+        return prefs!!.getString("binjeeSubPackageId", "")
     }
 
     fun setLivePaymentSource(value: String?) {

@@ -67,16 +67,6 @@
             "carousel": "null"
             },
             {
-            "tabName": "KIDS",
-            "category": "kids",
-            "carousel": "null"
-            },
-            {
-            "tabName": "RELIGIOUS",
-            "category": "religious",
-            "carousel": "null"
-            },
-            {
             "tabName": "SPORTS",
             "category": "sports",
             "carousel": "null"
@@ -207,7 +197,7 @@
     </entry>
     <entry>
         <key>privacy_url</key>
-        <value>https://goonj.pk/privacy-policy/</value>
+        <value>https://goonj.pk/privacy-policy</value>
     </entry>
     <entry>
         <key>feed_limit</key>

@@ -28,6 +28,7 @@ public class Constants {
         val LIVE_QUERY = "/live?slug="
         val PIC_EXTENSION = ".webp"
         val VOD_THUMB = "video/thumb/"
+        val VOD_DRAMA = "video/drama/"
         val LIVE_LOGO = "live/logo/"
         val ANCHOR_PIC = "anchor/"
         val PROGRAMS_PIC = "programs/"
@@ -56,7 +57,7 @@ public class Constants {
         var EXCLUDE_PRE_ROLL_CHANNELS: List<String> = ArrayList()
         var IS_PAYWALL_ENABLED = false
         var HE_URL: String? = null
-        var CATEGORIES_STRING_JSON: String? = null
+        lateinit var CATEGORIES_STRING_JSON: String
         var CATEGORIES_CHANNEL_JSON: String? = null
         var COMEDY_CATEGORIES_STRING_JSON: String? = null
         var COMEDY_BASE_URL: String? = null
@@ -82,10 +83,11 @@ public class Constants {
         var PREROLL_LIVE_FREQ = 0
         var LIVE_URL: String? = null
         var VOD_URL: String? = null
-        var API_BASE_URL: String? = null
+        var API_BASE_URL: String? = "https://api.goonj.pk/v2/";
+        var BINJEE_API_BASE_URL: String = "https://binjee.com/api/";
         var CDN_STATIC_URL: String? = null
         var TERMS_URL: String? = null
-        var PRIVACY_POLICY_URL: String? = null
+        lateinit var PRIVACY_POLICY_URL: String
         var FEED_LIMIT = 0
         var IN_FEED_BANNER_AD_FREQ: String? = null
         lateinit var UPDATE_AVAILABLE_IMAGE: String;
@@ -107,6 +109,7 @@ public class Constants {
             const val GET_CHANNEL_VIDEOS = "video?source="
             const val VOD_DETAILS = "video?_id="
             const val VIDEO_BY_CATEGORY = "video?category="
+            const val VIDEO_BY_SUB_CATEGORY = "video?sub_category="
             const val VIDEO = "video"
             const val ANCHOR = "anchor"
             const val LIVE = "live"
@@ -114,11 +117,13 @@ public class Constants {
             const val TOPIC = "topic"
             const val PROGRAM = "program"
             const val CATEGORY = "category"
-            const val BANNER = "banner/list"
             const val CITIES = "city"
 
+            const val SUBCATEGORY = "subcategory?category_name="
+            const val VIDEO_SUB_CAT_WISE = "video?sub_category="
+
             // Paywall
-            const val STATUS = "payment/status"
+            const val CHECK_GOONJ_SUBSCRIPTION = "payment/status"
             const val PACKAGE = "package"
             const val PAYWALL = "paywall"
             const val SEND_OTP = "payment/otp/send"
@@ -135,12 +140,23 @@ public class Constants {
             const val REFRESH_TOKEN = "auth/refresh"
 
             // Comedy
-            const val GET_EPISODES = "rest-api/v100/episodes"
-            const val SEND_COMEDY_OTP = "rest-api/v100/signin"
+            const val COMEDY_GET_EPISODES = "rest-api/v100/episodes"
+            const val COMEDY_GET_SHOWS = "rest-api/v100/tv_shows"
+            const val COMEDY_SEND_COMEDY_OTP = "rest-api/v100/signin"
             const val GET_COMEDY_PACKAGES = "rest-api/v100/packages"
-            const val COMEDY_VERIFY_OTP = "rest-api/v100/verify_otp"
-            const val CHECK_SUBSCRIPTION = "rest-api/v100/check_subscription"
-            const val CANCEL_COMEDY_SUBSCRIPTION = "rest-api/v100/cancel_subscription"
+            const val COMEDY_COMEDY_VERIFY_OTP = "rest-api/v100/verify_otp"
+            const val CHECK_COMEDY_SUBSCRIPTION = "rest-api/v100/check_subscription"
+            const val COMEDY_CANCEL_COMEDY_SUBSCRIPTION = "rest-api/v100/cancel_subscription"
+
+            // Binjee
+            const val BINJEE_USERNAME = "b!nj330r!g!n@I5"
+            const val BINJEE_PASSWORD = "b!nj33at0n3tw0thr33"
+
+            const val BINJEE_SIGNUP = "signUpIn/userSignUp"
+            const val BINJEE_SIGNUP_PIN_RESEND = "signUpIn/userPinResend"
+            const val BINJEE_VALIDATE_OTP = "signUpIn/userPinValidation"
+            const val BINJEE_CHECK_STATUS = "signUpIn/querySubscriber"
+            const val BINJEE_UNSUBSCRIBE = "subscriber/unSubscribe"
         }
 
         private var currentWindow = 0
@@ -188,25 +204,19 @@ public class Constants {
             return bitRates
         }
 
-        fun getVodStreamingLink(filename: String): String {
-            Logger.println("filename: $filename")
-            return VOD_URL + "/smil:" + removeFileExtension(filename) + "/playlist.m3u8"
-        }
 
-        fun getNewVodStreamingLink(filename: String): String? {
-            return VOD_URL + removeNewFileExtension(filename) + VOD_POSTFIX_URL + getNewFileExtension(
-                    filename
-            ) + VOD_END_URL
+        /*fun getNewVodStreamingLink(filename: String): String? {
+            return VOD_URL + removeNewFileExtension(filename) + VOD_POSTFIX_URL + getNewFileExtension(filename) + VOD_END_URL
         }
 
         fun getNewFileExtension(filename: String): String {
-            return "." + filename.split("\\.").toTypedArray()[filename.split("\\.")
+            return "." + filename.split(".").toTypedArray()[filename.split(".")
                     .toTypedArray().size - 1]
         }
 
         fun getExtension(filename: String?): String {
             if (filename != null) {
-                val splitString = filename.split("\\.").toTypedArray()
+                val splitString = filename.split(".").toTypedArray()
                 return "." + splitString[splitString.size - 1]
             }
             return ".m3u8"
@@ -214,7 +224,7 @@ public class Constants {
 
         private fun removeFileExtension(filename: String?): String {
             return if (filename != null) {
-                val splitString = filename.split("\\.").toTypedArray()
+                val splitString = filename.split(".").toTypedArray()
                 filename.replace(splitString[splitString.size - 1], "smil")
             } else {
                 ""
@@ -222,8 +232,8 @@ public class Constants {
         }
 
         private fun removeNewFileExtension(filename: String?): String {
-            return filename?.split("\\.")?.toTypedArray()?.get(0) ?: ""
-        }
+            return filename?.split(".")?.toTypedArray()?.get(0) ?: ""
+        }*/
     }
 
     fun setPlayerState(currentWindow: Int, playbackPos: Long) {
@@ -243,6 +253,10 @@ public class Constants {
     object ThumbnailManager {
         fun getVodThumbnail(filename: String?): String {
             return Constants.CDN_STATIC_URL + VOD_THUMB + filename
+        }
+
+        fun getSlugBaseImageUrl(slug: String?, filename: String): String {
+            return (Constants.CDN_STATIC_URL + slug + "/" + filename.replace(" ", "%20")+".jpg");
         }
 
         fun getLiveThumbnail(filename: String?): String {

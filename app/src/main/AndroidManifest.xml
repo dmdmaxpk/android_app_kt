@@ -11,13 +11,16 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:name=".base.BaseApplication"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Goonj">
-        <activity android:name=".screens.activities.SubscriptionActivity"></activity>
+
+        <activity android:name=".screens.activities.PaywallActivity"></activity>
+        <activity android:name=".screens.activities.SubscriptionActivity" />
         <activity android:name=".screens.activities.MyProfileActivity" />
         <activity android:name=".screens.activities.WebViewActivity" />
         <activity android:name=".screens.activities.PlayerActivity" />
@@ -27,7 +30,23 @@
         <activity android:name=".screens.activities.LoginActivity" />
         <activity android:name=".screens.activities.GetStartedActivity" />
         <activity android:name=".screens.activities.UserContentPrefsActivity" />
-        <activity android:name=".screens.activities.SplashActivity">
+        <activity
+            android:launchMode="singleTask"
+            android:name=".screens.activities.SplashActivity">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="goonj.pk"
+                    android:scheme="https" />
+                <data
+                    android:host="www.goonj.pk"
+                    android:scheme="https" />
+            </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

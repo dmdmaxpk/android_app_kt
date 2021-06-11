@@ -11,5 +11,5 @@ interface SigninView: ObservableView<SigninView.Listener> {
         fun viewPrivacyPolicy();
     }
 
-    fun  initialize();
+    fun  initialize(subscriptionSource: String?, packageId: String?);
 }

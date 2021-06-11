@@ -8,13 +8,15 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.JsonRequest
 import com.android.volley.toolbox.StringRequest
 import com.dmdmax.goonj.models.Params
-import com.dmdmax.goonj.screens.fragments.ComedyFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Toaster
 import com.dmdmax.goonj.utility.Utility
 import org.json.JSONObject
+import java.nio.charset.StandardCharsets
 import java.util.*
 import javax.net.ssl.SSLHandshakeException
 import kotlin.collections.ArrayList
@@ -28,6 +30,8 @@ class RestClient {
     private var mPrefs: GoonjPrefs;
     private var mList: ArrayList<Params>?;
     private var mListener: NetworkOperationListener;
+
+    private var mCategory: String? = null;
 
 
     constructor(context: Context, url: String, method: String, list: ArrayList<Params>?, listener: NetworkOperationListener) {
@@ -63,16 +67,19 @@ class RestClient {
     public fun exec(){
         if (Utility.isConnectedToInternet(mContext)) {
             getResponse(null)
-            Logger.println("RestClient - Executed");
         } else {
-            Logger.println("RestClient - Failed to execute");
             retryDialog();
         }
     }
 
-    public fun exec(category: String?, formData: Map<String, String>) {
+    public fun exec(category: String?, formData: Map<String, String>?) {
         if (Utility.isConnectedToInternet(mContext)) {
-            getFormBodyResponse(category, formData)
+            this.mCategory = category;
+            if(formData == null){
+                getResponse(category);
+            }else{
+                getFormBodyResponse(category, formData)
+            }
         } else {
             retryDialog()
         }
@@ -80,15 +87,22 @@ class RestClient {
 
     public fun execComedy() {
         if (Utility.isConnectedToInternet(mContext)) {
-            getResponse(ComedyFragment.SLUG)
+            getResponse(PaywallComedyFragment.SLUG)
         } else {
             retryDialog()
         }
     }
 
     private fun getAuthHeaders(category: String?): HashMap<String, String> {
+        Logger.println("AUTH HEADERS:  $category");
         val headers = HashMap<String, String>()
-        if (category != null && category == ComedyFragment.SLUG) {
+        if (category != null && category == PaywallBinjeeFragment.SLUG) {
+            val creds = String.format("%s:%s", Constants.Companion.EndPoints.BINJEE_USERNAME,Constants.Companion.EndPoints.BINJEE_PASSWORD)
+            //val auth = "Basic " + toBase64(creds);
+            val auth = "Basic YiFuajMzMHIhZyFuQEk1OmIhbmozM2F0MG4zdHcwdGhyMzM=";
+            Logger.println("AUTH: $auth");
+            headers["Authorization"] = auth;
+        }else if (category != null && category == PaywallComedyFragment.SLUG) {
             headers["API-KEY"] = Constants.COMEDY_API_KEY!!
         } else {
             headers["Authorization"] = "Bearer " + mPrefs!!.getAccessToken()
@@ -96,20 +110,21 @@ class RestClient {
         return headers
     }
 
+
     private fun getFormBodyResponse(category: String?, formData: Map<String, String>) {
         val jRequest: StringRequest = object : StringRequest(Method.POST, mLink, StringSuccessListener(), ErrorListener()) {
             override fun getParams(): Map<String, String> {
                 return formData
             }
 
-            @Throws(AuthFailureError::class)
             override fun getHeaders(): Map<String, String> {
-                if (mPrefs!!.getAccessToken() != null) {
+                if (category != null && category == PaywallComedyFragment.SLUG) {
+                    return getAuthHeaders(PaywallComedyFragment.SLUG)
+                }else if(category != null && category == PaywallBinjeeFragment.SLUG){
+                    return getAuthHeaders(PaywallBinjeeFragment.SLUG)
+                }else{
                     return getAuthHeaders(category)
-                } else if (category != null && category == ComedyFragment.SLUG) {
-                    return getAuthHeaders(ComedyFragment.SLUG)
                 }
-                return HashMap()
             }
         }
         addRequest(jRequest);
@@ -121,36 +136,36 @@ class RestClient {
             if (Method.GET.equals(mMethod)) {
                 val jRequest: StringRequest = object : StringRequest(Method.GET, mLink, StringSuccessListener(), ErrorListener()) {
                     override fun getHeaders(): Map<String, String> {
-                        if (mPrefs!!.getAccessToken() != null) {
-                            return getAuthHeaders(category)
-                        } else if (category != null && category == ComedyFragment.SLUG) {
-                            return getAuthHeaders(ComedyFragment.SLUG)
+                        if (category != null && category == PaywallComedyFragment.SLUG) {
+                            return getAuthHeaders(PaywallComedyFragment.SLUG)
+                        }else if(category != null && category == PaywallBinjeeFragment.SLUG){
+                            return getAuthHeaders(PaywallBinjeeFragment.SLUG)
                         }
-                        return HashMap()
+                        return getAuthHeaders(category)
                     }
                 }
                 addRequest(jRequest);
             } else if (Method.POST.equals(mMethod)) {
                 val jRequest: JsonRequest<*> = object : JsonObjectRequest(Method.POST, mLink, mBody, JsonSuccessListener(), ErrorListener()) {
                     override fun getHeaders(): Map<String, String> {
-                        if (mPrefs!!.getAccessToken() != null) {
-                            return getAuthHeaders(category)
-                        } else if (category != null && category == ComedyFragment.SLUG) {
-                            return getAuthHeaders(ComedyFragment.SLUG)
+                        if (category != null && category == PaywallComedyFragment.SLUG) {
+                            return getAuthHeaders(PaywallComedyFragment.SLUG)
+                        }else if(category != null && category == PaywallBinjeeFragment.SLUG){
+                            return getAuthHeaders(PaywallBinjeeFragment.SLUG)
                         }
-                        return HashMap()
+                        return getAuthHeaders(category)
                     }
                 }
                 addRequest(jRequest);
             } else if (Method.PUT.equals(mMethod)) {
                 val jRequest: JsonRequest<*> = object : JsonObjectRequest(Method.PUT, mLink, mBody, JsonSuccessListener(), ErrorListener()) {
                     override fun getHeaders(): Map<String, String> {
-                        if (mPrefs!!.getAccessToken() != null) {
-                            return getAuthHeaders(category)
-                        } else if (category != null && category == ComedyFragment.SLUG) {
-                            return getAuthHeaders(ComedyFragment.SLUG)
+                        if (category != null && category == PaywallComedyFragment.SLUG) {
+                            return getAuthHeaders(PaywallComedyFragment.SLUG)
+                        }else if(category != null && category == PaywallBinjeeFragment.SLUG){
+                            return getAuthHeaders(PaywallBinjeeFragment.SLUG)
                         }
-                        return HashMap()
+                        return getAuthHeaders(category)
                     }
                 }
                 addRequest(jRequest);
@@ -209,7 +224,7 @@ class RestClient {
 
     private inner class ErrorListener : Response.ErrorListener {
         override fun onErrorResponse(err: VolleyError) {
-            if (err.networkResponse != null && err.networkResponse.statusCode == 401) {
+            if (mCategory == null && err.networkResponse != null && err.networkResponse.statusCode == 401) {
                 // Un-Authorized
                 Logger.println("Un-Authorized: $mLink")
                 getRefreshTokenAndExecRequest()
@@ -247,7 +262,7 @@ class RestClient {
         context!!.startActivity(intent)
     }*/
 
-    private fun<T> addRequest(request: Request<T>){
+    private fun <T> addRequest(request: Request<T>){
         VolleySingleton.instance.getInstance(mContext).addToRequestQueue(request);
     }
 }

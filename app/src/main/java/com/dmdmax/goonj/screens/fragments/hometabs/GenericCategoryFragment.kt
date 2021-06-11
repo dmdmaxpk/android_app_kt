@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.models.TabModel
+import com.dmdmax.goonj.models.Video
 import com.dmdmax.goonj.screens.views.GenericCategoryView
 
-class GenericCategoryFragment: BaseFragment() {
+class GenericCategoryFragment: BaseFragment(), GenericCategoryView.Listener {
 
     companion object {
         val ARGS_TAB = "tab";
@@ -32,5 +33,19 @@ class GenericCategoryFragment: BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         mView.initialize();
         mView.loadVideos(arguments?.get(ARGS_TAB) as TabModel)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mView.registerListener(this);
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mView.unregisterListener(this);
+    }
+
+    override fun onItemClick(video: Video) {
+        getCompositionRoot().getViewFactory().toPlayerScreen(video);
     }
 }

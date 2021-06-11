@@ -1,5 +1,7 @@
 package com.dmdmax.goonj.models
 
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
+
 class TabModel: java.io.Serializable {
     private  var tabName: String? = null;
     private  var slug:kotlin.String? = null;
@@ -53,5 +55,11 @@ class TabModel: java.io.Serializable {
 
     fun getSlug(): String? {
         return slug
+    }
+
+    companion object {
+        fun getEpisodeTab(): TabModel{
+            return TabModel("episode", PaywallComedyFragment.SLUG, "null", "episode", null, null, null);
+        }
     }
 }

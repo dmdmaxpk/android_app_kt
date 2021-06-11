@@ -46,8 +46,10 @@ class Welcomelmpl: BaseObservableView<WelcomeView.Listener>, WelcomeView, View.O
         mList.add(BottomMenu("Home", R.drawable.btm_home_not_focus, R.drawable.btm_home_not_focus, false));
         mList.add(BottomMenu("Live TV", R.drawable.btm_live_not_focus, R.drawable.btm_live_not_focus, false))
         mList.add(BottomMenu("VOD", R.drawable.btm_vod_not_focus, R.drawable.btm_vod_not_focus, false))
-        mList.add(BottomMenu("Favourite", R.drawable.btm_fvt_not_focus, R.drawable.btm_fvt_not_focus, false))
+        //mList.add(BottomMenu("Favourite", R.drawable.btm_fvt_not_focus, R.drawable.btm_fvt_not_focus, false))
         mList.add(BottomMenu("More", R.drawable.btm_more_not_focus, R.drawable.btm_more_not_focus, false))
+
+        mBottomGrid.numColumns = mList.size;
 
         mAdapter = BottomGridAdapter(getContext(), mList, 0);
         mBottomGrid.adapter = mAdapter;
@@ -61,6 +63,14 @@ class Welcomelmpl: BaseObservableView<WelcomeView.Listener>, WelcomeView, View.O
                 }
             }
         }
+    }
+
+    override fun setCurrentBottomIndex(position: Int) {
+        mAdapter.markSelection(position)
+    }
+
+    override fun currentBottomIndex(): Int {
+        return mAdapter.getCurrentSelection();
     }
 
     override fun onClick(v: View) {

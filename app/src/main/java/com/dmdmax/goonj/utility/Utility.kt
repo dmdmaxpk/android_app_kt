@@ -86,9 +86,9 @@ class Utility {
 
         fun fireShareIntent(context: Context?, title: String, id: String, isLive: Boolean) {
             val sendIntent = Intent()
-            val slug: String
-            slug = if (isLive) title else title.toLowerCase().replace("[^\\dA-Za-z ]".toRegex(), "")
-                .replace("\\s+".toRegex(), "-")
+            val slug: String =
+                if (isLive) title else
+                    title.toLowerCase().replace("[^\\dA-Za-z ]".toRegex(), "").replace("\\s+".toRegex(), "-")
             sendIntent.action = Intent.ACTION_SEND
             sendIntent.putExtra(Intent.EXTRA_TEXT, getSharingUrl(id, slug, isLive))
             sendIntent.type = "text/plain"
@@ -141,30 +141,19 @@ class Utility {
         }
 
         // Function to generate selected bitrate URL for VOD
-        fun generateVodUrl(selectedBitrate: String, url: String, extensionOfFile: String): String? {
-            var url = url
-            if (selectedBitrate == Constants.Companion.NewBitRates.BITRATE_AUTO) {
-                return url
-            } else if (selectedBitrate == Constants.Companion.NewBitRates.BITRATE_DATA_SAVER) {
-                url = parseVodUrl(url, "baseline_144$extensionOfFile")
-            } else if (selectedBitrate == Constants.Companion.NewBitRates.BITRATE_MEDIUM) {
-                url = parseVodUrl(url, "main_360$extensionOfFile")
-            } else if (selectedBitrate == Constants.Companion.NewBitRates.BITRATE_HIGH) {
-                url = parseVodUrl(url, "main_480$extensionOfFile")
-            }
-            return url
+        fun generateVodUrl(bitrate: String, filename: String): String {
+            //https://androidvod.goonj.pk/JA-N2-10-06-21_baseline_144.m4v/index.m3u8?uid=4c8e4f006cb3453f&media_id=DrA3
+
+            return Constants.VOD_URL + filename.split(".")[0] + (
+                    if(bitrate == Constants.Companion.NewBitRates.BITRATE_DATA_SAVER) "_baseline_144.m4v"
+                    else if(bitrate == Constants.Companion.NewBitRates.BITRATE_MEDIUM) "_main_360.m4v"
+                    else "_main_480.m4v") + "/index.m3u8";
         }
 
         // Function to generate selected bitrate URL for live
         fun generateLiveUrl(selectedBitrate: String, url: String): String? {
             Logger.println("Selected Bitrates: "+selectedBitrate)
             return parseLiveUrl(url, selectedBitrate)
-        }
-
-        // Parse New VOD URL
-        fun parseVodUrl(url: String, bitrate: String): String {
-            val splitString = url.split(",").toTypedArray()
-            return splitString[0] + bitrate + "/index.m3u8"
         }
 
         // Parse Live URL
@@ -377,7 +366,7 @@ class Utility {
             } else {
                 Constants.GOONJ_URL + id + "_" + slug
             }
-            return "https://$url"
+            return "https://${url.replace(" ", "%20")}"
         }
 
         fun getNetworkIndex(networkList: List<Channel>, id: String?): Int {

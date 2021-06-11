@@ -23,13 +23,20 @@ class HeadlinesCarouselListAdapter: RecyclerView.Adapter<HeadlinesCarouselListAd
 
     private var list: ArrayList<Video>? = null
     private var context: Context? = null
+    private var listener: OnItemClickListener? = null;
 
     constructor(
         list: ArrayList<Video>?,
-        context: Context?
+        context: Context?,
+        listener: OnItemClickListener?
     ) {
         this.list = list
         this.context = context;
+        this.listener = listener;
+    }
+
+    interface OnItemClickListener{
+        fun onClick(video: Video)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -38,7 +45,7 @@ class HeadlinesCarouselListAdapter: RecyclerView.Adapter<HeadlinesCarouselListAd
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Picasso.get().load(list!![holder.adapterPosition].getThumbnail())
+        Picasso.get().load(list!![holder.adapterPosition].getThumbnail(null))
             .into(holder.thumbnail, object : Callback {
                 override fun onSuccess() {
 
@@ -47,10 +54,12 @@ class HeadlinesCarouselListAdapter: RecyclerView.Adapter<HeadlinesCarouselListAd
                 override fun onError(e: Exception) {
                     holder.thumbnail.setImageResource(R.drawable.no_image_found)
                 }
-            }
-            )
+        })
+
         holder.thumbnail.setOnClickListener {
-            Toaster.printToast(this.context, list!![holder.adapterPosition].getTitle()!!)
+            if(listener != null){
+                listener?.onClick(list!![holder.adapterPosition])
+            }
         }
 
         holder.title.text = list!![holder.adapterPosition].getTitle()!!;

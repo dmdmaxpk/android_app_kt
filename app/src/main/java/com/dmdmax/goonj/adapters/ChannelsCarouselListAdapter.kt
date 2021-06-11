@@ -61,20 +61,17 @@ class ChannelsCarouselListAdapter: RecyclerView.Adapter<ChannelsCarouselListAdap
                 listener?.onClick(list!![holder.adapterPosition], holder.adapterPosition);
             }else{
                 if(!(context as BaseActivity is PlayerActivity)){
+                    PlayerActivity.ARGS_VIDEO = null;
+                    PlayerActivity.ARGS_CHANNEL = list!![holder.adapterPosition];
+                    PlayerActivity.ARGS_CHANNELS = list!!;
                     val intent = Intent(context, PlayerActivity::class.java)
-                    intent.putExtra(PlayerActivity.ARGS_NAME, list!![holder.adapterPosition].getName())
-                    intent.putExtra(PlayerActivity.ARGS_ID, list!![holder.adapterPosition].getId())
-                    intent.putExtra(PlayerActivity.ARGS_HLS, list!![holder.adapterPosition].getHlsLink())
-                    intent.putExtra(PlayerActivity.ARGS_THUMBNAIL, list!![holder.adapterPosition].getThumbnail())
-                    intent.putExtra(PlayerActivity.ARGS_CHANNELS, list);
                     context!!.startActivity(intent)
                 }else{
+                    PlayerActivity.ARGS_VIDEO = null;
+                    PlayerActivity.ARGS_CHANNEL = list!![holder.adapterPosition];
+                    PlayerActivity.ARGS_CHANNELS = list!!;
+
                     val intent = Intent(context, PlayerActivity::class.java)
-                    intent.putExtra(PlayerActivity.ARGS_NAME, list!![holder.adapterPosition].getName())
-                    intent.putExtra(PlayerActivity.ARGS_ID, list!![holder.adapterPosition].getId())
-                    intent.putExtra(PlayerActivity.ARGS_HLS, list!![holder.adapterPosition].getHlsLink())
-                    intent.putExtra(PlayerActivity.ARGS_THUMBNAIL, list!![holder.adapterPosition].getThumbnail())
-                    intent.putExtra(PlayerActivity.ARGS_CHANNELS, list);
                     context!!.startActivity(intent)
                     (context as BaseActivity).finish()
                 }

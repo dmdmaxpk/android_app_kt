@@ -12,7 +12,6 @@ import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.TabModel
-import com.dmdmax.goonj.screens.fragments.HomeCategoryFragment
 import com.dmdmax.goonj.screens.fragments.hometabs.GenericCategoryFragment
 import com.dmdmax.goonj.screens.fragments.hometabs.LiveTvFragment
 import com.dmdmax.goonj.screens.views.HomeView
@@ -43,32 +42,6 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
     override fun initialize() {
         val mList: ArrayList<BaseFragment> = getChildFragments();
         bindViewPager(mList);
-    }
-
-    override fun getRemoteConfigs() {
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        mFirebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-        mFirebaseRemoteConfig.setConfigSettingsAsync(FirebaseRemoteConfigSettings.Builder().build())
-        mFirebaseRemoteConfig.fetch(Constants.CONFIG_EXPIRATION_TIME_IN_SEC)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful()) {
-                        Utility.setConstants(mFirebaseRemoteConfig)
-                        getLogger().println("Fetch successful")
-                        mFirebaseRemoteConfig.activate();
-                        workingCompleted();
-                    }
-                }.addOnFailureListener { e ->
-                    getLogger().println("Fetch failed: " + e.message)
-                    e.printStackTrace()
-                    Utility.setConstants(mFirebaseRemoteConfig)
-                    workingCompleted();
-                }
-    }
-
-    private fun workingCompleted() {
-        for (listener in getListeners()) {
-            listener.onCompleted()
-        }
     }
 
 

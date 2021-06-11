@@ -1,14 +1,12 @@
 package com.dmdmax.goonj.utility
 
-import android.content.Context
-import android.util.Log
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.SliderModel
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.models.Video
-import com.dmdmax.goonj.storage.GoonjPrefs
-import com.dmdmax.goonj.utility.Constants.ThumbnailManager.getLiveThumbnail
+import com.dmdmax.goonj.utility.Constants.ThumbnailManager.getVodThumbnail
 import org.json.JSONArray
+import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -49,7 +47,7 @@ class JSONParser {
                         val model = SliderModel();
                         model.setId(rootArray.getJSONObject(i).getString("_id"))
                         model.setName(rootArray.getJSONObject(i).getString("name"))
-                        model.setThumb(rootArray.getJSONObject(i).getString("filename"))
+                        model.setThumb(Constants.CDN_STATIC_URL + "dramas/" + model.getName()!!.replace(" ", "%20")+".jpg");
                         list.add(model)
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -84,7 +82,7 @@ class JSONParser {
             return list
         }
 
-        fun getFeed(json: String?): ArrayList<Video> {
+        fun getFeed(json: String?, slug: String?): ArrayList<Video> {
             val list: ArrayList<Video> = ArrayList()
             try {
                 val rootArray = JSONArray(json)
@@ -103,6 +101,9 @@ class JSONParser {
                         model.setSource(rootArray.getJSONObject(i).getString("source"))
                         model.setDescription(rootArray.getJSONObject(i).getString("description"))
                         model.setTopics(Utility.getStringList(rootArray.getJSONObject(i).getJSONArray("topics")))
+                        if(slug != null){
+                            model.setSlug(slug);
+                        }
                         list.add(model)
                     } catch (e: Exception) {
                         Logger.println("Exception Message: " + e.message)
@@ -113,6 +114,94 @@ class JSONParser {
                 e.printStackTrace()
             }
             return list
+        }
+
+        fun getVideos(videos: String?, slug: String): ArrayList<Video> {
+            val videoList: ArrayList<Video> = ArrayList();
+
+            try {
+                val rootArr = JSONArray(videos)
+                for (i in 0 until rootArr.length()) {
+                    val video = Video(Video.TileType.TILE_TYPE_THUMBNAIL)
+                    video.setId(rootArr.getJSONObject(i).getString("videos_id"))
+                    video.setTitle(rootArr.getJSONObject(i).getString("title"))
+                    video.setDescription(rootArr.getJSONObject(i).getString("description"))
+                    video.setCategory(slug)
+                    if (rootArr.getJSONObject(i).has("thumbnail_url")) {
+                        video.setThumbnailUrl(rootArr.getJSONObject(i).getString("thumbnail_url"))
+                        video.setPosterUrl(rootArr.getJSONObject(i).getString("poster_url"))
+                        if (rootArr.getJSONObject(i).has("video_url")) {
+                            video.setVideoUrl(rootArr.getJSONObject(i).getString("video_url"))
+                        }
+
+                        if (rootArr.getJSONObject(i).has("file_url")) {
+                            video.setVideoUrl(rootArr.getJSONObject(i).getString("file_url"))
+                        }
+                    }
+                    videoList.add(video)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return videoList;
+        }
+
+        fun getCategory(json: String?, slug: String, key: String): ArrayList<Video> {
+            val videoList: ArrayList<Video> = ArrayList();
+
+            try {
+                val rootArr = JSONArray(json)
+                for (i in 0 until rootArr.length()) {
+                    val video = Video(Video.TileType.TILE_TYPE_THUMBNAIL);
+                    video.setId(rootArr.getJSONObject(i).getString("_id"));
+                    video.setTitle(rootArr.getJSONObject(i).getString("name"));
+                    video.setPosterUrl(Constants.CDN_STATIC_URL + slug + "/" + video.getTitle()!!.replace(" ", "%20")+".jpg");
+                    video.setKey(key);
+                    video.setCategory(slug);
+                    videoList.add(video)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return videoList;
+        }
+
+        fun getLiveDetailsModel(response: String?): Channel? {
+            var model: Channel? = Channel()
+            try {
+                val root = JSONObject(response)
+                model!!.setId(root.getString("_id"))
+                model.setHlsLink(root.getString("hls_link"))
+            } catch (e: java.lang.Exception) {
+                model = null;
+                e.printStackTrace()
+            }
+            return model
+        }
+
+        fun getVodDetailsModel(response: String?): Video? {
+            var model: Video? = Video(Video.TileType.TILE_TYPE_THUMBNAIL)
+            try {
+                val root = JSONObject(response)
+                model!!.setId(root.getString("_id"))
+                model.setCategory(root.getString("category"))
+                model.setProgram(root.getString("program"))
+                model.setTitle(root.getString("title"))
+                model.setAnchor(root.getString("anchor"))
+                model.setPublishDtm(root.getString("publish_dtm"))
+                model.setDuration(root.getInt("duration"))
+                model.setThumbnail(getVodThumbnail(root.getString("thumbnail")))
+                model.setFileName(root.getString("file_name"))
+                model.setSource(root.getString("source"))
+                model.setDescription(root.getString("description"))
+                model.setTopics(Utility.getStringList(root.getJSONArray("topics")))
+            } catch (e: java.lang.Exception) {
+                model = null
+                e.printStackTrace()
+            }
+            return model
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.dmdmax.goonj.screens.implements
 
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,15 +11,16 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.adapters.ChannelsCarouselListAdapter
+import com.dmdmax.goonj.adapters.ComedyBannerCarouselListAdapter
 import com.dmdmax.goonj.adapters.HomeSliderAdapter
 import com.dmdmax.goonj.base.BaseObservableView
-import com.dmdmax.goonj.gps.GPSHelper
-import com.dmdmax.goonj.models.Channel
-import com.dmdmax.goonj.models.City
-import com.dmdmax.goonj.models.SliderModel
+import com.dmdmax.goonj.models.*
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.screens.dialogs.DialogManager
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.LiveTvView
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.JSONParser
@@ -28,7 +28,6 @@ import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Utility
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
 import org.json.JSONArray
-import java.sql.Time
 import java.util.*
 
 
@@ -42,11 +41,12 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
     private lateinit var mTime: TextView;
     private lateinit var mNoCitySelection: TextView;
 
-    private lateinit var mTimer: Timer;
-
     private lateinit var mCatWiseLiveChannels: LinearLayout;
 
     private var currentItem: Int = 0;
+    var timer: Timer? = null
+    val DELAY_MS: Long = 500 //delay in milliseconds before task is to be executed
+    val PERIOD_MS: Long = 3000 // time in milliseconds between successive task executions.
 
     private lateinit var mProgressBar: ProgressBar;
     private lateinit var mNamezTimeLayout: LinearLayout;
@@ -66,7 +66,6 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
         mNamezTimeLayout = findViewById(R.id.namaz_time_layout);
         mLeftLayout = findViewById(R.id.left_layout);
         mTime = findViewById(R.id.time);
-        mTimer = Timer();
 
         mCatWiseLiveChannels = findViewById(R.id.category_wise_live_channels);
         displaySlider();
@@ -77,10 +76,16 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
     }
 
     private fun bindSliderAdapter(list: ArrayList<SliderModel>) {
-        mSliderAdapter = HomeSliderAdapter(getContext(), list);
-        mViewPager.setClipToPadding(false);
-        mViewPager.pageMargin = 20;
-        mViewPager.setOffscreenPageLimit(2);
+        mSliderAdapter = HomeSliderAdapter(getContext(), list, object: HomeSliderAdapter.OnItemClickListener{
+            override fun onClick(mode: SliderModel, position: Int) {
+                for (listener in getListeners()) {
+                    listener.onSliderClick(mSliderAdapter.getDataSet()[position], position);
+                }
+            }
+        });
+        mViewPager.clipToPadding = false;
+        mViewPager.pageMargin = 10;
+        mViewPager.offscreenPageLimit = 3;
 
         mViewPager.adapter = mSliderAdapter;
         mIndicator.setViewPager(mViewPager);
@@ -95,40 +100,42 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
             }
 
             override fun onPageSelected(position: Int) {
-                //getLogger().println("onPageSelected");
+
             }
 
             override fun onPageScrollStateChanged(state: Int) {
                 //getLogger().println("onPageScrollStateChanged");
             }
         });
-        slideSlider(list.size);
+
         displayChannels();
+        slideSlider(list.size);
     }
 
-    override fun cancelTimer(){
-        mTimer!!.cancel();
+    override fun cancelTimer() {
+        timer?.cancel()
     }
 
     private fun slideSlider(max: Int){
-        mTimer.scheduleAtFixedRate(Slide(max), 0, 3000);
-    }
-
-    inner class Slide: TimerTask {
-        var max: Int = 0;
-        constructor(max: Int){
-            this.max = max;
-        }
-
-        override fun run() {
-            currentItem = currentItem.inc();
-            if (currentItem >= max) {
-                currentItem = 0;
+        /*After setting the adapter use the timer */
+        val handler = android.os.Handler();
+        val Update = Runnable {
+            if (currentItem > max) {
+                currentItem = -1
             }
-            getLogger().println("run: "+currentItem);
-            mViewPager.setCurrentItem(currentItem, true)
+            mViewPager.setCurrentItem(currentItem++, true)
         }
+
+        timer = Timer() // This will create a new Thread
+
+        timer?.schedule(object : TimerTask() {
+            // task to be scheduled
+            override fun run() {
+                handler.post(Update)
+            }
+        }, DELAY_MS, PERIOD_MS)
     }
+
 
     private fun displayChannels(){
         var rootObj = JSONArray(Constants.CATEGORIES_CHANNEL_JSON);
@@ -138,10 +145,17 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
                 for (i in 0 until rootObj.length()) {
                     displaySingleCategoryChannel(rootObj.getJSONObject(i).getString("cat_name"), Utility.getCategoryWiseChannel(response, rootObj.getJSONObject(i).getString("url"), null));
                 }
+
+                // Display Binjee
+                displayBinjee()
+
+                // Display Comedy
+                displayComedy();
+
             }
 
             override fun onFailed(code: Int, reason: String?) {
-                TODO("Not yet implemented")
+                getLogger().println("Failed " + reason)
             }
         }).exec();
     }
@@ -152,9 +166,70 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
 
         var recyclerView = singleView.findViewById<RecyclerView>(R.id.feed);
         setRecyclerView(recyclerView);
-        recyclerView.adapter = ChannelsCarouselListAdapter(list, getContext());
+        recyclerView.adapter = ChannelsCarouselListAdapter(list, getContext(), object : ChannelsCarouselListAdapter.OnItemClickListener {
+            override fun onClick(channel: Channel, position: Int) {
+                for (listener in getListeners()) {
+                    listener.onChannelClick(channel, PaywallGoonjFragment.SLUG);
+                }
+            }
+        });
 
         mCatWiseLiveChannels.addView(singleView);
+    }
+
+    private fun displayComedy(){
+        RestClient(getContext(), Constants.COMEDY_BASE_URL + Constants.Companion.EndPoints.COMEDY_GET_SHOWS, RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
+            override fun onSuccess(response: String?) {
+                getLogger().println("RESPONSE: $response");
+                val videos = JSONParser.getVideos(response, PaywallComedyFragment.SLUG);
+
+                var singleView = LayoutInflater.from(getContext()).inflate(R.layout.cat_wise_channel_layout, null);
+                singleView.findViewById<TextView>(R.id.category_name).text = "comedy".toUpperCase();
+
+                var recyclerView = singleView.findViewById<RecyclerView>(R.id.feed);
+                setRecyclerView(recyclerView);
+                recyclerView.adapter = ComedyBannerCarouselListAdapter(videos, getContext(), object : ComedyBannerCarouselListAdapter.OnItemClickListener {
+                    override fun onClick(video: Video, position: Int) {
+                        for (listener in getListeners()) {
+                            listener.onComedyClick(video, PaywallComedyFragment.SLUG);
+                        }
+                    }
+                });
+
+                mCatWiseLiveChannels.addView(singleView);
+            }
+
+            override fun onFailed(code: Int, reason: String?) {
+                Logger.println("LiveTvImpl - displayComedy - onFailed: $reason")
+            }
+        }).execComedy();
+    }
+
+    private fun displayBinjee(){
+        RestClient(getContext(), Constants.COMEDY_BASE_URL + Constants.Companion.EndPoints.COMEDY_GET_SHOWS, RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
+            override fun onSuccess(response: String?) {
+                val videos = JSONParser.getVideos(response, PaywallBinjeeFragment.SLUG);
+
+                var singleView = LayoutInflater.from(getContext()).inflate(R.layout.cat_wise_channel_layout, null);
+                singleView.findViewById<TextView>(R.id.category_name).text = "binjee".toUpperCase();
+
+                var recyclerView = singleView.findViewById<RecyclerView>(R.id.feed);
+                setRecyclerView(recyclerView);
+                recyclerView.adapter = ComedyBannerCarouselListAdapter(videos, getContext(), object : ComedyBannerCarouselListAdapter.OnItemClickListener {
+                    override fun onClick(video: Video, position: Int) {
+                        for (listener in getListeners()) {
+                            listener.onBinjeeClick(video, PaywallBinjeeFragment.SLUG);
+                        }
+                    }
+                });
+
+                mCatWiseLiveChannels.addView(singleView);
+            }
+
+            override fun onFailed(code: Int, reason: String?) {
+                Logger.println("LiveTvImpl - displayBinjee - onFailed: $reason")
+            }
+        }).execComedy();
     }
 
 
@@ -166,7 +241,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
     private fun getSliderList() {
         RestClient(
                 getContext(),
-                Constants.API_BASE_URL + Constants.Companion.EndPoints.BANNER,
+                Constants.API_BASE_URL + Constants.Companion.EndPoints.SUBCATEGORY + "drama",
                 RestClient.Companion.Method.GET,
                 null,
                 object : NetworkOperationListener {
@@ -175,7 +250,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
                     }
 
                     override fun onFailed(code: Int, reason: String?) {
-                        getLogger().println("Failed to load: "+reason)
+                        getLogger().println("Failed to load: " + reason)
                     }
                 }).exec();
     }
@@ -184,7 +259,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
         if(getPrefs().getCity().isEmpty()){
             mProgressBar.visibility = View.GONE;
             mNoCitySelection.visibility = View.VISIBLE;
-            mNoCitySelection.setOnClickListener(object: View.OnClickListener {
+            mNoCitySelection.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(v: View?) {
                     DialogManager().displayCityDialog(getContext(), object : DialogManager.CitySelectionListener {
                         override fun onCitySelected(city: City) {
@@ -198,25 +273,6 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
                     });
                 }
             });
-
-            /*val mHelper = GPSHelper(getContext());
-            if(!mHelper.isLocationEnabled()){
-                getLogger().println("isLocationEnabled - not")
-                mHelper.displaySwitchOnSettingsDialog();
-            }else{
-                getLogger().println("isLocationEnabled - yes")
-                mHelper.updateLocation(object : GPSHelper.LocationUpdatedListener {
-                    override fun onUpdated(lat: Double, lng: Double, alt: Double) {
-                        getLogger().println("isLocationEnabled - onUpdated")
-                        getPrefs().setCity(mHelper.getCity()!!);
-                        getPrefs().setCoords(lat, lng, alt);
-
-                        mCity.text = mHelper.getCity()!!.split(",")[0];
-                        mCity.visibility = View.VISIBLE;
-                        fetchTodayNamazTimeAndSet(lat, lng, alt);
-                    }
-                });
-            }*/
         }else{
             mNoCitySelection.visibility = View.GONE;
             mCity.text = getPrefs().getCity();
@@ -224,7 +280,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
             fetchTodayNamazTimeAndSet(getPrefs().getLat(), getPrefs().getLng());
         }
 
-        mCity.setOnClickListener(object: View.OnClickListener {
+        mCity.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 DialogManager().displayCityDialog(getContext(), object : DialogManager.CitySelectionListener {
                     override fun onCitySelected(city: City) {

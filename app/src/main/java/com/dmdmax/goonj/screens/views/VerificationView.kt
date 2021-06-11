@@ -9,5 +9,5 @@ interface VerificationView: ObservableView<VerificationView.Listener> {
         fun goBack();
     }
 
-    fun  initialize(msisdn: String);
+    fun  initialize(msisdn: String, subscriptionSource: String?);
 }

@@ -17,4 +17,10 @@
     <string name="by_signing_in_i_agree_to_user_agreement_and">By signing in, I agree to user agreement and</string>
     <string name="help">Help</string>
     <string name="verify">verify</string>
+    <string name="for_package_conversion_or_cancellation">for package conversion or cancellation</string>
+    <string name="go_to_profile_subscription"><![CDATA[go to profile > subscription]]></string>
+    <string name="shows_web_series_darama_action_ncomedy_and_pranks">shows, web series, drama, action,\ncomedy and pranks</string>
+    <string name="subscribe_now">subscribe now</string>
+    <string name="comedy_shows">comedy shows</string>
+    <string name="by_subscribing_you_are_agreeing_to_weekly_auto_renewal_charging">By subscribing you are agreeing to weekly auto renewal charging</string>
 </resources>

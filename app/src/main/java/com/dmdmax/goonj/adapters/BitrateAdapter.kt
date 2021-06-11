@@ -14,11 +14,8 @@ import java.util.*
 class BitrateAdapter: BaseAdapter {
     private var list: ArrayList<BitRatesModel>? = null
     private var context: Context? = null
-    private var currentSelected = 0;
+    public var currentSelected = 0;
 
-    interface OnBitrateItemClickListener {
-        fun onClick(model: BitRatesModel?, position: Int)
-    }
 
     constructor(list: ArrayList<BitRatesModel>?, context: Context?) {
         this.list = list
@@ -65,9 +62,5 @@ class BitrateAdapter: BaseAdapter {
         }
         holder.bitrate.text = list!![position].getBitrate()
         return convertView
-    }
-
-    public fun getCurrentSelected(): Int{
-        return currentSelected;
     }
 }

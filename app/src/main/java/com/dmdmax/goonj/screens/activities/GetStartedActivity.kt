@@ -15,7 +15,7 @@ class GetStartedActivity: BaseActivity(), GetStartedView.Listener {
         mView = getCompositionRoot().getViewFactory().getStarted1Impl(null);
 
         if(mView.getPrefs().isSkipped()){
-            startActivity(Intent(this, LoginActivity::class.java));
+            startActivity(Intent(this, UserContentPrefsActivity::class.java));
             finish();
         }else{
             setContentView(mView.getRootView());
@@ -39,13 +39,21 @@ class GetStartedActivity: BaseActivity(), GetStartedView.Listener {
     }
 
     override fun skip() {
-        mView.getToaster().printToast(this, "Skipping intro...");
+        /*mView.getToaster().printToast(this, "Skipping intro...");
         mView.getPrefs().setIsSkipped(true);
-        startActivity(Intent(this, LoginActivity::class.java));
+        startActivity(Intent(this, UserContentPrefsActivity::class.java));
+        finish();*/
+
+        mView.getPrefs().setIsInterestedTopicDone(true);
+        startActivity(Intent(this, WelcomeActivity::class.java));
         finish();
     }
 
     override fun next() {
-        startActivity(Intent(this, LoginActivity::class.java));
+        //startActivity(Intent(this, UserContentPrefsActivity::class.java));
+
+        mView.getPrefs().setIsInterestedTopicDone(true);
+        startActivity(Intent(this, WelcomeActivity::class.java));
+        finish();
     }
 }

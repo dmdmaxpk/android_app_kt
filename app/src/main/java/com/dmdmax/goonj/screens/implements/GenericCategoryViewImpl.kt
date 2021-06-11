@@ -15,13 +15,11 @@ import com.dmdmax.goonj.models.Video
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.screens.views.GenericCategoryView
-import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.JSONParser
-import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Utility
 
-class GenericCategoryImpl: BaseObservableView<GenericCategoryView.Listener>, GenericCategoryView {
+class GenericCategoryViewImpl: BaseObservableView<GenericCategoryView.Listener>, GenericCategoryView {
 
     private lateinit var mVideosRecyclerView: RecyclerView;
     private lateinit var mProgressBar: ProgressBar;
@@ -46,7 +44,7 @@ class GenericCategoryImpl: BaseObservableView<GenericCategoryView.Listener>, Gen
             null,
             object : NetworkOperationListener {
                 override fun onSuccess(response: String?) {
-                    val list = JSONParser.getFeed(response);
+                    val list = JSONParser.getFeed(response, null);
                     var relatedChannels = Utility.getCategoryWiseChannel(null, category.getCategory()!!, getContext())
 
                     if(relatedChannels.size > 0){
@@ -63,9 +61,11 @@ class GenericCategoryImpl: BaseObservableView<GenericCategoryView.Listener>, Gen
                             override fun onVideoClick(
                                 position: Int,
                                 video: Video,
-                                tabModel: TabModel
+                                tabModel: TabModel?
                             ) {
-                                Logger.println("onVideoClick: " + video.getTitle());
+                                for(listener in getListeners()){
+                                    listener.onItemClick(video);
+                                }
                             }
                         });
 
@@ -74,7 +74,7 @@ class GenericCategoryImpl: BaseObservableView<GenericCategoryView.Listener>, Gen
                 }
 
                 override fun onFailed(code: Int, reason: String?) {
-                    TODO("Not yet implemented")
+                    getToaster().printToast(getContext(), "Failed to fetch data from APIs")
                 }
             }).exec();
     }

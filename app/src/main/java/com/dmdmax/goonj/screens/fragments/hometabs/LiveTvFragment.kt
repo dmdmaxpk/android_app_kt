@@ -1,28 +1,27 @@
 package com.dmdmax.goonj.screens.fragments.hometabs
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseFragment
-import com.dmdmax.goonj.screens.dialogs.DialogManager
+import com.dmdmax.goonj.models.Channel
+import com.dmdmax.goonj.models.SliderModel
+import com.dmdmax.goonj.models.Video
+import com.dmdmax.goonj.payments.PaymentHelper
+import com.dmdmax.goonj.screens.activities.PlayerActivity
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
+import com.dmdmax.goonj.screens.implements.VodImpl
 import com.dmdmax.goonj.screens.views.LiveTvView
+import com.dmdmax.goonj.storage.GoonjPrefs
 
-class LiveTvFragment: BaseFragment() {
+class LiveTvFragment: BaseFragment(), LiveTvView.Listener {
 
+    private lateinit var mPrefs: GoonjPrefs;
     private lateinit var mView: LiveTvView;
-    private val REQUEST_CODE = 1422;
-
     companion object {
-        val ARGS_TAB: String = "args"
-
         fun newInstance(args: Bundle?): LiveTvFragment {
             val fragment = LiveTvFragment();
             if (args != null) {
@@ -41,69 +40,61 @@ class LiveTvFragment: BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         mView.initialize();
         mView.displayPrayerTime();
+        mPrefs = GoonjPrefs(context);
     }
 
     override fun onStart() {
         super.onStart()
         mView.getLogger().println("onStart")
-        /*if(!mView.getPrefs().isDontAsk()){
-            Handler().postDelayed(Runnable{
-                if (
-                        !ContextCompat.checkSelfPermission(context as BaseActivity, Manifest.permission.ACCESS_FINE_LOCATION).equals(PackageManager.PERMISSION_GRANTED) ||
-                        !ContextCompat.checkSelfPermission(context as BaseActivity, Manifest.permission.ACCESS_COARSE_LOCATION).equals(PackageManager.PERMISSION_GRANTED)
-                ) {
-                    openLocationPermissionDialog();
-                }else{
-                    // Location permission has already been granted
-                    mView.displayPrayerTime();
-                }
-            }, 1000);
-        }*/
+        mView.registerListener(this);
     }
 
     override fun onStop() {
         super.onStop()
         mView.cancelTimer();
+        mView.unregisterListener(this);
     }
 
-    private fun openLocationPermissionDialog(){
-        DialogManager().grantLocationPermission(context as BaseActivity, object: DialogManager.LocationPermissionClickListener{
-            override fun onPositiveButtonClick() {
-                requestLocationPermission();
-            }
-
-            override fun onNegativeButtonClick() {
-                mView.getToaster().printToast(context, "Location permission cancelled");
-            }
-
-            override fun onDontAskClick() {
-                mView.getPrefs().setDontAsk(true);
-            }
-        });
+    override fun onSliderClick(model: SliderModel, position: Int) {
+        val video = Video(Video.TileType.TILE_TYPE_THUMBNAIL);
+        video.setTitle(model.getName());
+        video.setThumbnail(model.getThumb());
+        video.setId(model.getId());
+        video.setKey(VodImpl.SLUG_DRAMA);
+        video.setCategory(VodImpl.SLUG_DRAMA);
+        getCompositionRoot().getViewFactory().toPlayerScreen(video);
     }
 
-    private fun requestLocationPermission(){
-        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE);
+    override fun goBack() {
+
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        mView.getLogger().println("onRequestPermissionsResult - Fragment");
-        when (requestCode) {
-            REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (
-                            (ContextCompat.checkSelfPermission(context as BaseActivity, Manifest.permission.ACCESS_FINE_LOCATION).equals(PackageManager.PERMISSION_GRANTED)) &&
-                            (ContextCompat.checkSelfPermission(context as BaseActivity, Manifest.permission.ACCESS_COARSE_LOCATION).equals(PackageManager.PERMISSION_GRANTED))
+    override fun onChannelClick(channel: Channel, paywallSlug: String) {
+        PlayerActivity.ARGS_CHANNEL = channel;
+        if(mPrefs.getSubscriptionStatus(PaywallGoonjFragment.SLUG) == PaymentHelper.Companion.PaymentStatus.STATUS_BILLED){
+            getCompositionRoot().getViewFactory().toPlayerScreen(channel, null);
+        }else{
+            getCompositionRoot().getViewFactory().toPaywallScreen(channel, paywallSlug);
+        }
+    }
 
-                    ) {
-                        mView.getToaster().printToast(context, "Location permission granted");
-                        mView.displayPrayerTime();
-                    }
-                } else {
-                    mView.getToaster().printToast(context, "Location permission not granted");
-                }
-            }
+    override fun onComedyClick(video: Video, paywallSlug: String) {
+        video.setSlug(PaywallComedyFragment.SLUG);
+        PlayerActivity.ARGS_VIDEO = video;
+        if(mPrefs.getSubscriptionStatus(paywallSlug) == PaymentHelper.Companion.PaymentStatus.STATUS_BILLED){
+            getCompositionRoot().getViewFactory().toPlayerScreen(video);
+        }else{
+            getCompositionRoot().getViewFactory().toPaywallScreen(video, paywallSlug);
+        }
+    }
+
+    override fun onBinjeeClick(video: Video, paywallSlug: String) {
+        video.setSlug(PaywallBinjeeFragment.SLUG);
+        PlayerActivity.ARGS_VIDEO = video;
+        if(mPrefs.getSubscriptionStatus(paywallSlug) == PaymentHelper.Companion.PaymentStatus.STATUS_BILLED){
+            getCompositionRoot().getViewFactory().toPlayerScreen(video);
+        }else{
+            getCompositionRoot().getViewFactory().toPaywallScreen(video, paywallSlug);
         }
     }
 }

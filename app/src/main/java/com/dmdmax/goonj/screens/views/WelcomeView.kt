@@ -7,9 +7,11 @@ interface WelcomeView: ObservableView<WelcomeView.Listener> {
     interface Listener {
         fun onSearchClick();
         fun onUserClick();
-        fun onBottomClick(position: Number)
+        fun onBottomClick(position: Int)
     }
 
     fun  initialize();
     fun bindBottomAdapter();
+    fun currentBottomIndex(): Int;
+    fun setCurrentBottomIndex(position: Int);
 }
