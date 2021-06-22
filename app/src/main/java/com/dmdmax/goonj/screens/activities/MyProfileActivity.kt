@@ -12,6 +12,7 @@ import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
@@ -99,7 +100,13 @@ class MyProfileActivity: BaseActivity(), View.OnClickListener {
             dialog.show();
         }
 
-        loadProfileData();
+        val mPrefs = GoonjPrefs(this);
+        if(mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) != null && mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) != "null"){
+            loadProfileData();
+        }else{
+            mProgressBar.visibility = View.GONE;
+            mProfileLayout.visibility = View.VISIBLE;
+        }
     }
 
     private fun updateLabel() {
@@ -109,7 +116,7 @@ class MyProfileActivity: BaseActivity(), View.OnClickListener {
     }
 
     private fun loadProfileData(){
-        RestClient(this, Constants.API_BASE_URL + Constants.Companion.EndPoints.GET_USER_PROFILE + GoonjPrefs(this).getMsisdn(null), RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
+        RestClient(this, Constants.API_BASE_URL + Constants.Companion.EndPoints.GET_USER_PROFILE + GoonjPrefs(this).getMsisdn(PaywallGoonjFragment.SLUG), RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
             override fun onSuccess(response: String?) {
                 try {
                     val rootObject = JSONObject(response);
@@ -212,14 +219,21 @@ class MyProfileActivity: BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when(v?.id){
             mEditProfile.id -> {
-                isEditModelEnabled = !isEditModelEnabled;
 
-                mEditProfile.text = if (isEditModelEnabled) "Update Profile" else "Edit Profile"
-                if (!isEditModelEnabled) {
-                    // update profile
-                    updateProfileData();
+                val mPrefs = GoonjPrefs(this);
+                if(mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) != null && mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) != null){
+                    isEditModelEnabled = !isEditModelEnabled;
+
+                    mEditProfile.text = if (isEditModelEnabled) "Update Profile" else "Edit Profile"
+                    if (!isEditModelEnabled) {
+                        // update profile
+                        updateProfileData();
+                    }
+                    switchMode(isEditModelEnabled);
+
+                }else{
+                    Toast.makeText(this, "Please login first to the Goonj Paywall in order to edit profile", Toast.LENGTH_LONG).show()
                 }
-                switchMode(isEditModelEnabled);
             }
 
             mBAckArrow.id -> {
@@ -246,6 +260,7 @@ class MyProfileActivity: BaseActivity(), View.OnClickListener {
             mGenderName.visibility = View.GONE;
 
         }else{
+            // update mode
             mUsernameSmall.visibility = View.VISIBLE;
             mUsernameEtSmall.visibility = View.GONE;
             mUsernameSmall.setText(mUsernameEtSmall.text);

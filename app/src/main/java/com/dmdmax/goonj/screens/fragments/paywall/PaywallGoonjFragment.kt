@@ -10,8 +10,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.dmdmax.goonj.R
+import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.models.PackageModel
+import com.dmdmax.goonj.models.Paywall
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.payments.PaymentHelper
@@ -24,6 +26,8 @@ import org.json.JSONArray
 import java.lang.Exception
 
 class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBillingView {
+
+    private lateinit var mPaywall: Paywall;
 
     companion object {
         val SLUG = "live";
@@ -74,6 +78,8 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
         mEasypaisaNumber = view.findViewById(R.id.ep_number)
         mEasypaisaNumber.setOnClickListener(this);
 
+        mPaywall = arguments!!.getSerializable(ARGS_TAB) as Paywall
+
         fetchPackages();
     }
 
@@ -109,7 +115,13 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
                 mProgressBar.visibility = View.GONE;
                 mMainLayout.visibility = View.VISIBLE;
 
-                mDefaultPackage = list.find { packageModel -> packageModel.default }!!
+                if(mPaywall != null && mPaywall.mSelectedPackage != null){
+                    mDefaultPackage = list.find { packageModel -> packageModel.id == mPaywall.mSelectedPackage?.id }!!
+                }else{
+                    mDefaultPackage = list.find { packageModel -> packageModel.default }!!
+                }
+
+
                 mPackageName.text = mDefaultPackage.name;
                 mPackagePrice.text = mDefaultPackage.text;
             }
@@ -127,6 +139,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
             intent.putExtra(ARG_PAYMENT_SOURCE, source);
             intent.putExtra(ARGS_DEFAULT_PACKAGE, mDefaultPackage.id);
             startActivity(intent);
+            (context as BaseActivity).finish()
         }catch (e: Exception){
             e.printStackTrace()
         }

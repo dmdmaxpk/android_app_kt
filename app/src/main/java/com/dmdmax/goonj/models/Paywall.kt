@@ -11,6 +11,8 @@ class Paywall: Serializable {
     lateinit var packages: ArrayList<PackageModel>;
     var active: Boolean = false;
 
+    var mSelectedPackage: PackageModel? = null;
+
     constructor(){
 
     }

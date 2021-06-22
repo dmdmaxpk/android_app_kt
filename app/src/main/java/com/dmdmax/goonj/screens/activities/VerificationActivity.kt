@@ -76,13 +76,12 @@ class VerificationActivity : BaseActivity(), VerificationView.Listener {
     private fun onResponse(otp: String, verified: Boolean, response: String?, allowedToStream: Boolean){
         if(verified && response != null){
             if(allowedToStream){
-                if(PlayerActivity.ARGS_CHANNEL != null){
+                if(PlayerActivity.ARGS_CHANNEL != null || PlayerActivity.ARGS_VIDEO != null){
                     getCompositionRoot().getViewFactory().toPlayerScreen(null, null);
                 }
                 Toaster.printToast(this@VerificationActivity, "Subscribed successfully");
                 finish();
             }else{
-
                 if(verified){
                     // subscribe now
                     val defaultPackage: String? = if(intent.extras != null && intent?.extras?.containsKey(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE) == true) intent?.extras?.getString(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE) else null;
@@ -92,7 +91,7 @@ class VerificationActivity : BaseActivity(), VerificationView.Listener {
                         override fun onSubscriptionResponse(billed: Boolean, response: String?, allowedToStream: Boolean) {
                             Logger.println("subscribeNow: $response");
                             if(billed && allowedToStream){
-                                if(PlayerActivity.ARGS_CHANNEL != null){
+                                if(PlayerActivity.ARGS_CHANNEL != null || PlayerActivity.ARGS_VIDEO != null){
                                     getCompositionRoot().getViewFactory().toPlayerScreen(null, null);
                                 }
                                 Toaster.printToast(this@VerificationActivity, "Subscribed successfully");

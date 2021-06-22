@@ -38,6 +38,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_bold"
             android:textStyle="bold"
             android:textAllCaps="true"
             android:gravity="center"
@@ -78,6 +79,7 @@
         android:paddingLeft="10dp"
         android:clickable="true">
         <TextView
+            android:fontFamily="@font/montserrat_bold"
             android:textStyle="bold"
             android:layout_gravity="center"
             android:textAllCaps="true"

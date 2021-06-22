@@ -13,6 +13,7 @@ import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.Channel
+import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.models.Paywall
 import com.dmdmax.goonj.payments.ComedyPaymentHelper
 import com.dmdmax.goonj.screens.activities.PlayerActivity
@@ -33,12 +34,18 @@ class PaywallViewImpl: BaseObservableView<PaywallView.Listener>, PaywallView {
     private lateinit var mPaywall: String;
     private var mChannel: Channel? = null;
 
+    private var mPackageModel: PackageModel? = null;
+
     constructor(inflater: LayoutInflater, parent: ViewGroup?) {
         setRootView(inflater.inflate(R.layout.activity_paywall, parent, false));
     }
 
 
-    override fun initialize(channel: Channel?, paywall: String) {
+    override fun initialize(channel: Channel?, paywall: String, packageModel: PackageModel?) {
+        if(packageModel != null){
+            mPackageModel = packageModel;
+        }
+
         Logger.println("PAYWALL: "+paywall);
         this.mChannel = channel;
         this.mPaywall = paywall;
@@ -76,8 +83,15 @@ class PaywallViewImpl: BaseObservableView<PaywallView.Listener>, PaywallView {
     private fun getChildFragments(): ArrayList<BaseFragment> {
         val fragmentList: ArrayList<BaseFragment> = arrayListOf();
         val paywallList: ArrayList<Paywall> = arrayListOf();
+
+        val paywall = Paywall("0", "Goonj", PaywallGoonjFragment.SLUG);
+
+        if(mPackageModel != null){
+            paywall.mSelectedPackage = mPackageModel;
+        }
+
         paywallList.addAll(arrayListOf(
-            Paywall("0", "Goonj", PaywallGoonjFragment.SLUG),
+            paywall,
             Paywall("1", "Binjee", PaywallBinjeeFragment.SLUG),
             Paywall("2", "Comedy", PaywallComedyFragment.SLUG)
         ));

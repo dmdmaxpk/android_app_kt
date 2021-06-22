@@ -1,11 +1,13 @@
 package com.dmdmax.goonj.adapters
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
@@ -139,6 +141,7 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun bindThumbsView(thumbsViewHolder: ThumbsViewHolder, position: Int, listener: OnItemClickListener?) {
         thumbsViewHolder.mTitle.text = mListItems[position].getTitle();
         //thumbsViewHolder.mCount.text = mListItems[position].getViewsCount().toString() + " views";
@@ -162,6 +165,8 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
         thumbsViewHolder.mThumbnail.setOnClickListener(View.OnClickListener {
             listener?.onVideoClick(position, mListItems[position], mTabModel)
         })
+
+        thumbsViewHolder.mThumbnail.clipToOutline = true;
     }
 
     private fun bindEpisodeViewHolder(thumbsViewHolder: ThumbsViewHolder, position: Int, listener: OnItemClickListener?) {

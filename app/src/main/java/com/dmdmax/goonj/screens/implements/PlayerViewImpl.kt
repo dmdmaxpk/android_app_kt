@@ -16,24 +16,19 @@ import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.*
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
-import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.player.ExoPlayerManager
 import com.dmdmax.goonj.screens.activities.PlayerActivity
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
-import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.PlayerView
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.JSONParser
 import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Utility
-import com.google.android.exoplayer2.Player
 import org.json.JSONArray
+import org.json.JSONObject
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.MutableMap
-import kotlin.collections.filter
 import kotlin.collections.set
 
 
@@ -94,6 +89,16 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
     }
 
     private fun displayView(model: MediaModel, list: ArrayList<Channel>?){
+        if(model.title?.length!! > 50){
+            val scale: Float = getContext().resources.displayMetrics.density
+            val dpAsPixels: Float = (50 * scale + 0.5f)
+            mTitle.setPadding((dpAsPixels).toInt(), 0, 0, 0);
+        }else{
+            val scale: Float = getContext().resources.displayMetrics.density
+            val dpAsPixels: Float = (0 * scale + 0.5f)
+            mTitle.setPadding((dpAsPixels).toInt(), 0, 0, 0);
+        }
+
         mTitle.text = model.title;
         mChannelTitle.text = model.title;
 
@@ -158,7 +163,7 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
     }
 
     private fun displayEpisodes(){
-        if(PlayerActivity.ARGS_VIDEO!!.getThumbnailUrl() != null){
+        if(PlayerActivity.ARGS_VIDEO!!.getSlug() == PaywallComedyFragment.SLUG){
             // ideation video
 
             val postBody: MutableMap<String, String> = HashMap()
@@ -190,7 +195,41 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
                 override fun onFailed(code: Int, reason: String?) {}
             }).exec(PaywallComedyFragment.SLUG, postBody);
         }
-        else{
+        else if(PlayerActivity.ARGS_VIDEO!!.getSlug() == PaywallBinjeeFragment.SLUG) {
+            // Binjee videos
+
+            val postBody: java.util.ArrayList<Params> = arrayListOf(
+                Params("channel", "APP"),
+                Params("refId", "20170101112222"),
+                Params("subcat_id", PlayerActivity.ARGS_VIDEO!!.getId()!!)
+            );
+
+            RestClient(getContext(), Constants.BINJEE_CONTENT_API_BASE_URL + Constants.Companion.EndPoints.GET_BINJEE_VIDEOS, RestClient.Companion.Method.POST, postBody, object : NetworkOperationListener {
+                override fun onSuccess(response: String?) {
+                    val mVideos: ArrayList<Video> = arrayListOf()
+                    val mObj = JSONObject(response).getJSONArray("info");
+
+                    for (i in 0 until mObj.length()) {
+                        mVideos.add(Episode.getVideo(mObj.getJSONObject(i), PaywallBinjeeFragment.SLUG));
+                    }
+
+
+                    mEpisodes.adapter = GenericCategoryAdapter(getContext(), mVideos, TabModel.getEpisodeTab(), object: GenericCategoryAdapter.OnItemClickListener{
+                        override fun onVideoClick(position: Int, video: Video, tabModel: TabModel?) {
+                            PlayerActivity.ARGS_CHANNEL = null;
+                            PlayerActivity.ARGS_VIDEO = null;
+                            PlayerActivity.ARGS_VIDEO = video;
+                            displayView(MediaModel.getVodMediaModel(video, mPrefs.getGlobalBitrate()!!), null);
+                        }
+                    })
+
+                    mPlayerManager.playMedia(MediaModel.getVodMediaModel(mVideos[0], mPrefs.getGlobalBitrate()!!))
+                    mChannelTitle.text = mVideos[0].getTitle();
+                }
+
+                override fun onFailed(code: Int, reason: String?) {}
+            }).exec(PaywallBinjeeFragment.SLUG, null);
+        }else{
             // dmd video
             if(PlayerActivity.ARGS_VIDEO!!.getSlug() == VodImpl.SLUG_DRAMA || PlayerActivity.ARGS_VIDEO!!.getCategory() == VodImpl.SLUG_DRAMA){
                 mChannelTitle.text = "";
@@ -239,8 +278,6 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
             }
 
         }
-
-
     }
 
     private fun displayHeadlines() {

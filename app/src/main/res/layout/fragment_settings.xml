@@ -45,7 +45,8 @@
             android:cropToPadding="true"/>
         <TextView
             android:text="My Profile"
-            android:textStyle="bold"
+            android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"
             android:textSize="13sp"
             android:textColor="@color/white"
             android:layout_width="match_parent"
@@ -66,7 +67,8 @@
             android:cropToPadding="true"/>
         <TextView
             android:text="Subscriptions"
-            android:textStyle="bold"
+            android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"
             android:textSize="13sp"
             android:textColor="@color/white"
             android:layout_width="match_parent"

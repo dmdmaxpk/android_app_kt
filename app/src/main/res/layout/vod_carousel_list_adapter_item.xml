@@ -3,47 +3,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/anchor_layout"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp">
-        <androidx.cardview.widget.CardView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="start">
+    <LinearLayout
+        android:layout_width="165dp"
+        android:layout_height="200dp">
+        <FrameLayout
             android:layout_width="150dp"
-            android:layout_height="200dp"
-            app:cardCornerRadius="5dp">
-
-            <FrameLayout
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/layout"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:orientation="vertical"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_corner_layout">
+
+                <ImageView
+                    android:id="@+id/thumbnail"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="140dp"
+                    android:scaleType="centerCrop" />
 
-                    <ImageView
-                        android:id="@+id/thumbnail"
-                        android:layout_width="match_parent"
-                        android:layout_height="140dp"
-                        android:scaleType="centerCrop" />
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/name"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="5dp"
+                    android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:background="#393851"/>
+            </LinearLayout>
 
-                    <TextView
-                        android:gravity="center_vertical"
-                        android:id="@+id/name"
-                        android:padding="5dp"
-                        android:textStyle="bold"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="14sp"
-                        android:textColor="@color/white"
-                        android:background="#393851"
-                        android:maxLines="3"
-                        android:ellipsize="end"/>
-                </LinearLayout>
-            </FrameLayout>
-
-        </androidx.cardview.widget.CardView>
-    </FrameLayout>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:visibility="gone"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="120dp"
+                android:src="@drawable/comedy_small_logo"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+        </FrameLayout>
+    </LinearLayout>
 </LinearLayout>

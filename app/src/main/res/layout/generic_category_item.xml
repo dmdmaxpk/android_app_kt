@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textSize="15sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"
         android:maxLines="2"
         android:ellipsize="end"/>
 
@@ -33,7 +34,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/cloudy_gray"
             android:textSize="13sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"/>
 
         <TextView
             android:text="   |   "
@@ -41,7 +43,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/cloudy_gray"
             android:textSize="13sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/time_ago"
@@ -49,7 +52,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/cloudy_gray"
             android:textSize="13sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"/>
     </LinearLayout>
 
     <FrameLayout
@@ -58,17 +62,12 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-        <androidx.cardview.widget.CardView
+        <ImageView
+            android:background="@drawable/rounded_corner_layout"
+            android:id="@+id/thumbnail"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/thumbnail_height"
-            app:cardCornerRadius="10dp">
-
-            <ImageView
-                android:id="@+id/thumbnail"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
-        </androidx.cardview.widget.CardView>
+            android:layout_height="200dp"
+            android:scaleType="centerCrop" />
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/spin_kit"

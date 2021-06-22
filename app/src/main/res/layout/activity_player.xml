@@ -21,12 +21,12 @@
             android:src="@drawable/back_arrow"
             android:layout_gravity="center_vertical"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:scaleType="fitXY"
             android:padding="12dp"
             android:cropToPadding="true"/>
         <TextView
-            android:paddingLeft="50dp"
+            android:fontFamily="@font/montserrat_bold"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="14sp"
@@ -59,7 +59,7 @@
         android:layout_height="40dp"
         android:background="#393d65"
         android:paddingRight="10dp"
-        android:paddingLeft="10dp">
+        android:paddingLeft="15dp">
         <LinearLayout
             android:layout_gravity="start"
             android:orientation="horizontal"
@@ -82,7 +82,8 @@
             <TextView
                 android:textSize="12sp"
                 android:id="@+id/channel_title"
-                android:textStyle="bold"
+                android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"
                 android:textColor="@color/white"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical"
@@ -138,7 +139,9 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
+                            android:paddingLeft="5dp"
                             android:textSize="15sp"
+                            android:fontFamily="@font/montserrat_bold"
                             android:textStyle="bold"
                             android:layout_marginTop="10dp"
                             android:text="Live Channels"
@@ -159,7 +162,9 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
+                            android:paddingLeft="5dp"
                             android:textSize="15sp"
+                            android:fontFamily="@font/montserrat_bold"
                             android:textStyle="bold"
                             android:text="Headlines"
                             android:textColor="@color/white"
@@ -178,7 +183,9 @@
                         android:layout_height="120dp"
                         android:orientation="vertical">
                         <TextView
+                            android:paddingLeft="5dp"
                             android:textSize="15sp"
+                            android:fontFamily="@font/montserrat_bold"
                             android:textStyle="bold"
                             android:layout_marginTop="10dp"
                             android:text="Entertainment Channels"

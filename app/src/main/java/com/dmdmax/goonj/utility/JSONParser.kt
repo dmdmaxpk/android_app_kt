@@ -4,6 +4,8 @@ import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.SliderModel
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.models.Video
+import com.dmdmax.goonj.payments.BinjeePaymentHelper
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.utility.Constants.ThumbnailManager.getVodThumbnail
 import org.json.JSONArray
 import org.json.JSONObject
@@ -127,6 +129,8 @@ class JSONParser {
                     video.setTitle(rootArr.getJSONObject(i).getString("title"))
                     video.setDescription(rootArr.getJSONObject(i).getString("description"))
                     video.setCategory(slug)
+                    video.setSlug(slug)
+
                     if (rootArr.getJSONObject(i).has("thumbnail_url")) {
                         video.setThumbnailUrl(rootArr.getJSONObject(i).getString("thumbnail_url"))
                         video.setPosterUrl(rootArr.getJSONObject(i).getString("poster_url"))
@@ -138,6 +142,28 @@ class JSONParser {
                             video.setVideoUrl(rootArr.getJSONObject(i).getString("file_url"))
                         }
                     }
+                    videoList.add(video)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return videoList;
+        }
+
+        fun getBinjeeCategories(videos: String?): ArrayList<Video> {
+            val videoList: ArrayList<Video> = ArrayList();
+
+            try {
+                val rootArr = JSONObject(videos).getJSONArray("info")
+                for (i in 0 until rootArr.length()) {
+                    val video = Video(Video.TileType.TILE_TYPE_THUMBNAIL)
+                    video.setId(rootArr.getJSONObject(i).getString("subcat_id"))
+                    video.setTitle(rootArr.getJSONObject(i).getString("title"))
+                    video.setDescription(rootArr.getJSONObject(i).getString("description"))
+                    video.setSlug(PaywallBinjeeFragment.SLUG)
+                    video.setPosterUrl(rootArr.getJSONObject(i).getString("thumbnail_url"))
+
                     videoList.add(video)
                 }
             } catch (e: Exception) {

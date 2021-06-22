@@ -6,7 +6,9 @@
     <ListView
         android:id="@+id/category_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:divider="@android:color/transparent"/>
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_gravity="center"

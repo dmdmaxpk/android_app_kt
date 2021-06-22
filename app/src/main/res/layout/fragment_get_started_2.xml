@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".screens.activities.GetStartedActivity">
 
-    <LinearLayout
-        android:padding="5dp"
-        android:layout_marginTop="30dp"
+    <ImageView
+        android:paddingTop="60dp"
+        android:paddingBottom="60dp"
+        android:cropToPadding="true"
+        android:scaleType="fitXY"
         android:id="@+id/channels"
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:orientation="vertical">
-        <ImageView
-            android:cropToPadding="true"
-            android:padding="10dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/favt_anchors"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
+        android:src="@drawable/favt_anchors"/>
+
+
 
     <TextView
-        android:layout_marginTop="10dp"
+        android:padding="5dp"
         android:id="@+id/streamTv"
         android:textColor="@color/white"
-        android:textStyle="bold"
+        android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"
         android:textSize="20sp"
         android:textAllCaps="true"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/channels"
@@ -42,16 +41,16 @@
         android:text="Follow favourite channels,\nprograms &amp; anchors"/>
 
     <TextView
-        android:layout_marginTop="10dp"
+        android:padding="5dp"
         android:id="@+id/streamTvTicker"
-        android:text="Whenever you want"
         android:textColor="@color/cloudy_gray"
         android:textSize="14sp"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/streamTv"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="Whenever you want" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

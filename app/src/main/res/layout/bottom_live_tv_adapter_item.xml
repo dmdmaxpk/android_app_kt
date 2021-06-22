@@ -8,11 +8,12 @@
     android:gravity="start">
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="85dp"
-        android:layout_height="70dp">
+        android:layout_width="82dp"
+        android:layout_height="82dp"
+        android:gravity="center">
         <FrameLayout
             android:layout_width="70dp"
-            android:layout_height="match_parent">
+            android:layout_height="70dp">
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/thumb"
                 android:layout_width="match_parent"

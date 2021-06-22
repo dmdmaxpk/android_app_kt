@@ -85,6 +85,7 @@ public class Constants {
         var VOD_URL: String? = null
         var API_BASE_URL: String? = "https://api.goonj.pk/v2/";
         var BINJEE_API_BASE_URL: String = "https://binjee.com/api/";
+        var BINJEE_CONTENT_API_BASE_URL: String = "http://37.111.131.39:90/Binjee/index.php/API/";
         var CDN_STATIC_URL: String? = null
         var TERMS_URL: String? = null
         lateinit var PRIVACY_POLICY_URL: String
@@ -157,7 +158,12 @@ public class Constants {
             const val BINJEE_VALIDATE_OTP = "signUpIn/userPinValidation"
             const val BINJEE_CHECK_STATUS = "signUpIn/querySubscriber"
             const val BINJEE_UNSUBSCRIBE = "subscriber/unSubscribe"
+
+            const val GET_BINJEE_CATEGORIES = "Subcategory"
+            const val GET_BINJEE_VIDEOS = "Getvideos"
         }
+
+
 
         private var currentWindow = 0
         private var playbackPos: Long = 0

@@ -2,11 +2,16 @@ package com.dmdmax.goonj.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
@@ -45,6 +50,7 @@ class VodCarouselListAdapter: RecyclerView.Adapter<VodCarouselListAdapter.MyView
         return MyViewHolder(itemView)
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.name.text = list!![holder.adapterPosition].getTitle();
         Picasso.get().load(list!![holder.adapterPosition].getThumbnail(null))
@@ -64,6 +70,8 @@ class VodCarouselListAdapter: RecyclerView.Adapter<VodCarouselListAdapter.MyView
                 listener?.onClick(list!![holder.adapterPosition], holder.adapterPosition);
             }
         }
+
+        holder.layout.clipToOutline = true;
     }
 
     override fun getItemCount(): Int {
@@ -73,10 +81,12 @@ class VodCarouselListAdapter: RecyclerView.Adapter<VodCarouselListAdapter.MyView
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var thumbnail: ImageView
         var name: TextView
+        var layout: LinearLayout;
 
         init {
             thumbnail = view.findViewById(R.id.thumbnail)
             name = view.findViewById(R.id.name)
+            layout = view.findViewById(R.id.layout);
         }
     }
 }

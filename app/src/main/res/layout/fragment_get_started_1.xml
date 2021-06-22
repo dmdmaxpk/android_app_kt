@@ -1,48 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".screens.activities.GetStartedActivity">
 
     <ImageView
-        android:padding="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:cropToPadding="true"
+        android:scaleType="fitXY"
         android:id="@+id/channels"
-        android:layout_width="280dp"
-        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/channels"/>
 
     <TextView
-        android:layout_marginTop="10dp"
         android:id="@+id/streamTv"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textAllCaps="true"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/channels"
+        android:padding="5dp"
+        android:text="Stream your favourite\ntv channels"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="Stream your favourite\ntv channels"/>
+        app:layout_constraintTop_toBottomOf="@id/channels" />
 
     <TextView
-        android:layout_marginTop="10dp"
+        android:padding="5dp"
         android:id="@+id/streamTvTicker"
-        android:text="On the Go! Make mobile your own\npersonal tv"
         android:textColor="@color/cloudy_gray"
         android:textSize="14sp"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/streamTv"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="On the Go! Make mobile your own\npersonal tv" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

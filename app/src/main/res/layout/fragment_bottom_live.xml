@@ -31,6 +31,7 @@
                 android:padding="12dp"
                 android:cropToPadding="true"/>
             <TextView
+                android:fontFamily="@font/montserrat_bold"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="14sp"
@@ -92,6 +93,7 @@
                 <TextView
                     android:textSize="14sp"
                     android:id="@+id/channel_title"
+                    android:fontFamily="@font/montserrat_bold"
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     android:layout_marginLeft="10dp"

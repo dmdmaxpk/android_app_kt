@@ -1,12 +1,15 @@
 package com.dmdmax.goonj.adapters
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
@@ -56,15 +59,14 @@ class CategoryWiseVodAdapter: BaseAdapter {
         return position.toLong();
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = LayoutInflater.from(context).inflate(R.layout.vod_fragment_list_item, parent, false);
         var thumbnail: ImageView = view.findViewById(R.id.thumbnail);
         var title: TextView = view.findViewById(R.id.title);
         var others: RecyclerView = view.findViewById(R.id.others);
-        Logger.println("POSITION $position - COUNT: ${list[position].size}")
 
         val key: String? = if(list[position][0].getKey() != null) list[position][0].getKey() else list[position][0].getSlug();
-        Logger.println("KEY: $key - URL: ${list[position][0].getThumbnailUrl()}");
 
         title.text = key;
         Picasso.get().load(if(position == 0) list[position][0].getPosterUrl() else list[position][0].getThumbnail(null))

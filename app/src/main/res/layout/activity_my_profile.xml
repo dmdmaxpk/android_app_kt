@@ -129,6 +129,7 @@
                     <TextView
                         android:text="personal information"
                         android:textColor="@color/white"
+                        android:fontFamily="@font/montserrat_bold"
                         android:textStyle="bold"
                         android:textSize="15sp"
                         android:textAllCaps="true"

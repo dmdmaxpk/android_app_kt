@@ -38,7 +38,7 @@ class ChannelsCarouselListAdapter: RecyclerView.Adapter<ChannelsCarouselListAdap
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView: View = LayoutInflater.from(parent.context).inflate(R.layout.channel_adapter_item, null)
+        val itemView: View = LayoutInflater.from(parent.context).inflate(R.layout.bottom_live_tv_adapter_item, null)
         return MyViewHolder(itemView)
     }
 

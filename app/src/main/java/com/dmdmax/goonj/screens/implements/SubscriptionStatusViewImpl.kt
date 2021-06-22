@@ -188,8 +188,8 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
 
                                         val mPackage = PackageModel()
                                         mPackage.id = "no-id"
-                                        mPackage.name = "Binjee Weekly";
-                                        mPackage.desc = "Binjee weekly package"
+                                        mPackage.name = "Daily Package";
+                                        mPackage.desc = "Binjee daily package"
                                         mPackage.slug = p.slug;
                                         mPackages.add(mPackage)
                                         p.packages = mPackages;

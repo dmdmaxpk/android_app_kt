@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/get_started_bg">
     <ProgressBar
         android:layout_gravity="center"
         android:id="@+id/progress_bar"
@@ -33,7 +33,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textAllCaps="true"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/package_name"
@@ -45,7 +46,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textAllCaps="true"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/package_price"
@@ -56,7 +58,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/greenish"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"/>
 
 
 
@@ -81,7 +84,8 @@
                 android:padding="10dp"
                 android:cropToPadding="true"/>
             <TextView
-                android:textStyle="bold"
+                android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"
                 android:textAllCaps="true"
                 android:text="@string/telenor_number"
                 android:textColor="@color/white"
@@ -110,7 +114,8 @@
                 android:padding="5dp"
                 android:cropToPadding="true"/>
             <TextView
-                android:textStyle="bold"
+                android:fontFamily="@font/montserrat_bold"
+android:textStyle="bold"
                 android:textAllCaps="true"
                 android:text="@string/easypaisa_number"
                 android:textColor="@color/white"

@@ -206,9 +206,16 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
     }
 
     private fun displayBinjee(){
-        RestClient(getContext(), Constants.COMEDY_BASE_URL + Constants.Companion.EndPoints.COMEDY_GET_SHOWS, RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
+        val postBody: ArrayList<Params> = arrayListOf(
+            Params("channel", "APP"),
+            Params("refId", "20170101112222"),
+            Params("catid", "101")
+        );
+
+        RestClient(getContext(), Constants.BINJEE_CONTENT_API_BASE_URL + Constants.Companion.EndPoints.GET_BINJEE_CATEGORIES, RestClient.Companion.Method.POST, postBody, object : NetworkOperationListener {
             override fun onSuccess(response: String?) {
-                val videos = JSONParser.getVideos(response, PaywallBinjeeFragment.SLUG);
+                Logger.println("RESPONSE BINJEE - $response");
+                val videos = JSONParser.getBinjeeCategories(response);
 
                 var singleView = LayoutInflater.from(getContext()).inflate(R.layout.cat_wise_channel_layout, null);
                 singleView.findViewById<TextView>(R.id.category_name).text = "binjee".toUpperCase();
@@ -229,7 +236,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
             override fun onFailed(code: Int, reason: String?) {
                 Logger.println("LiveTvImpl - displayBinjee - onFailed: $reason")
             }
-        }).execComedy();
+        }).exec(PaywallBinjeeFragment.SLUG, null);
     }
 
 

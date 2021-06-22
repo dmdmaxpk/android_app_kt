@@ -2,11 +2,13 @@ package com.dmdmax.goonj.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.models.Anchor
@@ -44,6 +46,7 @@ class HeadlinesCarouselListAdapter: RecyclerView.Adapter<HeadlinesCarouselListAd
         return MyViewHolder(itemView)
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Picasso.get().load(list!![holder.adapterPosition].getThumbnail(null))
             .into(holder.thumbnail, object : Callback {
@@ -63,6 +66,7 @@ class HeadlinesCarouselListAdapter: RecyclerView.Adapter<HeadlinesCarouselListAd
         }
 
         holder.title.text = list!![holder.adapterPosition].getTitle()!!;
+        holder.thumbnail.clipToOutline = true;
     }
 
     override fun getItemCount(): Int {

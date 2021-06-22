@@ -160,6 +160,7 @@ class PackageListAdapter: BaseAdapter {
                 else{
                     val intent = Intent(mContext, PaywallActivity::class.java);
                     intent.putExtra(PaywallActivity.ARG_PAYWALL_SLUG, PaywallGoonjFragment.SLUG)
+                    intent.putExtra(PaywallActivity.ARG_PAYWALL_PACKAGE, mPackagesList[position])
                     mContext.startActivity(intent);
                     //(mContext as BaseActivity).finish()
                 }

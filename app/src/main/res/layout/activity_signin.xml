@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textAllCaps="true"
+        android:fontFamily="@font/montserrat_bold"
         android:textStyle="bold"/>
 
 
@@ -63,6 +64,7 @@
         android:paddingLeft="10dp"
         android:clickable="true">
         <TextView
+            android:fontFamily="@font/montserrat_bold"
             android:textStyle="bold"
             android:layout_gravity="center"
             android:textAllCaps="true"
