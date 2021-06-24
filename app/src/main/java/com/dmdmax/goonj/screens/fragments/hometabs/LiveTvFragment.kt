@@ -80,6 +80,7 @@ class LiveTvFragment: BaseFragment(), LiveTvView.Listener {
 
     override fun onComedyClick(video: Video, paywallSlug: String) {
         video.setSlug(PaywallComedyFragment.SLUG);
+        PlayerActivity.ARGS_CHANNEL = null;
         PlayerActivity.ARGS_VIDEO = video;
         if(mPrefs.getSubscriptionStatus(paywallSlug) == PaymentHelper.Companion.PaymentStatus.STATUS_BILLED){
             getCompositionRoot().getViewFactory().toPlayerScreen(video);
@@ -90,6 +91,7 @@ class LiveTvFragment: BaseFragment(), LiveTvView.Listener {
 
     override fun onBinjeeClick(video: Video, paywallSlug: String) {
         video.setSlug(PaywallBinjeeFragment.SLUG);
+        PlayerActivity.ARGS_CHANNEL = null;
         PlayerActivity.ARGS_VIDEO = video;
         if(mPrefs.getSubscriptionStatus(paywallSlug) == PaymentHelper.Companion.PaymentStatus.STATUS_BILLED){
             getCompositionRoot().getViewFactory().toPlayerScreen(video);

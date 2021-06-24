@@ -57,11 +57,10 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
         <GridView
-            android:padding="5dp"
             android:background="@color/bottom_sheet_background"
             android:id="@+id/bottom_grid"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:gravity="center_vertical"/>
+            android:gravity="center_vertical" />
     </LinearLayout>
 </LinearLayout>

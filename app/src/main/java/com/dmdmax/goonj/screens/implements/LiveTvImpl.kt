@@ -149,9 +149,6 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
                 // Display Binjee
                 displayBinjee()
 
-                // Display Comedy
-                displayComedy();
-
             }
 
             override fun onFailed(code: Int, reason: String?) {
@@ -231,6 +228,10 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
                 });
 
                 mCatWiseLiveChannels.addView(singleView);
+
+
+                // Display Comedy
+                displayComedy();
             }
 
             override fun onFailed(code: Int, reason: String?) {

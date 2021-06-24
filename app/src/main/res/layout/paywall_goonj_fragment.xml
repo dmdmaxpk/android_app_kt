@@ -4,11 +4,13 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/get_started_bg">
+
     <ProgressBar
         android:layout_gravity="center"
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:visibility="gone"
         android:id="@+id/main_layout"
@@ -24,7 +26,6 @@
 
         <TextView
             android:id="@+id/watch_live_tv_anytime_anywhere"
-            android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@id/logo_include"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -34,7 +35,7 @@
             android:textColor="@color/white"
             android:textAllCaps="true"
             android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"/>
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/package_name"
@@ -47,11 +48,11 @@ android:textStyle="bold"/>
             android:textColor="@color/white"
             android:textAllCaps="true"
             android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"/>
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/package_price"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="7dp"
             app:layout_constraintTop_toBottomOf="@id/package_name"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -59,7 +60,7 @@ android:textStyle="bold"/>
             android:layout_height="wrap_content"
             android:textColor="@color/greenish"
             android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"/>
+            android:textStyle="bold"/>
 
 
 
@@ -85,7 +86,7 @@ android:textStyle="bold"/>
                 android:cropToPadding="true"/>
             <TextView
                 android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"
+                android:textStyle="bold"
                 android:textAllCaps="true"
                 android:text="@string/telenor_number"
                 android:textColor="@color/white"
@@ -115,7 +116,7 @@ android:textStyle="bold"
                 android:cropToPadding="true"/>
             <TextView
                 android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"
+                android:textStyle="bold"
                 android:textAllCaps="true"
                 android:text="@string/easypaisa_number"
                 android:textColor="@color/white"

@@ -6,51 +6,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".screens.activities.GetStartedActivity">
+    tools:context=".screens.activities.GetStartedActivity"
+    android:weightSum="3">
 
     <ImageView
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:cropToPadding="true"
-        android:scaleType="fitXY"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp"
         android:id="@+id/channels"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2.2"
+        android:src="@drawable/channels" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/channels"/>
+        android:layout_weight="0.8"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/streamTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="Stream your favourite\ntv channels"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/channels" />
+        <TextView
+            android:id="@+id/streamTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="Stream your favourite\ntv channels"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
 
-    <TextView
-        android:padding="5dp"
-        android:id="@+id/streamTvTicker"
-        android:textColor="@color/cloudy_gray"
-        android:textSize="14sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/streamTv"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:text="On the Go! Make mobile your own\npersonal tv" />
+        <TextView
+            android:layout_marginTop="15dp"
+            android:id="@+id/streamTvTicker"
+            android:textColor="@color/cloudy_gray"
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="On the Go! Make mobile your own\npersonal tv" />
+    </LinearLayout>
+
+
 
 </LinearLayout>

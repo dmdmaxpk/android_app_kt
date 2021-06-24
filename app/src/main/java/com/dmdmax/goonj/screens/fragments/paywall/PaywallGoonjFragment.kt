@@ -63,6 +63,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
         mPackageName = view.findViewById(R.id.package_name);
         mPackagePrice = view.findViewById(R.id.package_price);

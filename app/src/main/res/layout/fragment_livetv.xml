@@ -11,7 +11,9 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:padding="10dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:scrollbars="none">
         <LinearLayout
             android:paddingBottom="10dp"

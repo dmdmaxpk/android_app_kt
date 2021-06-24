@@ -7,9 +7,9 @@
     <LinearLayout
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="12dp">
         <ImageView
             android:id="@+id/menu_icon"
             android:layout_width="22dp"

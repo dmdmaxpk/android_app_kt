@@ -8,9 +8,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.base.BaseViewFactory
 import com.dmdmax.goonj.models.Anchor
 import com.dmdmax.goonj.models.Channel
+import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.activities.PlayerActivity
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
+import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Logger
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -60,20 +64,21 @@ class ChannelsCarouselListAdapter: RecyclerView.Adapter<ChannelsCarouselListAdap
             if(listener != null){
                 listener?.onClick(list!![holder.adapterPosition], holder.adapterPosition);
             }else{
-                if(!(context as BaseActivity is PlayerActivity)){
-                    PlayerActivity.ARGS_VIDEO = null;
-                    PlayerActivity.ARGS_CHANNEL = list!![holder.adapterPosition];
-                    PlayerActivity.ARGS_CHANNELS = list!!;
-                    val intent = Intent(context, PlayerActivity::class.java)
-                    context!!.startActivity(intent)
-                }else{
-                    PlayerActivity.ARGS_VIDEO = null;
-                    PlayerActivity.ARGS_CHANNEL = list!![holder.adapterPosition];
-                    PlayerActivity.ARGS_CHANNELS = list!!;
+                val mPrefs = GoonjPrefs(context);
+                PlayerActivity.ARGS_VIDEO = null;
+                PlayerActivity.ARGS_CHANNEL = list!![holder.adapterPosition];
+                PlayerActivity.ARGS_CHANNELS = list!!;
 
-                    val intent = Intent(context, PlayerActivity::class.java)
-                    context!!.startActivity(intent)
-                    (context as BaseActivity).finish()
+                if(mPrefs.getSubscriptionStatus(PaywallGoonjFragment.SLUG) == PaymentHelper.Companion.PaymentStatus.STATUS_BILLED){
+                    if(!(context as BaseActivity is PlayerActivity)){
+                        BaseViewFactory(LayoutInflater.from(context)).toPlayerScreen(list!![holder.adapterPosition], list!!);
+                    }else{
+                        BaseViewFactory(LayoutInflater.from(context)).toPlayerScreen(list!![holder.adapterPosition], list!!);
+                        (context as BaseActivity).finish()
+                    }
+
+                }else{
+                    BaseViewFactory(LayoutInflater.from(context)).toPaywallScreen(list!![holder.adapterPosition], PaywallGoonjFragment.SLUG);
                 }
             }
         }
