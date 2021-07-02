@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dmdmax.goonj.base.BaseFragment
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.models.Video
 import com.dmdmax.goonj.screens.views.GenericCategoryView
@@ -31,8 +32,14 @@ class GenericCategoryFragment: BaseFragment(), GenericCategoryView.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val mTabModel = arguments?.get(ARGS_TAB) as TabModel;
+
         mView.initialize();
-        mView.loadVideos(arguments?.get(ARGS_TAB) as TabModel)
+        mView.loadVideos(mTabModel)
+
+
+        EventManager.getInstance(context!!).fireEvent("${mTabModel.getTabName()!!.split(" ", "_")}${EventManager.Events.VIEW}")
     }
 
     override fun onStart() {

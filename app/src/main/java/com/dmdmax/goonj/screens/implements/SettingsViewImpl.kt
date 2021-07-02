@@ -4,6 +4,8 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -13,6 +15,7 @@ import com.dmdmax.goonj.screens.activities.MyProfileActivity
 import com.dmdmax.goonj.screens.activities.SubscriptionActivity
 import com.dmdmax.goonj.screens.views.SettingsView
 import com.dmdmax.goonj.storage.GoonjPrefs
+import java.util.logging.Handler
 
 class SettingsViewImpl: BaseObservableView<SettingsView.Listener>, SettingsView, View.OnClickListener {
 

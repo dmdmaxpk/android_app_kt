@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.views.GetStartedView
 
 class GetStartedActivity: BaseActivity(), GetStartedView.Listener {
@@ -26,6 +27,8 @@ class GetStartedActivity: BaseActivity(), GetStartedView.Listener {
     private fun initialize(){
         mView.initialize();
         mView.bindAdapter();
+
+        EventManager.getInstance(this).fireEvent(EventManager.Events.GET_STARTED_VIEW);
     }
 
     override fun onStart() {
@@ -39,10 +42,7 @@ class GetStartedActivity: BaseActivity(), GetStartedView.Listener {
     }
 
     override fun skip() {
-        /*mView.getToaster().printToast(this, "Skipping intro...");
-        mView.getPrefs().setIsSkipped(true);
-        startActivity(Intent(this, UserContentPrefsActivity::class.java));
-        finish();*/
+        EventManager.getInstance(this).fireEvent(EventManager.Events.GET_STARTED_SKIP);
 
         mView.getPrefs().setIsInterestedTopicDone(true);
         startActivity(Intent(this, WelcomeActivity::class.java));
@@ -50,7 +50,7 @@ class GetStartedActivity: BaseActivity(), GetStartedView.Listener {
     }
 
     override fun next() {
-        //startActivity(Intent(this, UserContentPrefsActivity::class.java));
+        EventManager.getInstance(this).fireEvent(EventManager.Events.GET_STARTED_JOIN_NOW);
 
         mView.getPrefs().setIsInterestedTopicDone(true);
         startActivity(Intent(this, WelcomeActivity::class.java));

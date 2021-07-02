@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseFragment
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.views.HomeView
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Utility
@@ -34,6 +35,7 @@ class HomeFragment: BaseFragment(), HomeView.Listener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mView.initialize();
+        EventManager.getInstance(context!!).fireEvent(EventManager.Events.BOTTOM_MENU_HOME_VIEW);
     }
 
     override fun onStart() {

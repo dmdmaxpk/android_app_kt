@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.views.SubscriptionStatusView
 
 class SubscriptionActivity : BaseActivity() {
@@ -19,5 +20,7 @@ class SubscriptionActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         mView.initialize();
+
+        EventManager.getInstance(this).fireEvent("Subscription_Status${EventManager.Events.VIEW}");
     }
 }

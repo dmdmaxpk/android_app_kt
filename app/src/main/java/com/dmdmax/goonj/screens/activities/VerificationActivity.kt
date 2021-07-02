@@ -2,6 +2,7 @@ package com.dmdmax.goonj.screens.activities
 
 import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.payments.BinjeePaymentHelper
 import com.dmdmax.goonj.payments.ComedyPaymentHelper
@@ -27,6 +28,7 @@ class VerificationActivity : BaseActivity(), VerificationView.Listener {
         mView = getCompositionRoot().getViewFactory().getVerificationImpl(null);
         setContentView(mView.getRootView());
         initialize();
+        EventManager.getInstance(this).fireEvent("OTP_Verification${EventManager.Events.VIEW}");
     }
 
     private fun initialize(){

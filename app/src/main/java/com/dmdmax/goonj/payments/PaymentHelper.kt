@@ -1,6 +1,7 @@
 package com.dmdmax.goonj.payments
 
 import android.content.Context
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
@@ -39,6 +40,7 @@ class PaymentHelper {
     interface VerifyOtpListener{
         fun verifyOtp(verified: Boolean, response: String?, allowedToStream: Boolean);
     }
+
     fun sendOtp(msisdn: String, packageId: String){
         val mList: ArrayList<Params> = arrayListOf();
         mList.add(Params("msisdn", msisdn));
@@ -51,6 +53,8 @@ class PaymentHelper {
                 Logger.println("SendOtp - onSuccess - " + response);
                 mPrefs.setMsisdn(msisdn, PaywallGoonjFragment.SLUG);
                 mPrefs.setSubscribedPackageId(packageId, PaywallGoonjFragment.SLUG);
+
+                EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_OTP_SENT)
             }
 
             override fun onFailed(code: Int, reason: String?) {
@@ -58,6 +62,7 @@ class PaymentHelper {
             }
         }).exec();
     }
+
     fun verifyOtp(msisdn: String?, otp: String?, packageId: String?, listener: VerifyOtpListener?){
         val args: ArrayList<Params> = arrayListOf();
         args.add(Params("msisdn", msisdn));
@@ -70,6 +75,8 @@ class PaymentHelper {
                 if (response != null) {
                     val rootObj = JSONObject(response);
                     if (rootObj.getInt("code") == 7) {
+                        EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_OTP_VERIFIED);
+
                         // validated
                         Logger.println("Verify - OTP - " + response);
                         Toaster.printToast(mContext, rootObj.getString("data"));
@@ -83,14 +90,20 @@ class PaymentHelper {
                         val isStreamable = (rootObj.has("is_allowed_to_stream") && rootObj.getBoolean("is_allowed_to_stream"));
                         mPrefs.setStreamable(isStreamable, PaywallGoonjFragment.SLUG)
 
+                        if(isStreamable){
+                            EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_ALREADY_SUBSCRIBED);
+                        }
+
                         if (rootObj.has("user_id"))
                             mPrefs.setUserId(rootObj.getString("user_id"), PaywallGoonjFragment.SLUG);
 
                         if (rootObj.has("subscribed_package_id"))
                             mPrefs.setSubscribedPackageId(rootObj.getString("subscribed_package_id"), PaywallGoonjFragment.SLUG);
 
-                        listener?.verifyOtp(true, response, (rootObj.has("is_allowed_to_stream") && rootObj.getBoolean("is_allowed_to_stream")))
+                        listener?.verifyOtp(true, response, isStreamable)
                     } else {
+                        EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_OTP_NOT_VERIFIED);
+
                         mPrefs.setOtpValidated(false);
                         listener?.verifyOtp(false, response, false)
                         Toaster.printToast(mContext, rootObj.getString("message"));
@@ -133,6 +146,7 @@ class PaymentHelper {
                     var status = "billed";
                     if(code == 11){
                         status = "trial"
+                        EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_TRIAL_ACTIVATED);
                     }
                     mPrefs.setMsisdn(msisdn!!, PaywallGoonjFragment.SLUG);
                     mPrefs.setSubscriptionStatus(status, PaywallGoonjFragment.SLUG)
@@ -141,11 +155,16 @@ class PaymentHelper {
                     if(rootObj.has("is_allowed_to_stream")){
                         streamable = rootObj.getBoolean("is_allowed_to_stream");
                     }else if(code == 0 && rootObj.has("message")){
+                        EventManager.getInstance(mContext).fireEvent("${EventManager.Events.GOONJ_PAYWALL_MESSAGE}${rootObj.getString("message").replace(" ", "_")}");
+
                         //{"code":0,"message":"Package successfully switched.","gw_transaction_id":"gw_logger-5fyhkp89j9tx-2021-05-28,11:49"}
                         Toaster.printToast(mContext, rootObj.getString("message"));
                         streamable = true;
                     }else{
-                        if(code == 9){
+                        if(code == 0){
+                            EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_SUBSCRIBED);
+                        }else if(code == 9){
+                            EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_ALREADY_SUBSCRIBED);
                             Toaster.printToast(mContext, rootObj.getString("message"))
                             streamable = true;
                         }
@@ -153,6 +172,7 @@ class PaymentHelper {
 
                     listener.onSubscriptionResponse(true, response, streamable)
                 }else{
+                    EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_FAILED_TO_SUBSCRIBE);
                     listener.onSubscriptionResponse(false, response, false)
                 }
 

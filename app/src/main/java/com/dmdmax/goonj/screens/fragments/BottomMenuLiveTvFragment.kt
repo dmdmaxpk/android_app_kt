@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dmdmax.goonj.base.BaseFragment
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.BottomMenuLiveTvView
 
@@ -38,6 +39,7 @@ class BottomMenuLiveTvFragment: BaseFragment(), BottomMenuLiveTvView.Listener {
         mView.getLogger().println("BottomMenuLiveTvFragment - onStart")
         mView.registerListener(this)
         mView.initialize();
+        EventManager.getInstance(context!!).fireEvent(EventManager.Events.BOTTOM_MENU_LIVE_VIEW);
     }
 
     override fun onStop() {

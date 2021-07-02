@@ -29,6 +29,7 @@ class JSONParser {
                         model.setHlsLink(Constants.LIVE_URL + rootArray.getJSONObject(i).getString("hls_link"))
                         model.setSlug(rootArray.getJSONObject(i).getString("slug"))
                         model.setCategory(rootArray.getJSONObject(i).getString("category"))
+                        model.setViewCount(rootArray.getJSONObject(i).getString("views_count"))
                         list.add(model)
                     } catch (e: Exception) {
                         e.printStackTrace()

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dmdmax.goonj.base.BaseFragment
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.views.SettingsView
 import com.dmdmax.goonj.screens.views.SubscriptionStatusView
 
@@ -31,6 +32,7 @@ class SettingsFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mView.initialize();
+        EventManager.getInstance(context!!).fireEvent(EventManager.Events.BOTTOM_MENU_MORE_VIEW);
     }
 
     override fun onResume() {

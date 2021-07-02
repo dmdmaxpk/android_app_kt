@@ -10,6 +10,7 @@ class Channel: Serializable {
     private lateinit var slug: String;
     private lateinit var hlsLink: String;
     private lateinit var thumbnail: String;
+    private lateinit var viewCount: String;
     private var category: String = "";
 
     fun setId(id: String) {
@@ -18,6 +19,14 @@ class Channel: Serializable {
 
     fun setSlug(slug: String) {
         this.slug = slug
+    }
+
+    fun setViewCount(count: String) {
+        this.viewCount = count
+    }
+
+    fun getViewCount(): String {
+        return this.viewCount;
     }
 
     fun setCategory(category: String) {

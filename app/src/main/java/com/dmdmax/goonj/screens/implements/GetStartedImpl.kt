@@ -12,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.adapters.GetStartedViewPagerAdapter
 import com.dmdmax.goonj.base.BaseObservableView
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.views.GetStartedView
 import com.dmdmax.goonj.utility.Logger
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
@@ -47,21 +48,21 @@ class GetStartedImpl: BaseObservableView<GetStartedView.Listener>, GetStartedVie
         mViewPager.adapter = mAdapter;
         mIndicator.setViewPager2(mViewPager);
         mViewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
             }
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                Logger.println("Selected Page: "+ position.toString())
             }
 
             override fun onPageScrollStateChanged(state: Int) {
                 super.onPageScrollStateChanged(state)
+
+                if(state == 0){
+                    // page changed
+                    EventManager.getInstance(getContext()).fireEvent(EventManager.Events.GET_STARTED_SCREEN_SWIPED);
+                }
             }
         })
     }

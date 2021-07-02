@@ -9,25 +9,32 @@
     tools:context=".screens.activities.GetStartedActivity"
     android:weightSum="3">
 
-    <ImageView
-        android:paddingTop="40dp"
-        android:id="@+id/channels"
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:src="@drawable/favt_anchors" />
+        android:layout_weight="2.2">
+        <ImageView
+            android:id="@+id/channels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/favt_anchors" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.8"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:weightSum="3">
 
         <TextView
             android:id="@+id/streamTv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"
             android:fontFamily="@font/montserrat_bold"
             android:textStyle="bold"
             android:gravity="center"
@@ -37,13 +44,14 @@
             android:text="Follow favourite channels,\nprograms &amp; anchors"/>
 
         <TextView
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/streamTvTicker"
             android:textColor="@color/cloudy_gray"
             android:textSize="14sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="top|center_horizontal"
             android:text="Whenever you want" />
     </LinearLayout>
 </LinearLayout>

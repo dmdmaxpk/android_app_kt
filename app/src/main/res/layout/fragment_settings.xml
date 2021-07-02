@@ -4,12 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/back_gradient"
-    android:padding="50dp">
+    android:paddingTop="50dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingLeft="50dp">
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:src="@drawable/user_dummy"
             android:id="@+id/user_image"
@@ -24,7 +27,7 @@
             <TextView
                 android:text="Username"
                 android:id="@+id/user_name"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -32,11 +35,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="20dp"
         android:id="@+id/my_profile"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingLeft="35dp">
         <ImageView
             android:src="@drawable/user"
             android:layout_width="50dp"
@@ -46,8 +51,8 @@
         <TextView
             android:text="My Profile"
             android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"
-            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textSize="15sp"
             android:textColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -58,7 +63,8 @@ android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingLeft="35dp">
         <ImageView
             android:src="@drawable/user"
             android:layout_width="50dp"
@@ -68,8 +74,8 @@ android:textStyle="bold"
         <TextView
             android:text="Subscriptions"
             android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"
-            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textSize="15sp"
             android:textColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

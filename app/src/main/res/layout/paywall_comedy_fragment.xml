@@ -35,7 +35,8 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:textStyle="bold"
                 android:layout_gravity="bottom|center_horizontal"
-                android:paddingBottom="10dp"/>
+                android:paddingBottom="10dp"
+                android:textSize="16sp"/>
         </FrameLayout>
 
         <TextView
@@ -77,7 +78,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textSize="16sp"/>
 
 
         <LinearLayout
@@ -102,12 +104,13 @@ android:textStyle="bold"/>
                 android:cropToPadding="true"/>
             <TextView
                 android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"
+                android:textStyle="bold"
                 android:textAllCaps="true"
                 android:text="@string/telenor_number"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="16sp"/>
         </LinearLayout>
 
         <TextView

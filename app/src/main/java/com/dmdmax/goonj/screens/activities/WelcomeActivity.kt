@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.payments.BinjeePaymentHelper
 import com.dmdmax.goonj.payments.ComedyPaymentHelper
 import com.dmdmax.goonj.payments.PaymentHelper
@@ -80,18 +81,22 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
         mView.setCurrentBottomIndex(position)
         when(position) {
             0 -> {
+                EventManager.getInstance(this).fireEvent(EventManager.Events.BOTTOM_MENU_HOME_CLICKED);
                 getCompositionRoot().getViewFactory().toHomePage(null);
             }
 
             1 -> {
+                EventManager.getInstance(this).fireEvent(EventManager.Events.BOTTOM_MENU_LIVE_CLICKED);
                 getCompositionRoot().getViewFactory().toBottomLiveTvPage(null);
             }
 
             2 -> {
+                EventManager.getInstance(this).fireEvent(EventManager.Events.BOTTOM_MENU_VOD_CLICKED);
                 getCompositionRoot().getViewFactory().toVodPage(null);
             }
 
             3 -> {
+                EventManager.getInstance(this).fireEvent(EventManager.Events.BOTTOM_MENU_MORE_CLICKED);
                 getCompositionRoot().getViewFactory().toBottomSettings(null);
             }
         }

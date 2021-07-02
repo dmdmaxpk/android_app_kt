@@ -2,6 +2,7 @@ package com.dmdmax.goonj.screens.activities
 
 import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.MediaModel
 import com.dmdmax.goonj.models.Video

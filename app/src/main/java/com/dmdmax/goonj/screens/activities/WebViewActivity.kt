@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 
@@ -31,9 +32,11 @@ class WebViewActivity : BaseActivity() {
     private fun loadLink(page: String?) {
         if (page == "terms") {
             startWebView(Constants.TERMS_URL)
+            EventManager.getInstance(this).fireEvent("Terms_And_Condition${EventManager.Events.VIEW}");
         }
         if (page == "privacy-policy") {
             startWebView(Constants.PRIVACY_POLICY_URL)
+            EventManager.getInstance(this).fireEvent("Privacy_Policy${EventManager.Events.VIEW}");
         }
     }
 

@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseFragment
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.BinjeePackage
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.PackageModel
@@ -72,6 +73,8 @@ class PaywallBinjeeFragment: BaseFragment(), PaywallBillingView, View.OnClickLis
 
     override fun processBilling(source: String) {
         try{
+            EventManager.getInstance(context!!).fireEvent(EventManager.Events.BINJEE_PAYWALL_PAY_CLICK);
+
             val intent = Intent(context, SigninActivity::class.java);
             intent.putExtra(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE, SLUG);
             intent.putExtra(PaywallGoonjFragment.ARG_PAYMENT_SOURCE, source);

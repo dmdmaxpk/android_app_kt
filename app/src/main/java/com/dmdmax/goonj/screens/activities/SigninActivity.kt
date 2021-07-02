@@ -3,6 +3,7 @@ package com.dmdmax.goonj.screens.activities
 import android.content.Intent
 import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.SigninView
@@ -17,6 +18,7 @@ class SigninActivity : BaseActivity(), SigninView.Listener {
         mView = getCompositionRoot().getViewFactory().getSigninImpl(null);
         setContentView(mView.getRootView());
         initialize();
+        EventManager.getInstance(this).fireEvent("SignIn${EventManager.Events.VIEW}");
     }
 
     private fun initialize(){

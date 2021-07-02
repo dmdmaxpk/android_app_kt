@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".screens.activities.PlayerActivity"
-    android:background="@color/darkColorPrimary"
     android:orientation="vertical">
     <LinearLayout
         android:id="@+id/player_main_layout"
@@ -68,7 +67,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:background="#393d65"
             android:paddingRight="10dp"
             android:paddingLeft="10dp">
@@ -76,7 +75,8 @@
                 android:layout_gravity="start"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:paddingLeft="3dp">
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="6dp"
@@ -122,7 +122,9 @@
             </LinearLayout>
         </FrameLayout>
         <androidx.recyclerview.widget.RecyclerView
-            android:padding="10dp"
+            android:paddingTop="15dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
             android:id="@+id/recommended_live_channels"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

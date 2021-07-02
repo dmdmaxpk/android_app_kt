@@ -3,6 +3,7 @@ package com.dmdmax.goonj.screens.activities
 import android.content.Intent
 import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.views.LoginView
 
 class LoginActivity : BaseActivity(), LoginView.Listener {
@@ -18,6 +19,7 @@ class LoginActivity : BaseActivity(), LoginView.Listener {
 
     private fun initialize(){
         mView.initialize();
+        EventManager.getInstance(this).fireEvent("Login${EventManager.Events.VIEW}");
     }
 
     override fun onStart() {

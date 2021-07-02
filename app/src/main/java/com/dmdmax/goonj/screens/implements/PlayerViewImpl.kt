@@ -13,6 +13,7 @@ import com.dmdmax.goonj.adapters.ChannelsCarouselListAdapter
 import com.dmdmax.goonj.adapters.GenericCategoryAdapter
 import com.dmdmax.goonj.adapters.HeadlinesCarouselListAdapter
 import com.dmdmax.goonj.base.BaseObservableView
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.*
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
@@ -103,6 +104,12 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
         mChannelTitle.text = model.title;
 
         mLiveOrVod.text = if (model.isLive) "LIVE" else "VOD";
+
+        EventManager.getInstance(getContext()).fireEvent(if(model.isLive) EventManager.Events.PLAY_LIVE else EventManager.Events.PLAY_VOD);
+
+        val event = "${model.category!!.capitalize(Locale.getDefault())}_${EventManager.Events.PLAY_CONTENT}${model.title!!.replace(" ", "_")}";
+        Logger.println("EVENT: "+event);
+        //EventManager.getInstance(getContext()).fireEvent(event);
 
         if (model.isLive) {
             mEpisodesLayout.visibility = View.GONE;

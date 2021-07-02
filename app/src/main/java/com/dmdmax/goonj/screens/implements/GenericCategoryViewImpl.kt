@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.adapters.GenericCategoryAdapter
 import com.dmdmax.goonj.base.BaseObservableView
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.models.Video
 import com.dmdmax.goonj.network.client.NetworkOperationListener

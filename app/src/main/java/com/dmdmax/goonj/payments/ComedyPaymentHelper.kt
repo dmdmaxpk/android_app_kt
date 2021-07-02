@@ -1,6 +1,7 @@
 package com.dmdmax.goonj.payments
 
 import android.content.Context
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
@@ -40,12 +41,14 @@ class ComedyPaymentHelper {
                 val rootObj = JSONObject(response)
                 val status: String = rootObj.getString("status")
                 if (status == "success") {
+                    EventManager.getInstance(mContext).fireEvent(EventManager.Events.COMEDY_PAYWALL_OTP_SENT);
                     Toaster.printToast(mContext, "OTP Sent")
                 } else {
                     var message = "Failed to send OTP"
                     if (rootObj.has("data")) {
                         message = rootObj.getString("data")
                     }
+                    EventManager.getInstance(mContext).fireEvent("${EventManager.Events.COMEDY_PAYWALL_FAILED_TO_SENT_OTP_SENT}${message.replace(" ", "_")}");
                     Toaster.printToast(mContext, message!!)
                 }
 
@@ -80,6 +83,7 @@ class ComedyPaymentHelper {
                     val status = rootObj.getString("status")
 
                     if (status == "success") {
+                        EventManager.getInstance(mContext).fireEvent(EventManager.Events.COMEDY_PAYWALL_OTP_VERIFIED);
                         Toaster.printToast(mContext, "OTP Validated!")
 
                         // Validated
@@ -101,10 +105,12 @@ class ComedyPaymentHelper {
                                 mPrefs.setStreamable(true, PaywallComedyFragment.SLUG)
                                 mPrefs.setSubscriptionStatus("billed", PaywallComedyFragment.SLUG)
                                 mPrefs.setMsisdn(msisdn, PaywallComedyFragment.SLUG)
+                                EventManager.getInstance(mContext).fireEvent(EventManager.Events.COMEDY_PAYWALL_SUBSCRIBED);
                             } else {
                                 // not subscribed
                                 mPrefs.setStreamable(false, PaywallComedyFragment.SLUG)
                                 mPrefs.setSubscriptionStatus(PaymentHelper.Companion.PaymentStatus.NOT_SUBSCRIBED, PaywallComedyFragment.SLUG)
+                                EventManager.getInstance(mContext).fireEvent(EventManager.Events.COMEDY_PAYWALL_FAILED_TO_SUBSCRIBE);
                             }
                             if (subStatus == 1) {
                                 // Display stream
@@ -113,10 +119,13 @@ class ComedyPaymentHelper {
                                 listener?.verifyOtp(false, response, false)
                             }
                         } else {
+                            EventManager.getInstance(mContext).fireEvent(EventManager.Events.COMEDY_PAYWALL_FAILED_TO_SUBSCRIBE);
                             Toaster.printToast(mContext, rootObj.getString("data"));
                             listener?.verifyOtp(false, response, false)
                         }
-                    } else {
+                    }
+                    else {
+                        EventManager.getInstance(mContext).fireEvent(EventManager.Events.COMEDY_PAYWALL_OTP_NOT_VERIFIED);
                         listener?.verifyOtp(false, response, false)
                     }
                 }

@@ -1,6 +1,7 @@
 package com.dmdmax.goonj.payments
 
 import android.content.Context
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
@@ -55,11 +56,13 @@ class BinjeePaymentHelper {
                 val code = rootObj.getInt("result")
                 if (code == 0) {
                     Toaster.printToast(mContext, "OTP Sent")
+                    EventManager.getInstance(mContext).fireEvent(EventManager.Events.BINJEE_PAYWALL_OTP_SENT);
                 } else {
                     var message: String? = "Failed to send OTP"
                     if (rootObj.has("data")) {
                         message = rootObj.getString("data")
                     }
+                    EventManager.getInstance(mContext).fireEvent("${EventManager.Events.BINJEE_PAYWALL_FAILED_TO_SENT_OTP_SENT}${message!!.replace(" ", "_")}");
                     Toaster.printToast(mContext, message!!)
                 }
 
@@ -91,11 +94,13 @@ class BinjeePaymentHelper {
                 val code = rootObj.getInt("result")
                 if (code == 0) {
                     Toaster.printToast(mContext, "OTP Sent")
+                    EventManager.getInstance(mContext).fireEvent(EventManager.Events.BINJEE_PAYWALL_OTP_SENT);
                 } else {
                     var message: String? = "Failed to send OTP"
                     if (rootObj.has("data")) {
                         message = rootObj.getString("data")
                     }
+                    EventManager.getInstance(mContext).fireEvent("${EventManager.Events.BINJEE_PAYWALL_FAILED_TO_SENT_OTP_SENT}${message!!.replace(" ", "_")}");
                     Toaster.printToast(mContext, message!!)
                 }
 
@@ -126,21 +131,39 @@ class BinjeePaymentHelper {
                     Logger.println("Binjee - verifyOtp - onSuccess: "+response);
 
                     val rootObj = JSONObject(response);
-                    val status = rootObj.getString("resultString")
-                    if (status == "success" || status == "User is already subscriber") {
-                        Toaster.printToast(mContext, "Subscribed!")
-                        mPrefs.setSubscriptionStatus("billed", PaywallBinjeeFragment.SLUG)
+                    if(rootObj.has("value") && rootObj.getString("value") == "pin validation successful"){
+                        EventManager.getInstance(mContext).fireEvent(EventManager.Events.BINJEE_PAYWALL_OTP_VERIFIED);
 
-                        // Validated
-                        mPrefs.setStreamable(true, PaywallBinjeeFragment.SLUG)
-                        mPrefs.setMsisdn(msisdn!!, PaywallBinjeeFragment.SLUG)
-                        listener?.onSubscriptionResponse(true, response, true);
-                    } else {
-                        mPrefs.setStreamable(false, PaywallBinjeeFragment.SLUG)
-                        mPrefs.setSubscriptionStatus(PaymentHelper.Companion.PaymentStatus.NOT_SUBSCRIBED, PaywallBinjeeFragment.SLUG)
+                        val status = rootObj.getString("resultString")
+                        if (status == "success" || status == "User is already subscriber") {
+                            Toaster.printToast(mContext, "Subscribed!")
+                            mPrefs.setSubscriptionStatus("billed", PaywallBinjeeFragment.SLUG)
 
+                            // Validated
+                            mPrefs.setStreamable(true, PaywallBinjeeFragment.SLUG)
+                            mPrefs.setMsisdn(msisdn!!, PaywallBinjeeFragment.SLUG)
+
+                            if(status == "success"){
+                                EventManager.getInstance(mContext).fireEvent(EventManager.Events.BINJEE_PAYWALL_SUBSCRIBED);
+                            }else{
+                                EventManager.getInstance(mContext).fireEvent(EventManager.Events.BINJEE_PAYWALL_ALREADY_SUBSCRIBED);
+                            }
+
+                            listener?.onSubscriptionResponse(true, response, true);
+                        } else {
+                            EventManager.getInstance(mContext).fireEvent(EventManager.Events.BINJEE_PAYWALL_FAILED_TO_SUBSCRIBE);
+                            mPrefs.setStreamable(false, PaywallBinjeeFragment.SLUG)
+                            mPrefs.setSubscriptionStatus(PaymentHelper.Companion.PaymentStatus.NOT_SUBSCRIBED, PaywallBinjeeFragment.SLUG)
+
+                            listener?.onSubscriptionResponse(false, response, false);
+                            Toaster.printToast(mContext, rootObj.getString("resultString"))
+                        }
+
+                    }
+                    else{
+                        EventManager.getInstance(mContext).fireEvent(EventManager.Events.BINJEE_PAYWALL_OTP_NOT_VERIFIED);
                         listener?.onSubscriptionResponse(false, response, false);
-                        Toaster.printToast(mContext, rootObj.getString("resultString"))
+                        Toaster.printToast(mContext, "Failed to validate OTP")
                     }
                 }
             }

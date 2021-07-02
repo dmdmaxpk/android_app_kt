@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/get_started_bg">
 
     <include
         android:id="@+id/header1"
@@ -32,12 +32,14 @@
     <FrameLayout
         android:background="@drawable/enter_mobile_number_et_bg"
         android:id="@+id/mobile_number"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         app:layout_constraintTop_toBottomOf="@+id/watch_live_tv_anytime_anywhere"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:paddingLeft="10dp">
         <EditText
             android:id="@+id/mobile_number_et"
@@ -55,13 +57,14 @@
     <FrameLayout
         android:id="@+id/next"
         android:background="@drawable/simple_focused_button_selector"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         app:layout_constraintTop_toBottomOf="@+id/mobile_number"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="25dp"
-        android:paddingLeft="10dp"
         android:clickable="true">
         <TextView
             android:fontFamily="@font/montserrat_bold"

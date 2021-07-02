@@ -8,6 +8,7 @@ import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
+import com.dmdmax.goonj.adapters.BottomMenuChannelAdapter
 import com.dmdmax.goonj.adapters.ChannelsCarouselListAdapter
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.Channel
@@ -76,7 +77,7 @@ class BottomMenuLiveTvImpl: BaseObservableView<BottomMenuLiveTvView.Listener>, B
         }
 
         // Set listener
-        mRecommendedLiveChannels.adapter = ChannelsCarouselListAdapter(mList, getContext(), object : ChannelsCarouselListAdapter.OnItemClickListener {
+        mRecommendedLiveChannels.adapter = BottomMenuChannelAdapter(mList, getContext(), object : BottomMenuChannelAdapter.OnItemClickListener {
             override fun onClick(channel: Channel, position: Int) {
                 play(channel);
             }
@@ -173,7 +174,7 @@ class BottomMenuLiveTvImpl: BaseObservableView<BottomMenuLiveTvView.Listener>, B
     }
 
     private fun setRecyclerView(recyclerView: RecyclerView) {
-        val manager = GridLayoutManager(getContext(), 4)
+        val manager = GridLayoutManager(getContext(), 2)
         recyclerView.layoutManager = manager
     }
 }

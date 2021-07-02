@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#FF212529</color>
     <color name="darkColorPrimary">#FF212529</color>
-    <color name="bottom_sheet_background">#1b1b1b</color>
+    <color name="bottom_sheet_background">#14161B</color>
     <color name="darkColorPrimaryDark">#FF2A2E32</color>
     <color name="darkColorAccent">#FFFFFFFF</color>
     <color name="welcome_bg">#1d2132</color>

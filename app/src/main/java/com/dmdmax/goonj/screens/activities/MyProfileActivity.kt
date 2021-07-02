@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
@@ -54,6 +55,8 @@ class MyProfileActivity: BaseActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_profile)
+
+        EventManager.getInstance(this).fireEvent("My_Profile${EventManager.Events.VIEW}");
     }
 
     override fun onResume() {

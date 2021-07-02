@@ -23,12 +23,14 @@
         android:layout_height="0dp"
         android:layout_weight="0.8"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:weightSum="2">
 
         <TextView
             android:id="@+id/streamTv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:fontFamily="@font/montserrat_bold"
             android:textStyle="bold"
             android:gravity="center"
@@ -38,12 +40,12 @@
             android:text="Watch top\nPrograms"/>
 
         <TextView
-            android:layout_marginTop="15dp"
             android:id="@+id/streamTvTicker"
             android:textColor="@color/cloudy_gray"
             android:textSize="14sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="Anytime, Anywhere" />
     </LinearLayout>

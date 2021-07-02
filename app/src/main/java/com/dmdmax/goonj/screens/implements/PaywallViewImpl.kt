@@ -1,13 +1,22 @@
 package com.dmdmax.goonj.screens.implements
 
+import android.content.Context
+import android.graphics.Typeface
+import android.graphics.fonts.Font
+import android.graphics.fonts.FontFamily
+import android.os.Build
 import android.os.Bundle
+import android.text.Spannable
+import android.text.style.BackgroundColorSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.RequiresApi
+import androidx.core.text.toSpannable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseFragment
@@ -15,14 +24,15 @@ import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.models.Paywall
-import com.dmdmax.goonj.payments.ComedyPaymentHelper
-import com.dmdmax.goonj.screens.activities.PlayerActivity
+import com.dmdmax.goonj.screens.*
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.PaywallView
 import com.dmdmax.goonj.utility.*
+import com.google.ads.interactivemedia.v3.internal.vw
 import com.google.android.material.tabs.TabLayout
+
 
 class PaywallViewImpl: BaseObservableView<PaywallView.Listener>, PaywallView {
 
@@ -35,6 +45,8 @@ class PaywallViewImpl: BaseObservableView<PaywallView.Listener>, PaywallView {
     private var mChannel: Channel? = null;
 
     private var mPackageModel: PackageModel? = null;
+
+    private var mContext: Context? = null;
 
     constructor(inflater: LayoutInflater, parent: ViewGroup?) {
         setRootView(inflater.inflate(R.layout.activity_paywall, parent, false));
@@ -57,6 +69,8 @@ class PaywallViewImpl: BaseObservableView<PaywallView.Listener>, PaywallView {
         val mList: ArrayList<BaseFragment> = getChildFragments();
         mChildFragmentManager = (getContext() as BaseActivity).supportFragmentManager;
         bindViewPager(mList);
+
+        mContext = getContext();
     }
 
 
@@ -111,7 +125,7 @@ class PaywallViewImpl: BaseObservableView<PaywallView.Listener>, PaywallView {
         return fragmentList;
     }
 
-    internal class MyPagerAdapter(manager: FragmentManager, private val categoryFragments: List<BaseFragment>) : FragmentPagerAdapter(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    inner class MyPagerAdapter(manager: FragmentManager, private val categoryFragments: List<BaseFragment>) : FragmentPagerAdapter(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(position: Int): Fragment {
             return categoryFragments[position]
         }
@@ -122,9 +136,14 @@ class PaywallViewImpl: BaseObservableView<PaywallView.Listener>, PaywallView {
 
         override fun getPageTitle(position: Int): CharSequence? {
             val bundle = categoryFragments[position].arguments
-            return if (bundle != null && bundle.containsKey(PaywallGoonjFragment.ARGS_TAB)) {
-                (bundle.getSerializable(PaywallGoonjFragment.ARGS_TAB) as Paywall?)!!.name.toUpperCase();
-            } else ""
+            val name = (bundle!!.getSerializable(PaywallGoonjFragment.ARGS_TAB) as Paywall?)!!.name.toUpperCase();
+            return name;
+
+            /*val str: Spannable = name.toSpannable();
+            str.setSpan(StyleSpan(Typeface.BOLD), 0, str.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            return str;*/
         }
+
+
     }
 }

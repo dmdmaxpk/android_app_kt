@@ -13,13 +13,13 @@ import android.view.Window
 import android.view.WindowManager
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.Params
-import com.dmdmax.goonj.models.PaywallPackage
 import com.dmdmax.goonj.screens.activities.SplashActivity
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONStringer
+import java.math.BigDecimal
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -404,14 +404,6 @@ class Utility {
             Constants.PRIVACY_POLICY_URL = Constants.PRIVACY_POLICY_URL!!.replace("https://", "http://")
         }
 
-        fun getPricePointOfPackage(context: Context?, packageId: String?): String? {
-            val packages: List<PaywallPackage> = GoonjPrefs(context).getPackagesList();
-            for (p in packages) {
-                if (p.getId().equals(packageId)) return p.getPricePoint()
-            }
-            return ""
-        }
-
         fun getNextNamazTime(response: String): String {
             val rootObj = JSONObject(response);
 
@@ -461,6 +453,19 @@ class Utility {
             }
 
             return list!!.filter { s -> s.getCategory() == category } as ArrayList<Channel>
+        }
+
+        fun getNumberFormat(number: String): String{
+            var numberString = ""
+            numberString = if (Math.abs(BigDecimal(number).intValueExact() / 1000000) > 1) {
+                (BigDecimal(number).intValueExact() / 1000000).toString() + "M"
+            } else if (Math.abs(BigDecimal(number).intValueExact() / 1000) > 1) {
+                (BigDecimal(number).intValueExact() / 1000).toString() + "K"
+            } else {
+                number
+            }
+
+            return numberString;
         }
     }
 }

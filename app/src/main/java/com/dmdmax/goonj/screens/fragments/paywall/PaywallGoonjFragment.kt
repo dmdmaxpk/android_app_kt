@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseFragment
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.models.Paywall
 import com.dmdmax.goonj.network.client.NetworkOperationListener
@@ -135,6 +136,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
 
     override fun processBilling(source: String) {
         try{
+            EventManager.getInstance(context!!).fireEvent(EventManager.Events.GOONJ_PAYWALL_PAY_CLICK);
             val intent = Intent(context, SigninActivity::class.java);
             intent.putExtra(ARG_SUBSCRIPTION_SOURCE, SLUG);
             intent.putExtra(ARG_PAYMENT_SOURCE, source);

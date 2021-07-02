@@ -30,7 +30,8 @@
             android:textAllCaps="true"
             android:fontFamily="@font/montserrat_bold"
             android:textStyle="bold"
-            android:textSize="15sp"/>
+            android:textSize="16sp"
+            android:layout_marginTop="-5dp"/>
 
         <TextView
             android:id="@+id/package_name"
@@ -45,7 +46,7 @@
             android:textAllCaps="true"
             android:fontFamily="@font/montserrat_bold"
             android:textStyle="bold"
-            android:textSize="15sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/package_price"
@@ -72,7 +73,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textSize="16sp"/>
 
 
         <LinearLayout
@@ -90,12 +92,13 @@ android:textStyle="bold"/>
             android:gravity="center">
             <TextView
                 android:fontFamily="@font/montserrat_bold"
-android:textStyle="bold"
+                android:textStyle="bold"
                 android:textAllCaps="true"
                 android:text="@string/subscribe_now"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="16sp"/>
         </LinearLayout>
 
         <TextView
