@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Channel
+import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.SigninView
 import com.dmdmax.goonj.utility.Constants
@@ -24,7 +25,7 @@ class SigninActivity : BaseActivity(), SigninView.Listener {
     private fun initialize(){
         mView.initialize(
                 intent.extras?.getString(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE),
-                intent.extras?.getString(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE)
+            intent.extras?.getSerializable(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE) as PackageModel
         );
     }
 
@@ -44,7 +45,7 @@ class SigninActivity : BaseActivity(), SigninView.Listener {
         intent.putExtra("msisdn", msisdn)
         intent.putExtra(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE, getIntent().extras?.getString(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE));
         intent.putExtra(PaywallGoonjFragment.ARG_PAYMENT_SOURCE, getIntent().extras?.getString(PaywallGoonjFragment.ARG_PAYMENT_SOURCE));
-        intent.putExtra(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE, getIntent().extras?.getString(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE));
+        intent.putExtra(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE, getIntent().extras?.getSerializable(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE) as PackageModel);
         startActivity(intent);
         finish();
     }

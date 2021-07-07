@@ -21,7 +21,6 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
         mView = getCompositionRoot().getViewFactory().getSplashViewImpl(null);
         setContentView(mView.getRootView());
         mView.getRemoteConfigs();
-        checkUrl()
         EventManager.getInstance(this).fireEvent("Splash${EventManager.Events.VIEW}");
     }
 
@@ -36,16 +35,7 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
     }
 
     override fun onCompleted() {
-        Logger.println("onCompleted - SplashActivity");
-        if(mView.getPrefs().isInterestedTopicDone()){
-            Logger.println("onCompleted - 1 - SplashActivity");
-            startActivity(Intent(this, WelcomeActivity::class.java));
-            finish();
-        }else{
-            Logger.println("onCompleted - 2 - SplashActivity");
-            startActivity(Intent(this, GetStartedActivity::class.java));
-            finish();
-        }
+        checkUrl()
     }
 
     private fun checkUrl() {
@@ -101,7 +91,7 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
                             startActivity(Intent(this@SplashActivity, WelcomeActivity::class.java))
                             finish()
                         } else {
-                            RestClient(this@SplashActivity, Constants.API_BASE_URL + "/" + Constants.LIVE_QUERY + channelString, RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
+                            RestClient(this@SplashActivity, Constants.API_BASE_URL + Constants.LIVE_QUERY + channelString, RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
                                     override fun onSuccess(response: String?) {
                                         var response = response
                                         try {
@@ -143,7 +133,8 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
                         startActivity(Intent(this@SplashActivity, WelcomeActivity::class.java))
                         finish()
                     }
-                } else {
+                }
+                else {
                     // Its VOD
                     RestClient(
                         this@SplashActivity,
@@ -198,6 +189,18 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
                             }
                         }).exec()
                 }
+            }
+        }
+        else{
+            Logger.println("onCompleted - SplashActivity");
+            if(mView.getPrefs().isInterestedTopicDone()){
+                Logger.println("onCompleted - 1 - SplashActivity");
+                startActivity(Intent(this, WelcomeActivity::class.java));
+                finish();
+            }else{
+                Logger.println("onCompleted - 2 - SplashActivity");
+                startActivity(Intent(this, GetStartedActivity::class.java));
+                finish();
             }
         }
     }

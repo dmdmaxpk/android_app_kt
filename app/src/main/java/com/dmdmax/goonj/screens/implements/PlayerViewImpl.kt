@@ -107,9 +107,9 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
 
         EventManager.getInstance(getContext()).fireEvent(if(model.isLive) EventManager.Events.PLAY_LIVE else EventManager.Events.PLAY_VOD);
 
-        val event = "${model.category!!.capitalize(Locale.getDefault())}_${EventManager.Events.PLAY_CONTENT}${model.title!!.replace(" ", "_")}";
+        val event = "${model.category!!.capitalize()}_${EventManager.Events.PLAY_CONTENT}${model.title!!.replace(" ", "_")}";
         Logger.println("EVENT: "+event);
-        //EventManager.getInstance(getContext()).fireEvent(event);
+        EventManager.getInstance(getContext()).fireEvent(event);
 
         if (model.isLive) {
             mEpisodesLayout.visibility = View.GONE;

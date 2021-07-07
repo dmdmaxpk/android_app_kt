@@ -40,6 +40,8 @@ class PaywallBinjeeFragment: BaseFragment(), PaywallBillingView, View.OnClickLis
             }
             return fragment;
         }
+
+        val BINJEE_PACKAGE = "Daily Package";
     }
 
     private lateinit var mSubscribeNow: LinearLayout;
@@ -78,6 +80,12 @@ class PaywallBinjeeFragment: BaseFragment(), PaywallBillingView, View.OnClickLis
             val intent = Intent(context, SigninActivity::class.java);
             intent.putExtra(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE, SLUG);
             intent.putExtra(PaywallGoonjFragment.ARG_PAYMENT_SOURCE, source);
+
+            // Package for package name to shoot facebook events.
+            val mPackage = PackageModel()
+            mPackage.name = BINJEE_PACKAGE;
+
+            intent.putExtra(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE, mPackage);
             startActivity(intent);
             activity?.finish();
         }catch (e: Exception){

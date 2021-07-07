@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Handler
 import androidx.multidex.MultiDex
 import com.dmdmax.goonj.utility.Logger
+import com.facebook.FacebookSdk
 import com.google.android.exoplayer2.util.Util
 import com.google.firebase.FirebaseApp
 import java.net.CookieHandler

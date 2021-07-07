@@ -11,6 +11,7 @@ import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Channel
+import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.activities.SigninActivity
 import com.dmdmax.goonj.screens.views.PaywallBillingView
@@ -28,6 +29,8 @@ class PaywallComedyFragment: BaseFragment(), PaywallBillingView, View.OnClickLis
             }
             return fragment;
         }
+
+        val COMEDY_HARD_CODE_PACKAGE = "Comedy Weekly";
     }
 
     private lateinit var mSubscribeNow: LinearLayout;
@@ -61,6 +64,13 @@ class PaywallComedyFragment: BaseFragment(), PaywallBillingView, View.OnClickLis
             val intent = Intent(context, SigninActivity::class.java);
             intent.putExtra(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE, SLUG);
             intent.putExtra(PaywallGoonjFragment.ARG_PAYMENT_SOURCE, source);
+
+            // Package for package name to shoot facebook events.
+            val mPackage = PackageModel()
+            mPackage.name = COMEDY_HARD_CODE_PACKAGE;
+
+            intent.putExtra(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE, mPackage);
+
             startActivity(intent);
         }catch (e: Exception){
             e.printStackTrace()

@@ -2,6 +2,7 @@ package com.dmdmax.goonj.payments
 
 import android.content.Context
 import com.dmdmax.goonj.firebase_events.EventManager
+import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
@@ -41,24 +42,24 @@ class PaymentHelper {
         fun verifyOtp(verified: Boolean, response: String?, allowedToStream: Boolean);
     }
 
-    fun sendOtp(msisdn: String, packageId: String){
+    fun sendOtp(msisdn: String, packageModel: PackageModel?){
         val mList: ArrayList<Params> = arrayListOf();
         mList.add(Params("msisdn", msisdn));
         mList.add(Params("source", source));
-        mList.add(Params("package_id", packageId));
+        mList.add(Params("package_id", packageModel?.id));
         mList.add(Params("payment_source", mPaymentSource));
 
         RestClient(mContext, Constants.API_BASE_URL + Constants.Companion.EndPoints.SEND_OTP, RestClient.Companion.Method.POST, mList, object : NetworkOperationListener {
             override fun onSuccess(response: String?) {
-                Logger.println("SendOtp - onSuccess - " + response);
+                Logger.println("SendOtp - onSuccess - $response");
                 mPrefs.setMsisdn(msisdn, PaywallGoonjFragment.SLUG);
-                mPrefs.setSubscribedPackageId(packageId, PaywallGoonjFragment.SLUG);
+                mPrefs.setSubscribedPackageId(packageModel?.id, PaywallGoonjFragment.SLUG);
 
                 EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_OTP_SENT)
             }
 
             override fun onFailed(code: Int, reason: String?) {
-                Logger.println("SendOtp - onFailed - " + reason);
+                Logger.println("SendOtp - onFailed - $reason");
             }
         }).exec();
     }
@@ -120,11 +121,12 @@ class PaymentHelper {
     interface SubscribeNowListener{
         fun onSubscriptionResponse(billed: Boolean, response: String?, allowedToStream: Boolean);
     }
-    fun subscribeNow(msisdn: String?, mPackage: String, paymentSource: String, otp: String?, listener: SubscribeNowListener) {
+
+    fun subscribeNow(msisdn: String?, mPackage: PackageModel, paymentSource: String, otp: String?, listener: SubscribeNowListener) {
 
         val postBody = arrayListOf<Params>();
         postBody.add(Params("msisdn", msisdn))
-        postBody.add(Params("package_id", mPackage))
+        postBody.add(Params("package_id", mPackage.id))
         postBody.add(Params("source", "app"))
         postBody.add(Params("payment_source", paymentSource))
 
@@ -163,6 +165,7 @@ class PaymentHelper {
                     }else{
                         if(code == 0){
                             EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_SUBSCRIBED);
+                            EventManager.getInstance(mContext).triggerFacebookSubscribeEvent(mPackage.name, "goonj", paymentSource)
                         }else if(code == 9){
                             EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_ALREADY_SUBSCRIBED);
                             Toaster.printToast(mContext, rootObj.getString("message"))

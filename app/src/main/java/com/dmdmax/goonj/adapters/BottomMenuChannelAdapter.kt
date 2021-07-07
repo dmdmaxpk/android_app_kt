@@ -51,7 +51,12 @@ class BottomMenuChannelAdapter: RecyclerView.Adapter<BottomMenuChannelAdapter.My
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.title.text = list!![holder.adapterPosition].getName();
+        var text = list!![holder.adapterPosition].getName();
+        if(text.toLowerCase().contains("entertainment")){
+            text = list!![holder.adapterPosition].getName().split(" ")[0] + "\n" + list!![holder.adapterPosition].getName().split(" ")[1];
+        }
+
+        holder.title.text = text
         Picasso.get().load(list!![holder.adapterPosition].getThumbnail())
             .into(holder.thumbnail, object : Callback {
                 override fun onSuccess() {

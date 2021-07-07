@@ -1,6 +1,7 @@
 package com.dmdmax.goonj.screens.views
 
 import com.dmdmax.goonj.base.ObservableView
+import com.dmdmax.goonj.models.PackageModel
 
 interface SigninView: ObservableView<SigninView.Listener> {
 
@@ -11,5 +12,5 @@ interface SigninView: ObservableView<SigninView.Listener> {
         fun viewPrivacyPolicy();
     }
 
-    fun  initialize(subscriptionSource: String?, packageId: String?);
+    fun  initialize(subscriptionSource: String?, packageModel: PackageModel);
 }

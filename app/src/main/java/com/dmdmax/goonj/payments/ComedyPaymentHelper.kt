@@ -2,6 +2,7 @@ package com.dmdmax.goonj.payments
 
 import android.content.Context
 import com.dmdmax.goonj.firebase_events.EventManager
+import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
@@ -63,7 +64,7 @@ class ComedyPaymentHelper {
         }).exec(PaywallComedyFragment.SLUG, postBody);
     }
 
-    fun verifyOtp(msisdn: String?, otp: String?, packageId: String?, listener: VerifyOtpListener?){
+    fun verifyOtp(msisdn: String?, otp: String?, mPackage: PackageModel, listener: VerifyOtpListener?){
         //{"status":"success","message":"Signup successfully",
         // "userData":{"user_id":"14340","name":"","slug":null,"username":"","email":"","password":"0fdb3f0c958aef4253e068907ca833f2","gender":"1","role":"subscriber",
         // "token":null,"theme":"default","theme_color":"#16163F",
@@ -106,6 +107,7 @@ class ComedyPaymentHelper {
                                 mPrefs.setSubscriptionStatus("billed", PaywallComedyFragment.SLUG)
                                 mPrefs.setMsisdn(msisdn, PaywallComedyFragment.SLUG)
                                 EventManager.getInstance(mContext).fireEvent(EventManager.Events.COMEDY_PAYWALL_SUBSCRIBED);
+                                EventManager.getInstance(mContext).triggerFacebookSubscribeEvent(mPackage.name, "comedy", null)
                             } else {
                                 // not subscribed
                                 mPrefs.setStreamable(false, PaywallComedyFragment.SLUG)

@@ -31,14 +31,14 @@
             android:id="@+id/subs_text"
             android:layout_gravity="center"
             android:textColor="@color/white"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:gravity="center"/>
     </FrameLayout>
 
     <ProgressBar
-        android:layout_marginRight="40dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginRight="25dp"
         android:layout_gravity="right|center_vertical"
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyleSmall"

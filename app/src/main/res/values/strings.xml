@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Goonj</string>
+    <string name="facebook_app_id">1907140572877408</string>
     <string name="str_get_started">Stream your favourite\ntv channels</string>
     <string name="skip">Skip</string>
     <string name="join_now">Join Now</string>

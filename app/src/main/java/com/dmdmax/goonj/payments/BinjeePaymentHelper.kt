@@ -2,6 +2,7 @@ package com.dmdmax.goonj.payments
 
 import android.content.Context
 import com.dmdmax.goonj.firebase_events.EventManager
+import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
@@ -115,7 +116,7 @@ class BinjeePaymentHelper {
         }).exec(PaywallBinjeeFragment.SLUG, null);
     }
 
-    fun verifyOtp(msisdn: String?, otp: String?, packageId: String?, listener: SubscribeNowListener?){
+    fun verifyOtp(msisdn: String?, otp: String?, mPackage: PackageModel, listener: SubscribeNowListener?){
 
         val postBody: ArrayList<Params> = arrayListOf(
           Params("msisdn", msisdn),
@@ -128,7 +129,7 @@ class BinjeePaymentHelper {
             override fun onSuccess(response: String?) {
                 if (response != null) {
                     //{"result":0,"resultCode":"200","pinCode":"053915","resultString":"success","refId":"2022523463477","value":"pin validation successful","data":{}}
-                    Logger.println("Binjee - verifyOtp - onSuccess: "+response);
+                    Logger.println("Binjee - verifyOtp - onSuccess: $response");
 
                     val rootObj = JSONObject(response);
                     if(rootObj.has("value") && rootObj.getString("value") == "pin validation successful"){
@@ -145,6 +146,7 @@ class BinjeePaymentHelper {
 
                             if(status == "success"){
                                 EventManager.getInstance(mContext).fireEvent(EventManager.Events.BINJEE_PAYWALL_SUBSCRIBED);
+                                EventManager.getInstance(mContext).triggerFacebookSubscribeEvent(mPackage.name, "comedy", mPackage.name)
                             }else{
                                 EventManager.getInstance(mContext).fireEvent(EventManager.Events.BINJEE_PAYWALL_ALREADY_SUBSCRIBED);
                             }
@@ -176,41 +178,6 @@ class BinjeePaymentHelper {
 
     interface SubscribeNowListener{
         fun onSubscriptionResponse(billed: Boolean, response: String?, allowedToStream: Boolean);
-    }
-
-    fun subscribeNow(msisdn: String?, mPackage: String, paymentSource: String, otp: String?, listener: SubscribeNowListener) {
-
-        val postBody = arrayListOf<Params>();
-        postBody.add(Params("msisdn", msisdn))
-        postBody.add(Params("package_id", mPackage))
-        postBody.add(Params("source", "app"))
-        postBody.add(Params("payment_source", paymentSource))
-
-        RestClient(mContext, Constants.COMEDY_BASE_URL + Constants.Companion.EndPoints.SUBSCRIBE, RestClient.Companion.Method.POST, postBody, object : NetworkOperationListener {
-            override fun onSuccess(response: String?) {
-                val rootObj = JSONObject(response);
-                val code = rootObj.getInt("code")
-
-                if (code == 0 || code == 11 || code == 9) {
-                    mPrefs.setOtpValidated(true)
-                    if (rootObj.has("package_id")) {
-                        mPrefs.setSubscribedPackageId(rootObj.getString("package_id"), PaywallBinjeeFragment.SLUG)
-                    }
-                    var status = "billed";
-                    if (code == 11) {
-                        status = "trial"
-                    }
-                    mPrefs.setSubscriptionStatus(status, PaywallBinjeeFragment.SLUG)
-                    listener.onSubscriptionResponse(true, response, rootObj.getBoolean("is_allowed_to_stream"))
-                } else {
-                    listener.onSubscriptionResponse(false, response, rootObj.getBoolean("is_allowed_to_stream"))
-                }
-            }
-
-            override fun onFailed(code: Int, reason: String?) {
-                listener.onSubscriptionResponse(false, null, false)
-            }
-        }).exec();
     }
 
     interface BillingStatusCheckListener {

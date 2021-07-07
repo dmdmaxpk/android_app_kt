@@ -188,7 +188,7 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
 
                                         val mPackage = PackageModel()
                                         mPackage.id = "no-id"
-                                        mPackage.name = "Daily Package";
+                                        mPackage.name = PaywallBinjeeFragment.BINJEE_PACKAGE;
                                         mPackage.desc = "Binjee daily package"
                                         mPackage.slug = p.slug;
                                         mPackages.add(mPackage)
@@ -212,7 +212,8 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
                                     packagesPb.setVisibility(View.GONE)
                                 }
                             }).execComedy()
-                    } catch (e: java.lang.Exception) {
+                    }
+                    catch (e: java.lang.Exception) {
                         e.printStackTrace()
                     }
                 }

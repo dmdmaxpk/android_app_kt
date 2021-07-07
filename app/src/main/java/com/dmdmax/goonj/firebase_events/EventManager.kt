@@ -1,6 +1,11 @@
 package com.dmdmax.goonj.firebase_events
 
 import android.content.Context
+import android.os.Bundle
+import com.dmdmax.goonj.utility.Logger
+import com.dmdmax.goonj.utility.Utility
+import com.facebook.appevents.AppEventsConstants
+import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
 
 open class EventManager {
@@ -25,7 +30,20 @@ open class EventManager {
         }
     }
 
+    open fun triggerFacebookSubscribeEvent(packageName: String?, slug: String, paymentSource: String?) {
+        val logger: AppEventsLogger = AppEventsLogger.newLogger(mContext)
 
+        val params = Bundle()
+        params.putString("package_subscribed", packageName!!.toLowerCase().replace(" ", "_"))
+        params.putString("paywall_type", slug.toLowerCase())
+
+        if(paymentSource != null) {
+            params.putString("paywall_source", slug.toLowerCase())
+        }
+
+        Logger.println("FACEBOOK EVENT: $params")
+        logger.logEvent(AppEventsConstants.EVENT_NAME_SUBSCRIBE, params)
+    }
 
     fun fireEvent(event: String){
         mFirebaseAnalytics.logEvent("V2_${event}", null)

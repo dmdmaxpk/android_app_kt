@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseObservableView
+import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.payments.BinjeePaymentHelper
 import com.dmdmax.goonj.payments.ComedyPaymentHelper
 import com.dmdmax.goonj.payments.PaymentHelper
@@ -31,14 +32,14 @@ class SigninImpl: BaseObservableView<SigninView.Listener>, SigninView, View.OnCl
     private lateinit var mPaymentHelper: PaymentHelper;
 
     private var mSubscriptionSource: String? = null;
-    private var mPackageId: String? = null;
+    private var mPackage: PackageModel? = null;
 
     constructor(inflater: LayoutInflater, parent: ViewGroup?) {
         setRootView(inflater.inflate(R.layout.activity_signin, parent, false));
     }
 
-    override fun initialize(subscriptionSource: String?, packageId: String?) {
-        this.mPackageId = packageId;
+    override fun initialize(subscriptionSource: String?, packageModel: PackageModel) {
+        this.mPackage = packageModel;
         this.mSubscriptionSource = subscriptionSource;
 
         mMobileNumber = findViewById(R.id.mobile_number_et);
@@ -74,7 +75,7 @@ class SigninImpl: BaseObservableView<SigninView.Listener>, SigninView, View.OnCl
                     }else if(mSubscriptionSource != null && mSubscriptionSource.equals(PaywallComedyFragment.SLUG)){
                         mComedyHelper.sendOtp(mobileNumber);
                     }else{
-                        mPaymentHelper.sendOtp(mobileNumber, mPackageId!!);
+                        mPaymentHelper.sendOtp(mobileNumber, mPackage);
                     }
 
                     for (listener in getListeners()) {

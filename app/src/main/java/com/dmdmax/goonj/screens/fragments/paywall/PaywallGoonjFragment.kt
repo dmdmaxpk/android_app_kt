@@ -117,7 +117,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
                 mProgressBar.visibility = View.GONE;
                 mMainLayout.visibility = View.VISIBLE;
 
-                if(mPaywall != null && mPaywall.mSelectedPackage != null){
+                if(mPaywall.mSelectedPackage != null){
                     mDefaultPackage = list.find { packageModel -> packageModel.id == mPaywall.mSelectedPackage?.id }!!
                 }else{
                     mDefaultPackage = list.find { packageModel -> packageModel.default }!!
@@ -140,7 +140,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
             val intent = Intent(context, SigninActivity::class.java);
             intent.putExtra(ARG_SUBSCRIPTION_SOURCE, SLUG);
             intent.putExtra(ARG_PAYMENT_SOURCE, source);
-            intent.putExtra(ARGS_DEFAULT_PACKAGE, mDefaultPackage.id);
+            intent.putExtra(ARGS_DEFAULT_PACKAGE, mDefaultPackage);
             startActivity(intent);
             (context as BaseActivity).finish()
         }catch (e: Exception){

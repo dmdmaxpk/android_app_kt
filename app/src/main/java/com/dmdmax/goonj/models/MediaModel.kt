@@ -43,6 +43,7 @@ class MediaModel {
             model.url = Utility.generateLiveUrl(bitrate, channel.getHlsLink());
             model.id = channel.getId();
             model.title = channel.getName();
+            model.category = "live"
             return model;
         }
     }

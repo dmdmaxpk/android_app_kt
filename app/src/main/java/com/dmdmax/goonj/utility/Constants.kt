@@ -25,7 +25,7 @@ public class Constants {
 
 
         val CONFIG_EXPIRATION_TIME_IN_SEC: Long = 300
-        val LIVE_QUERY = "/live?slug="
+        val LIVE_QUERY = "live?slug="
         val PIC_EXTENSION = ".webp"
         val VOD_THUMB = "video/thumb/"
         val VOD_DRAMA = "video/drama/"

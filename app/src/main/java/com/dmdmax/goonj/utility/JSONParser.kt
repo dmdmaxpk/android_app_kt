@@ -196,16 +196,23 @@ class JSONParser {
         }
 
         fun getLiveDetailsModel(response: String?): Channel? {
-            var model: Channel? = Channel()
             try {
+                val model = Channel()
+
                 val root = JSONObject(response)
-                model!!.setId(root.getString("_id"))
-                model.setHlsLink(root.getString("hls_link"))
+                model.setId(root.getString("_id"))
+                model.setName(root.getString("name"))
+                model.setThumbnail((root.getString("thumbnail")))
+                model.setHlsLink(Constants.LIVE_URL + root.getString("hls_link"))
+                model.setSlug(root.getString("slug"))
+                model.setCategory(root.getString("category"))
+                model.setViewCount(root.getString("views_count"))
+
+                return model;
             } catch (e: java.lang.Exception) {
-                model = null;
                 e.printStackTrace()
             }
-            return model
+            return null
         }
 
         fun getVodDetailsModel(response: String?): Video? {
