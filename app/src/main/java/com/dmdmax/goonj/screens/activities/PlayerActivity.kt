@@ -60,15 +60,7 @@ class PlayerActivity : BaseActivity(), PlayerView.Listener {
         mView.pauseStreaming();
     }
 
-    override fun onDestroy() {
-        PlayerActivity.ARGS_VIDEO = null;
-        PlayerActivity.ARGS_CHANNEL = null;
-        super.onDestroy()
-    }
-
     override fun goBack() {
-        PlayerActivity.ARGS_VIDEO = null;
-        PlayerActivity.ARGS_CHANNEL = null;
         onBackPressed()
     }
 

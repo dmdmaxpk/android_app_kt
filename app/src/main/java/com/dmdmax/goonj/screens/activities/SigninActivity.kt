@@ -13,6 +13,7 @@ import com.dmdmax.goonj.utility.Constants
 class SigninActivity : BaseActivity(), SigninView.Listener {
 
     private lateinit var mView: SigninView;
+    private lateinit var mPaywallSource: String;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,10 +24,9 @@ class SigninActivity : BaseActivity(), SigninView.Listener {
     }
 
     private fun initialize(){
-        mView.initialize(
-                intent.extras?.getString(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE),
-            intent.extras?.getSerializable(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE) as PackageModel
-        );
+        mPaywallSource =
+            intent.extras?.getString(PaywallGoonjFragment.ARG_SUBSCRIPTION_SOURCE).toString();
+        mView.initialize(mPaywallSource, intent.extras?.getSerializable(PaywallGoonjFragment.ARGS_DEFAULT_PACKAGE) as PackageModel);
     }
 
     override fun onStart() {
@@ -61,6 +61,7 @@ class SigninActivity : BaseActivity(), SigninView.Listener {
     override fun viewPrivacyPolicy() {
         val intent = Intent(this, WebViewActivity::class.java)
         intent.putExtra("page", "privacy-policy")
+        intent.putExtra("slug", mPaywallSource)
         startActivity(intent);
     }
 }

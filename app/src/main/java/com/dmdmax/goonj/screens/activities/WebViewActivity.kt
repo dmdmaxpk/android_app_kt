@@ -10,12 +10,15 @@ import android.widget.Toast
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.firebase_events.EventManager
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 
 class WebViewActivity : BaseActivity() {
     var webView: WebView? = null
     var page: String? = null
+    var paywallSource: String? = null
     var pb: ProgressBar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +28,7 @@ class WebViewActivity : BaseActivity() {
         if (intent.extras != null) {
             val bundle = intent.extras
             page = bundle!!.getString("page")
+            paywallSource = bundle.getString("slug")
             loadLink(page)
         }
     }
@@ -35,8 +39,14 @@ class WebViewActivity : BaseActivity() {
             EventManager.getInstance(this).fireEvent("Terms_And_Condition${EventManager.Events.VIEW}");
         }
         if (page == "privacy-policy") {
-            startWebView(Constants.PRIVACY_POLICY_URL)
-            EventManager.getInstance(this).fireEvent("Privacy_Policy${EventManager.Events.VIEW}");
+            if(paywallSource != null && paywallSource.equals(PaywallBinjeeFragment.SLUG)){
+                // Go to binjee privacy policy
+                startWebView("https://goonj.binjee.com/privacy")
+            }else{
+                startWebView(Constants.PRIVACY_POLICY_URL)
+            }
+
+            EventManager.getInstance(this).fireEvent("${paywallSource?.capitalize()}_Privacy_Policy${EventManager.Events.VIEW}");
         }
     }
 
