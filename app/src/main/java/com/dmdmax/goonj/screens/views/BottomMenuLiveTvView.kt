@@ -12,4 +12,5 @@ interface BottomMenuLiveTvView: ObservableView<BottomMenuLiveTvView.Listener> {
 
     fun  initialize();
     fun pauseStreaming();
+    fun setFullscreen(isFull: Boolean);
 }

@@ -2,6 +2,7 @@ package com.dmdmax.goonj.models
 
 import com.dmdmax.goonj.utility.Constants
 import com.google.gson.annotations.SerializedName
+import org.json.JSONObject
 import java.io.Serializable
 
 class Channel: Serializable {
@@ -68,5 +69,19 @@ class Channel: Serializable {
 
     fun setHlsLink(hlsLink: String) {
         this.hlsLink = hlsLink
+    }
+
+    companion object {
+        fun getObject(jsonObject: JSONObject): Channel {
+            val model = Channel()
+            model.setId(jsonObject.getString("_id"))
+            model.setName(jsonObject.getString("name"))
+            model.setThumbnail((jsonObject.getString("thumbnail")))
+            model.setHlsLink(Constants.LIVE_URL + jsonObject.getString("hls_link"))
+            model.setSlug(jsonObject.getString("slug"))
+            model.setCategory(jsonObject.getString("category"))
+            model.setViewCount(jsonObject.getString("views_count"))
+            return model;
+        }
     }
 }

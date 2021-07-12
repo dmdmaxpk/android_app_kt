@@ -29,6 +29,7 @@ import com.dmdmax.goonj.utility.Utility
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
 import org.json.JSONArray
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
@@ -254,7 +255,12 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
                 null,
                 object : NetworkOperationListener {
                     override fun onSuccess(response: String?) {
-                        bindSliderAdapter(JSONParser.getSlider(response));
+                        var slider: ArrayList<SliderModel> = arrayListOf();
+                        if(Constants.EXTERNAL_HOME_SLIDER_STRING_JSON.isNotEmpty()){
+                            slider.addAll(JSONParser.getSlider(Constants.EXTERNAL_HOME_SLIDER_STRING_JSON, getContext()));
+                        }
+                        slider.addAll(JSONParser.getSlider(response, getContext()))
+                        bindSliderAdapter(slider);
                     }
 
                     override fun onFailed(code: Int, reason: String?) {

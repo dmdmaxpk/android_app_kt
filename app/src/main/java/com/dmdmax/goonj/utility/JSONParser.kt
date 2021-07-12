@@ -1,11 +1,15 @@
 package com.dmdmax.goonj.utility
 
+import android.content.Context
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.SliderModel
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.models.Video
+import com.dmdmax.goonj.network.client.NetworkOperationListener
+import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.payments.BinjeePaymentHelper
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
+import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants.ThumbnailManager.getVodThumbnail
 import org.json.JSONArray
 import org.json.JSONObject
@@ -22,15 +26,7 @@ class JSONParser {
                 val rootArray = JSONArray(json)
                 for (i in 0 until rootArray.length()) {
                     try {
-                        val model = Channel()
-                        model.setId(rootArray.getJSONObject(i).getString("_id"))
-                        model.setName(rootArray.getJSONObject(i).getString("name"))
-                        model.setThumbnail((rootArray.getJSONObject(i).getString("thumbnail")))
-                        model.setHlsLink(Constants.LIVE_URL + rootArray.getJSONObject(i).getString("hls_link"))
-                        model.setSlug(rootArray.getJSONObject(i).getString("slug"))
-                        model.setCategory(rootArray.getJSONObject(i).getString("category"))
-                        model.setViewCount(rootArray.getJSONObject(i).getString("views_count"))
-                        list.add(model)
+                        list.add(Channel.getObject(rootArray.getJSONObject(i)));
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -41,8 +37,9 @@ class JSONParser {
             return list
         }
 
-        fun getSlider(json: String?): ArrayList<SliderModel> {
-            val list: ArrayList<SliderModel> = ArrayList<SliderModel>()
+        fun getSlider(json: String?, context: Context): ArrayList<SliderModel> {
+            val mPrefs = GoonjPrefs(context);
+            val list: ArrayList<SliderModel> = ArrayList()
             try {
                 val rootArray = JSONArray(json)
                 for (i in 0 until rootArray.length()) {
@@ -50,8 +47,40 @@ class JSONParser {
                         val model = SliderModel();
                         model.setId(rootArray.getJSONObject(i).getString("_id"))
                         model.setName(rootArray.getJSONObject(i).getString("name"))
-                        model.setThumb(Constants.CDN_STATIC_URL + "dramas/" + model.getName()!!.replace(" ", "%20")+".jpg");
+                        model.setLive(rootArray.getJSONObject(i).has("live") && rootArray.getJSONObject(i).getBoolean("live"))
+
+                        if(rootArray.getJSONObject(i).has("banner")){
+                            model.setThumb(rootArray.getJSONObject(i).getString("banner"))
+                        }else{
+                            model.setThumb(Constants.CDN_STATIC_URL + "dramas/" + model.getName()!!.replace(" ", "%20")+".jpg");
+                        }
+
+                        for (channel: Channel in mPrefs.getChannels()){
+                            if(channel.getId().equals(model.getId())){
+                                model.setChannel(channel);
+                            }
+                        }
                         list.add(model)
+
+                        /*if(model.getChannel() == null){
+                            RestClient(context, Constants.API_BASE_URL + Constants.Companion.EndPoints.CHANNEL_DETAILS + model.getId(), RestClient.Companion.Method.GET, null, object: NetworkOperationListener {
+                                override fun onSuccess(response: String?) {
+                                    var rootArray = JSONArray(response);
+                                    if(rootArray.length() > 0){
+                                        model.setChannel(Channel.getObject(rootArray.getJSONObject(0)));
+                                    }
+                                    list.add(model)
+                                    return list;
+                                }
+
+                                override fun onFailed(code: Int, reason: String?) {
+                                    TODO("Not yet implemented")
+                                }
+                            }).exec();
+                        }else{
+                            list.add(model)
+                            return list;
+                        }*/
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

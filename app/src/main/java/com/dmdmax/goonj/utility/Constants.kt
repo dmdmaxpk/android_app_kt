@@ -58,6 +58,7 @@ public class Constants {
         var IS_PAYWALL_ENABLED = false
         var HE_URL: String? = null
         lateinit var CATEGORIES_STRING_JSON: String
+        lateinit var EXTERNAL_HOME_SLIDER_STRING_JSON: String
         var CATEGORIES_CHANNEL_JSON: String? = null
         var COMEDY_CATEGORIES_STRING_JSON: String? = null
         var COMEDY_BASE_URL: String? = null
@@ -108,6 +109,7 @@ public class Constants {
             const val GET_PROGRAM_VIDEOS = "video?program="
             const val GET_TOPIC_VIDEOS = "video?topics="
             const val GET_CHANNEL_VIDEOS = "video?source="
+            const val CHANNEL_DETAILS = "live?_id="
             const val VOD_DETAILS = "video?_id="
             const val VIDEO_BY_CATEGORY = "video?category="
             const val VIDEO_BY_SUB_CATEGORY = "video?sub_category="

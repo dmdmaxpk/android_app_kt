@@ -1,6 +1,8 @@
 package com.dmdmax.goonj.screens.implements
 
+import android.content.Context
 import android.media.Image
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +15,13 @@ import com.dmdmax.goonj.adapters.ChannelsCarouselListAdapter
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.MediaModel
+import com.dmdmax.goonj.models.Params
+import com.dmdmax.goonj.network.client.NetworkOperationListener
+import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.player.ExoPlayerManager
 import com.dmdmax.goonj.screens.activities.PlayerActivity
+import com.dmdmax.goonj.screens.activities.WelcomeActivity
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.BottomMenuLiveTvView
 import com.dmdmax.goonj.storage.GoonjPrefs
@@ -29,11 +35,13 @@ import java.util.logging.Handler
 class BottomMenuLiveTvImpl: BaseObservableView<BottomMenuLiveTvView.Listener>, BottomMenuLiveTvView, View.OnClickListener {
 
     private lateinit var mPlayerMainLayout: LinearLayout;
+    private lateinit var mBelowPlayerLayout: LinearLayout;
     private lateinit var mProgressBar: ProgressBar;
     private lateinit var mDummy: ImageView;
 
     private lateinit var mChannelTitle: TextView;
     private lateinit var mHeader: FrameLayout;
+    private lateinit var mMainPlayerView: FrameLayout;
     private lateinit var mPlayerManager: ExoPlayerManager;
     private lateinit var mPlayer: com.google.android.exoplayer2.ui.PlayerView;
     private lateinit var mPrefs: GoonjPrefs;
@@ -49,7 +57,9 @@ class BottomMenuLiveTvImpl: BaseObservableView<BottomMenuLiveTvView.Listener>, B
     }
 
     override fun initialize() {
+        mMainPlayerView = findViewById(R.id.main_player_view);
         mPlayerMainLayout = findViewById(R.id.player_main_layout);
+        mBelowPlayerLayout = findViewById(R.id.below_player_layout);
         mProgressBar = findViewById(R.id.progress_bar);
 
         mChannelTitle = findViewById(R.id.channel_title);
@@ -142,14 +152,26 @@ class BottomMenuLiveTvImpl: BaseObservableView<BottomMenuLiveTvView.Listener>, B
             mCurrentChannel = channel;
 
             // play media
-
-            /*val model = MediaModel();
-            model.isLive = true
-            model.setId(channel.getId());
-            model.setUrl(Utility.generateLiveUrl(mPrefs.getGlobalBitrate()!!, channel.getHlsLink()));*/
             mPlayerManager.playMedia(MediaModel.getLiveMediaModel(channel, mPrefs.getGlobalBitrate()!!));
-
             mDummy.visibility = View.GONE
+
+            val paramsArrayList = ArrayList<Params>()
+            paramsArrayList.add(Params("id", channel.getId()))
+            RestClient(
+                getContext(),
+                Constants.API_BASE_URL + Constants.Companion.EndPoints.POST_LIVE_VIEWS,
+                RestClient.Companion.Method.POST,
+                paramsArrayList,
+                object : NetworkOperationListener {
+                    override fun onSuccess(response: String?) {
+                        Logger.println("*** $response")
+                    }
+
+                    override fun onFailed(code: Int, reason: String?) {
+                        Logger.println("*** $reason")
+                    }
+                }).exec()
+
         }else{
             // display paywall
             for(listener in getListeners()){
@@ -176,5 +198,32 @@ class BottomMenuLiveTvImpl: BaseObservableView<BottomMenuLiveTvView.Listener>, B
     private fun setRecyclerView(recyclerView: RecyclerView) {
         val manager = GridLayoutManager(getContext(), 2)
         recyclerView.layoutManager = manager
+    }
+
+    override fun setFullscreen(isFull: Boolean) {
+        if(isFull){
+            mMainPlayerView.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            mMainPlayerView.layoutParams.height = getHeight(getContext())
+        }else{
+            mMainPlayerView.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            mMainPlayerView.layoutParams.height = dpToPx(getContext(), 210)
+        }
+
+        mPlayerManager.setFullScreen(isFull)
+    }
+
+    fun getHeight(context: Context): Int {
+        val displayMetrics = context.resources.displayMetrics
+        val fullHeight = displayMetrics.heightPixels / displayMetrics.density
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            fullHeight,
+            context.resources.displayMetrics
+        )
+            .toInt()
+    }
+
+    fun dpToPx(context: Context, dp: Int): Int {
+        return (dp * context.resources.displayMetrics.density).toInt()
     }
 }

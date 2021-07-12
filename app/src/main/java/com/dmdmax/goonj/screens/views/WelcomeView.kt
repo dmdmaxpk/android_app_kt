@@ -14,4 +14,5 @@ interface WelcomeView: ObservableView<WelcomeView.Listener> {
     fun bindBottomAdapter();
     fun currentBottomIndex(): Int;
     fun setCurrentBottomIndex(position: Int);
+    fun setFullScreen(isFull: Boolean)
 }

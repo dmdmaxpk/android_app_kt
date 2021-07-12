@@ -298,6 +298,7 @@ class Utility {
             Constants.VOD_ADTAG_SOURCE = `object`.getString("vod_adtag_source")
             Constants.IS_PAYWALL_ENABLED = `object`.getBoolean("is_paywall_enabled")
             Constants.CATEGORIES_STRING_JSON = `object`.getString("v2_home_categories")
+            Constants.EXTERNAL_HOME_SLIDER_STRING_JSON = `object`.getString("v2_external_home_slider")
             Constants.CATEGORIES_CHANNEL_JSON = `object`.getString("v2_channel_categories")
             Constants.COMEDY_CATEGORIES_STRING_JSON = `object`.getString("comedy_categories_json")
             Constants.COMEDY_BASE_URL = `object`.getString("comedy_base_url")

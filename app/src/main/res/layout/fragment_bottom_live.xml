@@ -42,6 +42,7 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/main_player_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/player_height">
             <com.google.android.exoplayer2.ui.PlayerView
@@ -61,74 +62,80 @@
                 android:src="@drawable/play"/>
         </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/video_view_tail"
-            app:layout_constraintTop_toBottomOf="@id/video_view"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+        <LinearLayout
+            android:id="@+id/below_player_layout"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#393d65"
-            android:paddingRight="10dp"
-            android:paddingLeft="10dp">
-            <LinearLayout
-                android:layout_gravity="start"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="3dp">
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:paddingLeft="6dp"
-                    android:paddingRight="6dp"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
-                    android:background="@drawable/rounded_corner_red"
-                    android:textColor="@color/white"
-                    android:text="Live"
+            android:layout_height="match_parent">
+            <FrameLayout
+                android:id="@+id/video_view_tail"
+                app:layout_constraintTop_toBottomOf="@id/video_view"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#393d65"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp">
+                <LinearLayout
+                    android:layout_gravity="start"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="3dp">
+                    <TextView
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="6dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:background="@drawable/rounded_corner_red"
+                        android:textColor="@color/white"
+                        android:text="Live"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textAllCaps="true"/>
+                    <TextView
+                        android:textSize="14sp"
+                        android:id="@+id/channel_title"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_gravity="end|center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:textAllCaps="true"/>
-                <TextView
-                    android:textSize="14sp"
-                    android:id="@+id/channel_title"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_gravity="end|center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:id="@+id/share">
-                <TextView
-                    android:text="Share"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <ImageView
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/share"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"/>
-            </LinearLayout>
-        </FrameLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:paddingTop="15dp"
-            android:paddingRight="15dp"
-            android:paddingLeft="15dp"
-            android:id="@+id/recommended_live_channels"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+                    android:gravity="center"
+                    android:id="@+id/share">
+                    <TextView
+                        android:text="Share"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <ImageView
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/share"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </LinearLayout>
+            </FrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:id="@+id/recommended_live_channels"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </LinearLayout>
     </LinearLayout>
     <ProgressBar
         android:layout_gravity="center"

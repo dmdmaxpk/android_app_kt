@@ -24,8 +24,8 @@
         <activity android:name=".screens.activities.SubscriptionActivity" />
         <activity android:name=".screens.activities.MyProfileActivity" />
         <activity android:name=".screens.activities.WebViewActivity" />
-        <activity android:name=".screens.activities.PlayerActivity" android:screenOrientation="portrait" />
-        <activity android:name=".screens.activities.WelcomeActivity" android:screenOrientation="portrait" />
+        <activity android:name=".screens.activities.PlayerActivity" android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".screens.activities.WelcomeActivity" android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".screens.activities.VerificationActivity" />
         <activity android:name=".screens.activities.SigninActivity" />
         <activity android:name=".screens.activities.LoginActivity" />

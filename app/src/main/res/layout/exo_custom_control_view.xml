@@ -90,13 +90,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical">
-            <FrameLayout
+            <LinearLayout
+                android:id="@+id/timelines"
                 android:paddingRight="5dp"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:layout_gravity="start"
                     android:id="@id/exo_position"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -104,14 +104,31 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:layout_gravity="end"
+                    android:text=" / "
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
                     android:id="@id/exo_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
-            </FrameLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:padding="5dp"
+                android:id="@+id/fullscreen"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right|center_vertical">
+                <ImageView
+                    android:src="@drawable/fullscreen"
+                    android:id="@+id/ic_fullscreen"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+            </LinearLayout>
         </LinearLayout>
         <com.google.android.exoplayer2.ui.DefaultTimeBar
             android:id="@+id/exo_progress"

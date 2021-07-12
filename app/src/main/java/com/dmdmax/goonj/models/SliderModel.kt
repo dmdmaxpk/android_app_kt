@@ -9,14 +9,11 @@ class SliderModel {
     private var id: String? = null
     private var name: String? = null
     private var thumb: String? = null
+    private var category: String = "drama"
+    private var live: Boolean = false;
+    private var mChannel: Channel? = null;
 
     constructor(){}
-
-    constructor(id: String?, name: String?, thumb: String?) {
-        this.id = id;
-        this.name = name;
-        this.thumb = thumb;
-    }
 
     fun setId(id: String?) {
         this.id = id;
@@ -30,6 +27,17 @@ class SliderModel {
         this.thumb = thumb;
     }
 
+    fun setCategory(category: String) {
+        this.category = category;
+    }
+
+    fun setLive(isLive: Boolean) {
+        this.live = isLive;
+    }
+
+    fun setChannel(channel: Channel) {
+        this.mChannel = channel;
+    }
 
     fun getId(): String? {
         return id;
@@ -41,5 +49,17 @@ class SliderModel {
 
     fun getThumb(): String? {
         return thumb;
+    }
+
+    fun getCategory(): String {
+        return this.category;
+    }
+
+    fun isLive(): Boolean {
+        return this.live;
+    }
+
+    fun getChannel(): Channel? {
+        return this.mChannel;
     }
 }

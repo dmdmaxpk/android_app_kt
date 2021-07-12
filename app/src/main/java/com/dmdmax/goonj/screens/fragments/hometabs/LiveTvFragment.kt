@@ -56,13 +56,20 @@ class LiveTvFragment: BaseFragment(), LiveTvView.Listener {
     }
 
     override fun onSliderClick(model: SliderModel, position: Int) {
-        val video = Video(Video.TileType.TILE_TYPE_THUMBNAIL);
-        video.setTitle(model.getName());
-        video.setThumbnail(model.getThumb());
-        video.setId(model.getId());
-        video.setKey(VodImpl.SLUG_DRAMA);
-        video.setCategory(VodImpl.SLUG_DRAMA);
-        getCompositionRoot().getViewFactory().toPlayerScreen(video);
+        if(model.isLive()){
+            PlayerActivity.ARGS_VIDEO = null;
+            PlayerActivity.ARGS_CHANNEL = model.getChannel();
+            PlayerActivity.ARGS_CHANNELS = mPrefs.getChannels();
+            getCompositionRoot().getViewFactory().toPlayerScreen(model.getChannel(), mPrefs.getChannels());
+        }else{
+            val video = Video(Video.TileType.TILE_TYPE_THUMBNAIL);
+            video.setTitle(model.getName());
+            video.setThumbnail(model.getThumb());
+            video.setId(model.getId());
+            video.setKey(VodImpl.SLUG_DRAMA);
+            video.setCategory(VodImpl.SLUG_DRAMA);
+            getCompositionRoot().getViewFactory().toPlayerScreen(video);
+        }
     }
 
     override fun goBack() {

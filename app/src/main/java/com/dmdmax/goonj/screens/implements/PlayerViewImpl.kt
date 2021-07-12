@@ -1,8 +1,12 @@
 package com.dmdmax.goonj.screens.implements
 
+import android.content.Context
+import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -35,6 +39,9 @@ import kotlin.collections.set
 
 class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.OnClickListener {
 
+    private lateinit var mMetaLayout: LinearLayout;
+    private lateinit var mHeaderLayout: FrameLayout;
+
     private lateinit var mTitle: TextView;
     private lateinit var mChannelTitle: TextView;
     private lateinit var mLiveOrVod: TextView;
@@ -57,6 +64,11 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
     }
 
     override fun initialize(model: MediaModel, list: ArrayList<Channel>?) {
+
+        mMetaLayout = findViewById(R.id.meta_layout);
+        mHeaderLayout = findViewById(R.id.header);
+        mPlayer = findViewById(R.id.video_view);
+
         mTitle = findViewById(R.id.title);
         mChannelTitle = findViewById(R.id.channel_title);
         mLiveOrVod = findViewById(R.id.liveOrVod);
@@ -78,8 +90,6 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
         mBack.setOnClickListener(this);
         mShare.setOnClickListener(this);
 
-        mPlayer = findViewById(R.id.video_view);
-
         mPlayerManager = ExoPlayerManager();
         mPrefs = GoonjPrefs(getContext());
 
@@ -90,7 +100,7 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
     }
 
     private fun displayView(model: MediaModel, list: ArrayList<Channel>?){
-        if(model.title?.length!! > 50){
+        if(model.title?.length!! > 35){
             val scale: Float = getContext().resources.displayMetrics.density
             val dpAsPixels: Float = (50 * scale + 0.5f)
             mTitle.setPadding((dpAsPixels).toInt(), 0, 0, 0);
@@ -151,7 +161,7 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
                             }
                         }
                     });
-                }else{
+                } else {
                     val list = getPrefs().getChannels() as ArrayList<Channel>?;
                     var liveChannels: ArrayList<Channel> = list!!.filter { s -> s.getCategory() == "news" } as ArrayList<Channel>
                     mRecommendedLiveChannels.adapter = ChannelsCarouselListAdapter(liveChannels, getContext(), object: ChannelsCarouselListAdapter.OnItemClickListener {
@@ -167,6 +177,23 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
                 displayEntertainmentChannels();
             }
         }
+
+        val paramsArrayList = ArrayList<Params>()
+        paramsArrayList.add(Params("id", model.id))
+        RestClient(
+            getContext(),
+            Constants.API_BASE_URL + (if(model.isLive) Constants.Companion.EndPoints.POST_LIVE_VIEWS else Constants.Companion.EndPoints.POST_VIDEO_VIEWS),
+            RestClient.Companion.Method.POST,
+            paramsArrayList,
+            object : NetworkOperationListener {
+                override fun onSuccess(response: String?) {
+                    Logger.println("*** $response")
+                }
+
+                override fun onFailed(code: Int, reason: String?) {
+                    Logger.println("*** $reason")
+                }
+            }).exec()
     }
 
     private fun displayEpisodes(){
@@ -344,6 +371,43 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
 
     override fun startStreaming(){
         mPlayerManager.resume();
+    }
+
+    override fun getPlayer(): com.google.android.exoplayer2.ui.PlayerView {
+        return mPlayer;
+    }
+
+    override fun setFullscreen(isFull: Boolean) {
+        if(isFull){
+            mPlayer.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            mPlayer.layoutParams.height = getHeight(getContext())
+
+            mHeaderLayout.visibility = View.GONE;
+            mMetaLayout.visibility = View.GONE;
+        }else{
+            mPlayer.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            mPlayer.layoutParams.height = dpToPx(getContext(), 210)
+
+            mHeaderLayout.visibility = View.VISIBLE;
+            mMetaLayout.visibility = View.VISIBLE;
+        }
+
+        mPlayerManager.setFullScreen(isFull)
+    }
+
+    fun getHeight(context: Context): Int {
+        val displayMetrics = context.resources.displayMetrics
+        val fullHeight = displayMetrics.heightPixels / displayMetrics.density
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            fullHeight,
+            context.resources.displayMetrics
+        )
+            .toInt()
+    }
+
+    fun dpToPx(context: Context, dp: Int): Int {
+        return (dp * context.resources.displayMetrics.density).toInt()
     }
 
     private fun setRecyclerView(recyclerView: RecyclerView) {

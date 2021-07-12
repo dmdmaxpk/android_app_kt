@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
+        <key>v2_external_home_slider</key>
+        <value>[
+            {
+            _id: "x_1Xs3Z",
+            name: "Pak Vs England",
+            live: true,
+            category_name: "sports",
+            banner: "https://content-dmd.s3.eu-central-1.amazonaws.com/TP-Content/static-content/banners/01.jpg"
+            }
+            ]</value>
+    </entry>
+    <entry>
         <key>contact_us_number</key>
-        <value>727200</value>
+        <value>03401832782</value>
     </entry>
     <entry>
         <key>corona_banner_visibility</key>

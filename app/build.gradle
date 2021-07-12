@@ -13,8 +13,8 @@ android {
         applicationId "com.dmdmax.goonj"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 3007
-        versionName "3.0.0.7"
+        versionCode 3009
+        versionName "3.0.0.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -1,6 +1,8 @@
 package com.dmdmax.goonj.player
 
 import android.content.Context
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Handler
 import android.view.View
@@ -53,6 +55,7 @@ class ExoPlayerManager: View.OnClickListener {
     private lateinit var mExoVolume: ImageButton;
     private lateinit var mExoSettings: ImageButton;
     private lateinit var mTimeBar: DefaultTimeBar;
+    private lateinit var mFullScreenImageView: ImageView;
 
     private lateinit var mPositionView: TextView;
     private lateinit var mDurationView: TextView;
@@ -63,6 +66,11 @@ class ExoPlayerManager: View.OnClickListener {
     private lateinit var mExoBitrateGrid: GridView;
 
     private lateinit var mBitrateList: ArrayList<BitRatesModel>;
+
+    private lateinit var mTimelines: LinearLayout;
+    private lateinit var mFooter: LinearLayout;
+    private lateinit var mFullscreen: LinearLayout;
+    private var isFullScreen = false;
 
     fun init(context: Context, playerView: PlayerView) {
         mPlayer = ExoPlayerFactory.newSimpleInstance(
@@ -84,6 +92,11 @@ class ExoPlayerManager: View.OnClickListener {
         mExoVolume = this.mPlayerView.findViewById(R.id.exo_volume);
         mExoSettings = this.mPlayerView.findViewById(R.id.exo_settings);
         mTimeBar = this.mPlayerView.findViewById(R.id.exo_progress)
+
+        mFooter = this.mPlayerView.findViewById(R.id.footer);
+        mTimelines = this.mPlayerView.findViewById(R.id.timelines);
+        mFullscreen = this.mPlayerView.findViewById(R.id.fullscreen)
+        mFullScreenImageView = this.mPlayerView.findViewById(R.id.ic_fullscreen)
 
         mExoBitrateLayout = this.mPlayerView.findViewById(R.id.exo_bitrate_layout);
         mExoBitrateGrid = this.mPlayerView.findViewById(R.id.exo_bitrate_grid);
@@ -133,6 +146,8 @@ class ExoPlayerManager: View.OnClickListener {
             mMediaModel.shouldMaintainState = true;
             playMedia(mMediaModel);
         };
+
+        mFullscreen.setOnClickListener(this);
     }
 
     fun playMedia(mediaModel: MediaModel){
@@ -181,7 +196,7 @@ class ExoPlayerManager: View.OnClickListener {
                     mDurationView.setVisibility(View.VISIBLE)
                     mPositionView.setVisibility(View.VISIBLE)
                 } else {
-                    mTimeBar.visibility = View.INVISIBLE
+                    mTimeBar.visibility = View.GONE
                     mDurationView.setVisibility(View.GONE)
                     mPositionView.setVisibility(View.GONE)
 
@@ -231,8 +246,10 @@ class ExoPlayerManager: View.OnClickListener {
                 if (playbackState == Player.STATE_READY) {
                     Logger.println("USE CONTROLLER: ${!mMediaModel.isLive}")
 
-                    showController();
-                    //mPlayerView.useController = !mMediaModel.isLive();
+                    //showController();
+                    mPlayerView.useController = true;
+
+                    mTimelines.visibility = if(mMediaModel.isLive) View.INVISIBLE else View.VISIBLE;
 
                     Logger.println("STATE_READY");
                     if (mPlayerView.player.playWhenReady) {
@@ -279,7 +296,19 @@ class ExoPlayerManager: View.OnClickListener {
                     isDefaultBitrateGridOn = false;
                 }
             }
+
+            mFullscreen -> {
+                isFullScreen = !isFullScreen;
+                (mContext as BaseActivity).requestedOrientation = if (isFullScreen) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            }
         }
+    }
+
+    fun setFullScreen(isFull: Boolean){
+        mFullScreenImageView.setImageResource(
+            if(isFull) R.drawable.fullscreen_exit
+            else R.drawable.fullscreen
+        )
     }
 
     private fun buildMediaSource(uri: Uri, adTag: String?, live: Boolean): MediaSource? {
