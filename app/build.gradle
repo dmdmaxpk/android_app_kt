@@ -13,8 +13,8 @@ android {
         applicationId "com.dmdmax.goonj"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 3009
-        versionName "3.0.0.9"
+        versionCode 3010
+        versionName "3.0.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -86,4 +86,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+
+    // Event Bus
+    implementation 'org.greenrobot:eventbus:3.2.0'
 }

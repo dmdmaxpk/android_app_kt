@@ -373,6 +373,10 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
         mPlayerManager.resume();
     }
 
+    override fun releasePlayer() {
+        mPlayerManager.release();
+    }
+
     override fun getPlayer(): com.google.android.exoplayer2.ui.PlayerView {
         return mPlayer;
     }

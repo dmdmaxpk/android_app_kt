@@ -9,15 +9,23 @@ import android.util.TypedValue
 import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
+import androidx.lifecycle.Observer
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.events.MessageEvent
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.MediaModel
 import com.dmdmax.goonj.models.Video
+import com.dmdmax.goonj.network.CONNECTED
+import com.dmdmax.goonj.network.DISCONNECTED
+import com.dmdmax.goonj.network.NetWorkManger
 import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.PlayerView
+import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Utility
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 class PlayerActivity : BaseActivity(), PlayerView.Listener {
 
@@ -33,7 +41,8 @@ class PlayerActivity : BaseActivity(), PlayerView.Listener {
         super.onCreate(savedInstanceState)
         mView = getCompositionRoot().getViewFactory().getPlayerViewImpl(null);
         setContentView(mView.getRootView());
-        mView.getLogger().println("PlayerActivity - onCreate")
+        mView.getLogger().println("" +
+                " - onCreate")
         init();
     }
 
@@ -45,6 +54,21 @@ class PlayerActivity : BaseActivity(), PlayerView.Listener {
             mView.getLogger().println("ARGS_VIDEO")
             mView.initialize(MediaModel.getVodMediaModel(ARGS_VIDEO!!, mView.getPrefs().getGlobalBitrate()!!), null);
         }
+
+        NetWorkManger.networkStatus.observe(this, Observer {
+            val event = MessageEvent(MessageEvent.EventNames.NETWORK_CONNECTED, null);
+            when (it) {
+                CONNECTED -> {
+                    Logger.println("Internet is connected")
+                    event.value = true;
+                }
+                DISCONNECTED -> {
+                    Logger.println("Internet disconnected")
+                    event.value = false;
+                }
+            }
+            EventBus.getDefault().post(event);
+        })
     }
 
     override fun onResume() {
@@ -61,6 +85,7 @@ class PlayerActivity : BaseActivity(), PlayerView.Listener {
         super.onStop();
         mView.unregisterListener(this);
         mView.pauseStreaming();
+        mView.releasePlayer()
     }
 
     override fun onPause() {

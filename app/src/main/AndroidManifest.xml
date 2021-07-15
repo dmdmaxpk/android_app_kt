@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Goonj">
 
-        <activity android:name=".screens.activities.PaywallActivity"></activity>
+        <activity android:name=".screens.activities.PaywallActivity"/>
         <activity android:name=".screens.activities.SubscriptionActivity" />
         <activity android:name=".screens.activities.MyProfileActivity" />
         <activity android:name=".screens.activities.WebViewActivity" />
@@ -54,7 +54,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

@@ -16,6 +16,7 @@ interface PlayerView: ObservableView<PlayerView.Listener> {
     fun  initialize(model: MediaModel, list: ArrayList<Channel>?);
     fun pauseStreaming();
     fun startStreaming();
+    fun releasePlayer();
     fun getPlayer(): com.google.android.exoplayer2.ui.PlayerView;
     fun setFullscreen(isFull: Boolean)
 }

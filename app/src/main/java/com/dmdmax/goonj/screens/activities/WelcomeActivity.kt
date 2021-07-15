@@ -5,11 +5,17 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.events.MessageEvent
 import com.dmdmax.goonj.firebase_events.EventManager
+import com.dmdmax.goonj.network.CONNECTED
+import com.dmdmax.goonj.network.DISCONNECTED
+import com.dmdmax.goonj.network.NetWorkManger
 import com.dmdmax.goonj.payments.BinjeePaymentHelper
 import com.dmdmax.goonj.payments.ComedyPaymentHelper
 import com.dmdmax.goonj.payments.PaymentHelper
@@ -20,7 +26,9 @@ import com.dmdmax.goonj.screens.views.WelcomeView
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Utility
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import org.greenrobot.eventbus.EventBus
 
 class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
 

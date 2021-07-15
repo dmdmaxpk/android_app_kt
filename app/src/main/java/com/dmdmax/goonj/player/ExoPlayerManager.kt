@@ -2,15 +2,16 @@ package com.dmdmax.goonj.player
 
 import android.content.Context
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Handler
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.adapters.BitrateAdapter
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseApplication
+import com.dmdmax.goonj.events.MessageEvent
 import com.dmdmax.goonj.models.BitRatesModel
 import com.dmdmax.goonj.models.MediaModel
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
@@ -22,6 +23,7 @@ import com.dmdmax.goonj.utility.Utility
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
+import com.google.android.exoplayer2.source.BehindLiveWindowException
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.hls.DefaultHlsDataSourceFactory
@@ -33,7 +35,11 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.Util
+import com.google.android.material.snackbar.Snackbar
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.util.*
 
 
@@ -237,6 +243,9 @@ class ExoPlayerManager: View.OnClickListener {
     fun addListeners() {
         mExoVolume.setOnClickListener(this);
         mExoSettings.setOnClickListener(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
 
         this.mPlayerView.player.addListener(object : Player.EventListener {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -272,6 +281,33 @@ class ExoPlayerManager: View.OnClickListener {
                     mExoPause.visibility = View.GONE;
                     mExoPlay.visibility = View.VISIBLE;
                     mExoBuffering.visibility = View.GONE;
+                }
+            }
+
+            override fun onPlayerError(error: ExoPlaybackException?) {
+                super.onPlayerError(error)
+                Logger.println("onPlayerError: "+error?.message);
+                if(error != null && error.sourceException != null && error.sourceException is BehindLiveWindowException){
+                    // Behind live window exception
+                    Logger.println("onPlayerError: INSIDE LIVE WINDOW");
+                    init(mContext, mPlayerView);
+                    playMedia(mMediaModel);
+                }else{
+                    // Behind live window exception
+                    Logger.println("onPlayerError: INSIDE ELSE");
+                    if(!Utility.isConnectedToInternet(mContext)){
+                        // No internet
+                        /*Snackbar.make(mPlayerView.parent as View, "Please check your internet", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Reload") {
+                                init(mContext, mPlayerView);
+                                playMedia(mMediaModel);
+                            }.setActionTextColor(ContextCompat.getColor(mContext, android.R.color.holo_blue_light))
+                            .show()*/
+                    }else{
+                        // Internet is available
+                        init(mContext, mPlayerView);
+                        playMedia(mMediaModel);
+                    }
                 }
             }
         })
@@ -313,7 +349,8 @@ class ExoPlayerManager: View.OnClickListener {
 
     private fun buildMediaSource(uri: Uri, adTag: String?, live: Boolean): MediaSource? {
         val msisdn = if (mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) != null) mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) else if (mPrefs.getMsisdn(PaywallComedyFragment.SLUG) != null) mPrefs.getMsisdn(PaywallComedyFragment.SLUG) else "null"
-        val userAgent = "msisdn_" + msisdn + (if(live) "_ua:goonjlive" else "_ua:goonjvod")
+        val userId = if (mPrefs.getUserId(PaywallGoonjFragment.SLUG) != null) mPrefs.getUserId(PaywallGoonjFragment.SLUG) else "null"
+        val userAgent = "msisdn_${msisdn}_${(if(live) "ua:goonjlive" else "ua:goonjvod")}_uid_${userId}";
 
         val mHlsDsFactory: HlsDataSourceFactory = DefaultHlsDataSourceFactory(
                 DefaultDataSourceFactory(
@@ -343,5 +380,23 @@ class ExoPlayerManager: View.OnClickListener {
             }
         }
         return null
+    }
+
+    @Subscribe
+    fun onEventReceive(event: MessageEvent){
+        if(event.name == MessageEvent.EventNames.NETWORK_CONNECTED && event.value == true){
+            Snackbar.make(mPlayerView.parent as View, "Back online", Snackbar.LENGTH_LONG).show()
+            Logger.println("NETWORK CONNECTED")
+            init(mContext, mPlayerView);
+            playMedia(mMediaModel);
+        }else{
+            Logger.println("NO NETWORK CONNECTED")
+            Snackbar.make(mPlayerView.parent as View, "No internet connection", Snackbar.LENGTH_INDEFINITE).show()
+        }
+    }
+
+    fun release(){
+        EventBus.getDefault().unregister(this);
+        mPlayer.release();
     }
 }
