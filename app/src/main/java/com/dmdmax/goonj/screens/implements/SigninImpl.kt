@@ -15,7 +15,6 @@ import com.dmdmax.goonj.payments.ComedyPaymentHelper
 import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
-import com.dmdmax.goonj.screens.views.LoginView
 import com.dmdmax.goonj.screens.views.SigninView
 
 class SigninImpl: BaseObservableView<SigninView.Listener>, SigninView, View.OnClickListener {

@@ -1,18 +1,13 @@
 package com.dmdmax.goonj.screens.activities
 
-import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.View
 import android.view.WindowManager
-import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.events.MessageEvent
-import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.MediaModel
 import com.dmdmax.goonj.models.Video
@@ -23,7 +18,6 @@ import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.PlayerView
 import com.dmdmax.goonj.utility.Logger
-import com.dmdmax.goonj.utility.Utility
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
@@ -41,12 +35,12 @@ class PlayerActivity : BaseActivity(), PlayerView.Listener {
         super.onCreate(savedInstanceState)
         mView = getCompositionRoot().getViewFactory().getPlayerViewImpl(null);
         setContentView(mView.getRootView());
-        mView.getLogger().println("" +
-                " - onCreate")
+        mView.getLogger().println("onCreate")
         init();
     }
 
     private fun init(){
+        var firstNetworkStatusBroadcast = true;
         if(ARGS_CHANNEL != null){
             mView.getLogger().println("ARGS_CHANNEL")
             mView.initialize(MediaModel.getLiveMediaModel(ARGS_CHANNEL!!, mView.getPrefs().getGlobalBitrate()!!), ARGS_CHANNELS);
@@ -67,7 +61,10 @@ class PlayerActivity : BaseActivity(), PlayerView.Listener {
                     event.value = false;
                 }
             }
-            EventBus.getDefault().post(event);
+            if(!firstNetworkStatusBroadcast) {
+                EventBus.getDefault().post(event);
+            }
+            firstNetworkStatusBroadcast = false;
         })
     }
 
@@ -79,6 +76,9 @@ class PlayerActivity : BaseActivity(), PlayerView.Listener {
     override fun onStart() {
         super.onStart();
         mView.registerListener(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     override fun onStop() {
@@ -86,6 +86,7 @@ class PlayerActivity : BaseActivity(), PlayerView.Listener {
         mView.unregisterListener(this);
         mView.pauseStreaming();
         mView.releasePlayer()
+        EventBus.getDefault().unregister(this);
     }
 
     override fun onPause() {
@@ -151,6 +152,13 @@ class PlayerActivity : BaseActivity(), PlayerView.Listener {
         decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        }
+    }
+
+    @Subscribe
+    fun onEventReceive(event: MessageEvent){
+        if(event.name == MessageEvent.EventNames.NETWORK_CONNECTED){
+            mView.updateNetworkState(event.value as Boolean);
         }
     }
 }

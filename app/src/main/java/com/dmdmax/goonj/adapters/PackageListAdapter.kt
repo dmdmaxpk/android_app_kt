@@ -3,17 +3,14 @@ package com.dmdmax.goonj.adapters
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
 import com.dmdmax.goonj.R
-import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.models.Params
-import com.dmdmax.goonj.models.Paywall
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.payments.BinjeePaymentHelper
@@ -28,7 +25,6 @@ import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Toaster
-import com.dmdmax.goonj.utility.Utility
 import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat

@@ -112,6 +112,7 @@ public class Constants {
             const val CHANNEL_DETAILS = "live?_id="
             const val VOD_DETAILS = "video?_id="
             const val VIDEO_BY_CATEGORY = "video?category="
+            const val RECOMMENDED_VIDEOS = "video/recommendations"
             const val VIDEO_BY_SUB_CATEGORY = "video?sub_category="
             const val VIDEO = "video"
             const val ANCHOR = "anchor"
@@ -259,7 +260,9 @@ public class Constants {
 
 
     object ThumbnailManager {
-        fun getVodThumbnail(filename: String?): String {
+        fun getVodThumbnail(filename: String?): String? {
+            if(filename == null)
+                return null;
             return Constants.CDN_STATIC_URL + VOD_THUMB + filename
         }
 

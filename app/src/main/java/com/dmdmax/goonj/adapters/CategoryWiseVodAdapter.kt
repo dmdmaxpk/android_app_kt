@@ -6,17 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
-import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.Video
-import com.dmdmax.goonj.screens.implements.VodImpl
-import com.dmdmax.goonj.utility.Logger
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 

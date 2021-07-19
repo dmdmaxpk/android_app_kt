@@ -7,9 +7,9 @@ import android.widget.*
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.adapters.UserPrefsContentGridAdapter
 import com.dmdmax.goonj.base.BaseObservableView
+import com.dmdmax.goonj.models.Category
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
-import com.dmdmax.goonj.models.Category
 import com.dmdmax.goonj.screens.views.UserContentPrefsView
 import com.dmdmax.goonj.utility.Constants
 import org.json.JSONArray

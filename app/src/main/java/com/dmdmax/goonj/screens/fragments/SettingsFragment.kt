@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.views.SettingsView
-import com.dmdmax.goonj.screens.views.SubscriptionStatusView
 
 class SettingsFragment: BaseFragment() {
 

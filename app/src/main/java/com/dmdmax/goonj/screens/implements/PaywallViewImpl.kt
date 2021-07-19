@@ -1,19 +1,10 @@
 package com.dmdmax.goonj.screens.implements
 
 import android.content.Context
-import android.graphics.Typeface
-import android.graphics.fonts.Font
-import android.graphics.fonts.FontFamily
-import android.os.Build
 import android.os.Bundle
-import android.text.Spannable
-import android.text.style.BackgroundColorSpan
-import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.annotation.RequiresApi
-import androidx.core.text.toSpannable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -24,13 +15,12 @@ import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.models.Paywall
-import com.dmdmax.goonj.screens.*
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.PaywallView
-import com.dmdmax.goonj.utility.*
-import com.google.ads.interactivemedia.v3.internal.vw
+import com.dmdmax.goonj.utility.CustomViewPager
+import com.dmdmax.goonj.utility.Logger
 import com.google.android.material.tabs.TabLayout
 
 

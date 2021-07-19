@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.provider.MediaStore
 import com.dmdmax.goonj.models.*
-import com.dmdmax.goonj.payments.ComedyPaymentHelper
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
@@ -12,7 +11,6 @@ import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlin.collections.ArrayList
 
 class GoonjPrefs {
     private var prefs: SharedPreferences? = null;

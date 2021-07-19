@@ -9,11 +9,6 @@ import com.dmdmax.goonj.adapters.BottomGridAdapter
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.BottomMenu
 import com.dmdmax.goonj.screens.views.WelcomeView
-import com.dmdmax.goonj.utility.Constants
-import com.dmdmax.goonj.utility.Utility
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import java.util.logging.Logger
 
 class Welcomelmpl: BaseObservableView<WelcomeView.Listener>, WelcomeView, View.OnClickListener {
 

@@ -4,11 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.firebase_events.EventManager
-import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.SigninView
-import com.dmdmax.goonj.utility.Constants
 
 class SigninActivity : BaseActivity(), SigninView.Listener {
 

@@ -4,21 +4,12 @@ import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.os.Build
-import android.os.Handler
 import android.os.Process.myPid
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.multidex.MultiDex
-import com.dmdmax.goonj.events.MessageEvent
-import com.dmdmax.goonj.network.CONNECTED
 import com.dmdmax.goonj.network.ConnectivityProvider
-import com.dmdmax.goonj.network.DISCONNECTED
-import com.dmdmax.goonj.network.NetWorkManger
 import com.dmdmax.goonj.utility.Logger
-import com.facebook.FacebookSdk
 import com.google.android.exoplayer2.util.Util
 import com.google.firebase.FirebaseApp
-import org.greenrobot.eventbus.EventBus
 import java.net.CookieHandler
 import java.net.CookieManager
 

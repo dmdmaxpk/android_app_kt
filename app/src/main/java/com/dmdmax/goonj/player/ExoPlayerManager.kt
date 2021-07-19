@@ -6,12 +6,10 @@ import android.net.Uri
 import android.os.Handler
 import android.view.View
 import android.widget.*
-import androidx.core.content.ContextCompat
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.adapters.BitrateAdapter
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseApplication
-import com.dmdmax.goonj.events.MessageEvent
 import com.dmdmax.goonj.models.BitRatesModel
 import com.dmdmax.goonj.models.MediaModel
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
@@ -35,11 +33,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.Util
-import com.google.android.material.snackbar.Snackbar
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import java.util.*
 
 
@@ -194,6 +188,11 @@ class ExoPlayerManager: View.OnClickListener {
         if (mediaSource != null) {
             if(mMediaModel.shouldMaintainState){
                 mPlayer.prepare(mediaSource, false, true)
+                if(mMediaModel.secondsLapsed > 3000){
+                    mPlayer.seekTo((mMediaModel.secondsLapsed - 2000))
+                    mMediaModel.secondsLapsed = 0;
+                    mMediaModel.shouldMaintainState = false;
+                }
             }else{
                 if (!mediaModel.isLive) {
                     mPlayer.prepare(mediaSource, true, false)
@@ -234,19 +233,15 @@ class ExoPlayerManager: View.OnClickListener {
         isDefaultVolumeOn = false;
     }
 
-    fun unMute(){
+    private fun unMute(){
         mPlayer.volume = mCurrentVolume;
         mExoVolume.setImageResource(R.drawable.volume_high)
         isDefaultVolumeOn = true;
     }
 
-    fun addListeners() {
+    private fun addListeners() {
         mExoVolume.setOnClickListener(this);
         mExoSettings.setOnClickListener(this);
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-
         this.mPlayerView.player.addListener(object : Player.EventListener {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 super.onPlayerStateChanged(playWhenReady, playbackState)
@@ -297,12 +292,8 @@ class ExoPlayerManager: View.OnClickListener {
                     Logger.println("onPlayerError: INSIDE ELSE");
                     if(!Utility.isConnectedToInternet(mContext)){
                         // No internet
-                        /*Snackbar.make(mPlayerView.parent as View, "Please check your internet", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("Reload") {
-                                init(mContext, mPlayerView);
-                                playMedia(mMediaModel);
-                            }.setActionTextColor(ContextCompat.getColor(mContext, android.R.color.holo_blue_light))
-                            .show()*/
+                        mMediaModel.shouldMaintainState = true;
+                        mMediaModel.secondsLapsed = mPlayer.currentPosition
                     }else{
                         // Internet is available
                         init(mContext, mPlayerView);
@@ -351,7 +342,7 @@ class ExoPlayerManager: View.OnClickListener {
         val msisdn = if (mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) != null) mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) else if (mPrefs.getMsisdn(PaywallComedyFragment.SLUG) != null) mPrefs.getMsisdn(PaywallComedyFragment.SLUG) else "null"
         val userId = if (mPrefs.getUserId(PaywallGoonjFragment.SLUG) != null) mPrefs.getUserId(PaywallGoonjFragment.SLUG) else "null"
         val userAgent = "msisdn_${msisdn}_${(if(live) "ua:goonjlive" else "ua:goonjvod")}_uid_${userId}";
-
+        Logger.println("USER_AGENT: ${userAgent}")
         val mHlsDsFactory: HlsDataSourceFactory = DefaultHlsDataSourceFactory(
                 DefaultDataSourceFactory(
                         mContext, Util.getUserAgent(
@@ -382,21 +373,14 @@ class ExoPlayerManager: View.OnClickListener {
         return null
     }
 
-    @Subscribe
-    fun onEventReceive(event: MessageEvent){
-        if(event.name == MessageEvent.EventNames.NETWORK_CONNECTED && event.value == true){
-            Snackbar.make(mPlayerView.parent as View, "Back online", Snackbar.LENGTH_LONG).show()
-            Logger.println("NETWORK CONNECTED")
+    fun updateNetworkState(isConnected: Boolean) {
+        if(isConnected && !mPlayer.playWhenReady) {
             init(mContext, mPlayerView);
             playMedia(mMediaModel);
-        }else{
-            Logger.println("NO NETWORK CONNECTED")
-            Snackbar.make(mPlayerView.parent as View, "No internet connection", Snackbar.LENGTH_INDEFINITE).show()
         }
     }
 
     fun release(){
-        EventBus.getDefault().unregister(this);
         mPlayer.release();
     }
 }

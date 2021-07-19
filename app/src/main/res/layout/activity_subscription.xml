@@ -112,7 +112,6 @@
 
             <FrameLayout
                 android:paddingLeft="15dp"
-                android:id="@+id/about_layout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/light_navy_blue">

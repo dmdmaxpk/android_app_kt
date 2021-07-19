@@ -11,7 +11,6 @@ import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
-import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 

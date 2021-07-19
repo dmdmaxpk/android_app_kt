@@ -24,7 +24,6 @@ import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import org.json.JSONArray
-import java.lang.Exception
 
 class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBillingView {
 

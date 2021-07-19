@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
@@ -14,7 +13,6 @@ import com.dmdmax.goonj.adapters.GetStartedViewPagerAdapter
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.views.GetStartedView
-import com.dmdmax.goonj.utility.Logger
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
 
 class GetStartedImpl: BaseObservableView<GetStartedView.Listener>, GetStartedView, View.OnClickListener {

@@ -1,9 +1,5 @@
 package com.dmdmax.goonj.models
 
-import com.dmdmax.goonj.storage.DBHelper
-import com.dmdmax.goonj.utility.Constants
-import com.google.gson.annotations.SerializedName
-
 class SliderModel {
 
     private var id: String? = null

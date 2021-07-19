@@ -1,17 +1,16 @@
 package com.dmdmax.goonj.screens.implements
 
 import android.content.Context
-import android.media.Image
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.adapters.BottomMenuChannelAdapter
-import com.dmdmax.goonj.adapters.ChannelsCarouselListAdapter
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.MediaModel
@@ -21,7 +20,6 @@ import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.player.ExoPlayerManager
 import com.dmdmax.goonj.screens.activities.PlayerActivity
-import com.dmdmax.goonj.screens.activities.WelcomeActivity
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.BottomMenuLiveTvView
 import com.dmdmax.goonj.storage.GoonjPrefs
@@ -29,7 +27,6 @@ import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Utility
 import java.util.*
-import java.util.logging.Handler
 
 
 class BottomMenuLiveTvImpl: BaseObservableView<BottomMenuLiveTvView.Listener>, BottomMenuLiveTvView, View.OnClickListener {
@@ -52,11 +49,14 @@ class BottomMenuLiveTvImpl: BaseObservableView<BottomMenuLiveTvView.Listener>, B
 
     private var mCurrentChannel: Channel? = null;
 
+    private lateinit var mNetworkStatusTextView: TextView;
+
     constructor(inflater: LayoutInflater, parent: ViewGroup?) {
         setRootView(inflater.inflate(R.layout.fragment_bottom_live, parent, false));
     }
 
     override fun initialize() {
+        mNetworkStatusTextView = findViewById(R.id.network_status);
         mMainPlayerView = findViewById(R.id.main_player_view);
         mPlayerMainLayout = findViewById(R.id.player_main_layout);
         mBelowPlayerLayout = findViewById(R.id.below_player_layout);
@@ -225,5 +225,17 @@ class BottomMenuLiveTvImpl: BaseObservableView<BottomMenuLiveTvView.Listener>, B
 
     fun dpToPx(context: Context, dp: Int): Int {
         return (dp * context.resources.displayMetrics.density).toInt()
+    }
+
+    override fun updateNetworkState(isConnected: Boolean) {
+        mNetworkStatusTextView.visibility = View.VISIBLE;
+        mNetworkStatusTextView.text = if(isConnected) "Back Online" else "No Internet Connection";
+        mNetworkStatusTextView.setBackgroundColor(if(isConnected) ContextCompat.getColor(getContext(), R.color.green) else ContextCompat.getColor(getContext(), R.color.colorRed));
+        if(isConnected){
+            android.os.Handler().postDelayed({
+                mNetworkStatusTextView.visibility = View.GONE;
+            }, 3000);
+        }
+        mPlayerManager.updateNetworkState(isConnected);
     }
 }

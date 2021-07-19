@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.adapters.ChannelsCarouselListAdapter
 import com.dmdmax.goonj.adapters.ComedyBannerCarouselListAdapter
+import com.dmdmax.goonj.adapters.HomeComedyBannerCarouselListAdapter
 import com.dmdmax.goonj.adapters.HomeSliderAdapter
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.*
@@ -29,7 +30,6 @@ import com.dmdmax.goonj.utility.Utility
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
 import org.json.JSONArray
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
@@ -186,7 +186,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
 
                 var recyclerView = singleView.findViewById<RecyclerView>(R.id.feed);
                 setRecyclerView(recyclerView);
-                recyclerView.adapter = ComedyBannerCarouselListAdapter(videos, getContext(), object : ComedyBannerCarouselListAdapter.OnItemClickListener {
+                recyclerView.adapter = HomeComedyBannerCarouselListAdapter(videos, getContext(), object : HomeComedyBannerCarouselListAdapter.OnItemClickListener {
                     override fun onClick(video: Video, position: Int) {
                         for (listener in getListeners()) {
                             listener.onComedyClick(video, PaywallComedyFragment.SLUG);
@@ -220,7 +220,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
 
                 var recyclerView = singleView.findViewById<RecyclerView>(R.id.feed);
                 setRecyclerView(recyclerView);
-                recyclerView.adapter = ComedyBannerCarouselListAdapter(videos, getContext(), object : ComedyBannerCarouselListAdapter.OnItemClickListener {
+                recyclerView.adapter = HomeComedyBannerCarouselListAdapter(videos, getContext(), object : HomeComedyBannerCarouselListAdapter.OnItemClickListener {
                     override fun onClick(video: Video, position: Int) {
                         for (listener in getListeners()) {
                             listener.onBinjeeClick(video, PaywallBinjeeFragment.SLUG);

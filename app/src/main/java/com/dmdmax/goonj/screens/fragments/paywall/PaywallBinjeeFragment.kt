@@ -6,26 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.firebase_events.EventManager
-import com.dmdmax.goonj.models.BinjeePackage
-import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.PackageModel
-import com.dmdmax.goonj.network.client.NetworkOperationListener
-import com.dmdmax.goonj.network.client.RestClient
-import com.dmdmax.goonj.payments.BinjeePaymentHelper
 import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.activities.SigninActivity
 import com.dmdmax.goonj.screens.views.PaywallBillingView
 import com.dmdmax.goonj.storage.GoonjPrefs
-import com.dmdmax.goonj.utility.Constants
-import com.dmdmax.goonj.utility.Logger
-import org.json.JSONArray
-import org.json.JSONObject
 
 class PaywallBinjeeFragment: BaseFragment(), PaywallBillingView, View.OnClickListener {
 

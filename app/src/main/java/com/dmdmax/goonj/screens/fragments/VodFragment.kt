@@ -8,7 +8,6 @@ import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Video
 import com.dmdmax.goonj.screens.views.VodView
-import java.util.logging.Logger
 
 class VodFragment: BaseFragment(), VodView.Listener {
 

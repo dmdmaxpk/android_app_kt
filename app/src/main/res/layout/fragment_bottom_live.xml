@@ -133,8 +133,18 @@
                 android:paddingLeft="15dp"
                 android:id="@+id/recommended_live_channels"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 />
+            <TextView
+                android:id="@+id/network_status"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:padding="3dp"/>
         </LinearLayout>
     </LinearLayout>
     <ProgressBar

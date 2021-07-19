@@ -1,19 +1,17 @@
 package com.dmdmax.goonj.screens.fragments
 
-import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseFragment
+import com.dmdmax.goonj.events.MessageEvent
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.activities.WelcomeActivity
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.BottomMenuLiveTvView
-import com.dmdmax.goonj.screens.views.WelcomeView
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 class BottomMenuLiveTvFragment: BaseFragment(), BottomMenuLiveTvView.Listener {
 
@@ -46,6 +44,10 @@ class BottomMenuLiveTvFragment: BaseFragment(), BottomMenuLiveTvView.Listener {
                 mView.setFullscreen(isFull);
             }
         })
+
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     override fun onStop() {
@@ -53,6 +55,7 @@ class BottomMenuLiveTvFragment: BaseFragment(), BottomMenuLiveTvView.Listener {
         mView.getLogger().println("BottomMenuLiveTvFragment - onStop")
         mView.unregisterListener(this);
         mView.pauseStreaming();
+        EventBus.getDefault().unregister(this);
 
         (context as WelcomeActivity).setFullScreenListener(null);
     }
@@ -65,6 +68,11 @@ class BottomMenuLiveTvFragment: BaseFragment(), BottomMenuLiveTvView.Listener {
         getCompositionRoot().getViewFactory().toPaywallScreen(null, PaywallGoonjFragment.SLUG);
     }
 
-
+    @Subscribe
+    fun onEventReceive(event: MessageEvent){
+        if(event.name == MessageEvent.EventNames.NETWORK_CONNECTED){
+            mView.updateNetworkState(event.value as Boolean);
+        }
+    }
 
 }

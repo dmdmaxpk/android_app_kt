@@ -15,7 +15,6 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:src="@drawable/user_dummy"
-            android:id="@+id/user_image"
             android:layout_width="50dp"
             android:layout_height="50dp"/>
         <LinearLayout

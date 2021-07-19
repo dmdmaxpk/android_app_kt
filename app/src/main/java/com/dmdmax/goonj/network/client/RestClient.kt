@@ -2,8 +2,9 @@ package com.dmdmax.goonj.network.client
 
 
 import android.content.Context
-import com.android.volley.*
 import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.JsonRequest
 import com.android.volley.toolbox.StringRequest
@@ -16,7 +17,6 @@ import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Toaster
 import com.dmdmax.goonj.utility.Utility
 import org.json.JSONObject
-import java.nio.charset.StandardCharsets
 import java.util.*
 import javax.net.ssl.SSLHandshakeException
 import kotlin.collections.ArrayList

@@ -1,6 +1,5 @@
 package com.dmdmax.goonj.base
 
-import com.dmdmax.goonj.utility.Logger
 import java.util.*
 import kotlin.collections.HashSet
 

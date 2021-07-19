@@ -1,7 +1,6 @@
 package com.dmdmax.goonj.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseViewFactory
-import com.dmdmax.goonj.models.Anchor
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.activities.PlayerActivity

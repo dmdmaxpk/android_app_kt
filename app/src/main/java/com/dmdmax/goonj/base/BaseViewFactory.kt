@@ -15,7 +15,6 @@ import com.dmdmax.goonj.screens.fragments.SettingsFragment
 import com.dmdmax.goonj.screens.fragments.VodFragment
 import com.dmdmax.goonj.screens.implements.*
 import com.dmdmax.goonj.screens.views.*
-import com.dmdmax.goonj.screens.views.GenericCategoryView
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.FragmentFrameHelper
 

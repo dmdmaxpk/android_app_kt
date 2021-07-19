@@ -16,7 +16,7 @@ import com.dmdmax.goonj.utility.Logger
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
-class ComedyBannerCarouselListAdapter: RecyclerView.Adapter<ComedyBannerCarouselListAdapter.MyViewHolder> {
+class HomeComedyBannerCarouselListAdapter: RecyclerView.Adapter<HomeComedyBannerCarouselListAdapter.MyViewHolder> {
 
     private var list: ArrayList<Video>? = null
     private var context: Context? = null
@@ -38,7 +38,7 @@ class ComedyBannerCarouselListAdapter: RecyclerView.Adapter<ComedyBannerCarousel
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView: View = LayoutInflater.from(parent.context).inflate(R.layout.comedy_banner_adapter_item, null)
+        val itemView: View = LayoutInflater.from(parent.context).inflate(R.layout.home_comedy_banner_adapter_item, null)
         return MyViewHolder(itemView)
     }
 

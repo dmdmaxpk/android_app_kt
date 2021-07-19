@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +43,7 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.mListItems = listItems;
         this.mTabModel = tabModel;
         this.mListener = listener;
+        Logger.println("Total Items In Adapter: "+mListItems.size)
     }
 
     internal class ThumbsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -61,6 +63,15 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    internal class FooterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+        val mProgressBar: ProgressBar
+
+        init {
+            mProgressBar = view.findViewById(R.id.footer_progress)
+        }
+    }
+
     internal class CarouselViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val mTitle: TextView
@@ -74,22 +85,16 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     override fun getItemViewType(position: Int): Int {
         return when (mListItems[position].getTileType()) {
-            TileType.TILE_TYPE_THUMBNAIL -> 0
             TileType.TILE_TYPE_RELATED_CHANNELS -> 1
             TileType.TILE_TYPE_EPISODE -> 2
+            TileType.TILE_TYPE_FOOTER -> 3
+            TileType.TILE_TYPE_THUMBNAIL_FLIP -> 4
             else -> 0
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            0 -> ThumbsViewHolder(
-                LayoutInflater.from(mContext).inflate(
-                    R.layout.generic_category_item,
-                    parent,
-                    false
-                )
-            )
 
             1 -> CarouselViewHolder(
                 LayoutInflater.from(mContext).inflate(
@@ -107,6 +112,22 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     )
             )
 
+            3 -> FooterViewHolder(
+                LayoutInflater.from(mContext).inflate(
+                    R.layout.footer,
+                    parent,
+                    false
+                )
+            )
+
+            4 -> ThumbsViewHolder(
+                LayoutInflater.from(mContext).inflate(
+                    R.layout.generic_category_item_flip,
+                    parent,
+                    false
+                )
+            )
+
             else -> ThumbsViewHolder(
                 LayoutInflater.from(mContext).inflate(
                     R.layout.generic_category_item,
@@ -119,10 +140,6 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            0 -> {
-                val thumbsViewHolder = holder as ThumbsViewHolder
-                bindThumbsView(thumbsViewHolder, thumbsViewHolder.adapterPosition, mListener)
-            }
 
             1 -> {
                 val viewHolder = holder as CarouselViewHolder
@@ -132,6 +149,11 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
             2 -> {
                 val episodeViewHolder = holder as ThumbsViewHolder
                 bindEpisodeViewHolder(episodeViewHolder, episodeViewHolder.adapterPosition, mListener)
+            }
+
+            3 -> {
+                val footerViewHolder = holder as FooterViewHolder
+                bindFooterViewHolder(footerViewHolder)
             }
 
             else -> {
@@ -144,14 +166,13 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun bindThumbsView(thumbsViewHolder: ThumbsViewHolder, position: Int, listener: OnItemClickListener?) {
         thumbsViewHolder.mTitle.text = mListItems[position].getTitle();
-        //thumbsViewHolder.mCount.text = mListItems[position].getViewsCount().toString() + " views";
+        thumbsViewHolder.mCount.text = mListItems[position].getViewsCount().toString() + " views";
 
-        thumbsViewHolder.mCount.text = ((100..1000).random().toString() + " views");
+        //thumbsViewHolder.mCount.text = ((100..1000).random().toString() + " views");
 
         thumbsViewHolder.mTimeAgo.text = Utility.getAgoTime(mListItems.get(position).getPublishDtm());
-
-        Picasso.get().load(
-            if (mTabModel?.getSlug() == PaywallComedyFragment.SLUG) mListItems[position].getThumbnailUrl() else mListItems[position].getThumbnail(mListItems[position].getSlug())).into(thumbsViewHolder.mThumbnail, object : Callback {
+        val thumb = if (mTabModel?.getSlug() == PaywallComedyFragment.SLUG) mListItems[position].getThumbnailUrl() else mListItems[position].getThumbnail(mListItems[position].getSlug());
+        Picasso.get().load(thumb).into(thumbsViewHolder.mThumbnail, object : Callback {
             override fun onSuccess() {
                 thumbsViewHolder.mSpinKitView.visibility = View.GONE;
             }
@@ -172,9 +193,7 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private fun bindEpisodeViewHolder(thumbsViewHolder: ThumbsViewHolder, position: Int, listener: OnItemClickListener?) {
         thumbsViewHolder.mTitle.text = mListItems[position].getTitle();
         //thumbsViewHolder.mCount.text = mListItems[position].getViewsCount().toString() + " views";
-
         //thumbsViewHolder.mTimeAgo.text = Utility.getAgoTime(mListItems.get(position).getPublishDtm());
-
         Picasso.get().load(mListItems[position].getThumbnailUrl()).into(thumbsViewHolder.mThumbnail, object : Callback {
             override fun onSuccess() {
                 thumbsViewHolder.mSpinKitView.visibility = View.GONE;
@@ -189,6 +208,10 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
         thumbsViewHolder.mThumbnail.setOnClickListener(View.OnClickListener {
             listener?.onVideoClick(position, mListItems[position], mTabModel)
         })
+    }
+
+    private fun bindFooterViewHolder(thumbsViewHolder: FooterViewHolder) {
+
     }
 
     private fun bindCarouselView(viewHolder: CarouselViewHolder, position: Int, listener: OnItemClickListener?) {

@@ -12,7 +12,6 @@ import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Toaster
 import org.json.JSONObject
-import kotlin.collections.ArrayList
 
 class BinjeePaymentHelper {
 

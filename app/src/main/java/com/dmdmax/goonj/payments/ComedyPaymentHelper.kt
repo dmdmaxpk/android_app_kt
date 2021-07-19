@@ -3,7 +3,6 @@ package com.dmdmax.goonj.payments
 import android.content.Context
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.PackageModel
-import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment

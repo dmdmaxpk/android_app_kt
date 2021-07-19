@@ -5,16 +5,11 @@ import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.SliderModel
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.models.Video
-import com.dmdmax.goonj.network.client.NetworkOperationListener
-import com.dmdmax.goonj.network.client.RestClient
-import com.dmdmax.goonj.payments.BinjeePaymentHelper
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants.ThumbnailManager.getVodThumbnail
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
-import kotlin.collections.ArrayList
 
 class JSONParser {
 
@@ -132,6 +127,42 @@ class JSONParser {
                         model.setFileName(rootArray.getJSONObject(i).getString("file_name"))
                         model.setSource(rootArray.getJSONObject(i).getString("source"))
                         model.setDescription(rootArray.getJSONObject(i).getString("description"))
+                        model.setViewsCount(rootArray.getJSONObject(i).getInt("views_count"))
+                        model.setTopics(Utility.getStringList(rootArray.getJSONObject(i).getJSONArray("topics")))
+                        if(slug != null){
+                            model.setSlug(slug);
+                        }
+                        list.add(model)
+                    } catch (e: Exception) {
+                        Logger.println("Exception Message: " + e.message)
+                    }
+                }
+            } catch (e: Exception) {
+                Logger.println("Reason: " + e.message)
+                e.printStackTrace()
+            }
+            return list
+        }
+
+        fun getFeedFlipped(json: String?, slug: String?): ArrayList<Video> {
+            val list: ArrayList<Video> = ArrayList()
+            try {
+                val rootArray = JSONArray(json)
+                for (i in 0 until rootArray.length()) {
+                    try {
+                        val model = Video(Video.TileType.TILE_TYPE_THUMBNAIL_FLIP)
+                        model.setId(rootArray.getJSONObject(i).getString("_id"))
+                        model.setCategory(rootArray.getJSONObject(i).getString("category"))
+                        model.setProgram(rootArray.getJSONObject(i).getString("program"))
+                        model.setTitle(rootArray.getJSONObject(i).getString("title"))
+                        model.setAnchor(rootArray.getJSONObject(i).getString("anchor"))
+                        model.setPublishDtm(rootArray.getJSONObject(i).getString("publish_dtm"))
+                        model.setDuration(rootArray.getJSONObject(i).getInt("duration"))
+                        model.setThumbnail(rootArray.getJSONObject(i).getString("thumbnail"))
+                        model.setFileName(rootArray.getJSONObject(i).getString("file_name"))
+                        model.setSource(rootArray.getJSONObject(i).getString("source"))
+                        model.setDescription(rootArray.getJSONObject(i).getString("description"))
+                        model.setViewsCount(rootArray.getJSONObject(i).getInt("views_count"))
                         model.setTopics(Utility.getStringList(rootArray.getJSONObject(i).getJSONArray("topics")))
                         if(slug != null){
                             model.setSlug(slug);

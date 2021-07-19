@@ -1,8 +1,6 @@
 package com.dmdmax.goonj.screens.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.screens.views.SubscriptionStatusView

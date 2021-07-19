@@ -1,7 +1,6 @@
 package com.dmdmax.goonj.screens.views
 
 import com.dmdmax.goonj.base.ObservableView
-import java.nio.channels.Channel
 
 interface BottomMenuLiveTvView: ObservableView<BottomMenuLiveTvView.Listener> {
 
@@ -13,4 +12,5 @@ interface BottomMenuLiveTvView: ObservableView<BottomMenuLiveTvView.Listener> {
     fun  initialize();
     fun pauseStreaming();
     fun setFullscreen(isFull: Boolean);
+    fun updateNetworkState(isConnected: Boolean);
 }

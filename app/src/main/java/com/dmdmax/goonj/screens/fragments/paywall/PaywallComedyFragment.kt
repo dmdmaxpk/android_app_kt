@@ -10,7 +10,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.firebase_events.EventManager
-import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.PackageModel
 import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.activities.SigninActivity

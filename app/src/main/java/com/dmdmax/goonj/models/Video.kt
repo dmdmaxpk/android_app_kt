@@ -2,7 +2,6 @@ package com.dmdmax.goonj.models
 
 import com.dmdmax.goonj.utility.Constants
 import com.google.gson.annotations.SerializedName
-import org.json.JSONArray
 import java.io.Serializable
 
 class Video: Serializable {
@@ -44,6 +43,9 @@ class Video: Serializable {
 
     @SerializedName("thumbnail")
     private var thumbnail: String? = null
+
+    @SerializedName("small_thumbnail")
+    private var small_thumbnail: String? = null
 
     @SerializedName("added_dtm")
     private var added_dtm: String? = null
@@ -166,6 +168,10 @@ class Video: Serializable {
         this.thumbnail = thumbnail
     }
 
+    fun setSmallThumbnail(thumbnail: String?) {
+        this.small_thumbnail = thumbnail
+    }
+
     fun setAdded_dtm(added_dtm: String?) {
         this.added_dtm = added_dtm
     }
@@ -205,7 +211,7 @@ class Video: Serializable {
     private var tag: Int? = null
 
     enum class TileType {
-         TILE_TYPE_THUMBNAIL, TILE_TYPE_RELATED_CHANNELS,TILE_TYPE_PROGRAMS, TILE_TYPE_SHOW, TILE_TYPE_EPISODE, TILE_TYPE_PRANKS, TILE_TYPE_ANCHORS, TILE_TYPE_TOPICS, TILE_TYPE_FOOTER, TILE_TYPE_SEARCH_RESULT_LAYOUT, TILE_TYPE_CUSTOM_AD
+         TILE_TYPE_THUMBNAIL, TILE_TYPE_THUMBNAIL_FLIP, TILE_TYPE_RELATED_CHANNELS,TILE_TYPE_PROGRAMS, TILE_TYPE_SHOW, TILE_TYPE_EPISODE, TILE_TYPE_PRANKS, TILE_TYPE_ANCHORS, TILE_TYPE_TOPICS, TILE_TYPE_FOOTER, TILE_TYPE_SEARCH_RESULT_LAYOUT, TILE_TYPE_CUSTOM_AD
     }
 
     private lateinit var tileType: TileType;
@@ -271,15 +277,14 @@ class Video: Serializable {
     }
 
     fun getThumbnail(slug: String?): String? {
-        /*return if(slug != null){
-            Constants.ThumbnailManager.getSlugBaseImageUrl(slug, thumbnail!!);
-        }else{
-            if (getTileType() == TileType.TILE_TYPE_THUMBNAIL) Constants.ThumbnailManager.getVodThumbnail(thumbnail);
-            else thumbnail
-        }*/
-
-        return if (getTileType() == TileType.TILE_TYPE_THUMBNAIL) Constants.ThumbnailManager.getVodThumbnail(thumbnail);
+        return if (getTileType() == TileType.TILE_TYPE_THUMBNAIL || getTileType() == TileType.TILE_TYPE_THUMBNAIL_FLIP ) Constants.ThumbnailManager.getVodThumbnail(thumbnail);
         else thumbnail
+    }
+
+    fun getSmallThumbnail(slug: String?): String? {
+        return if (getTileType() == TileType.TILE_TYPE_THUMBNAIL)
+            Constants.ThumbnailManager.getVodThumbnail(small_thumbnail);
+        else small_thumbnail
     }
 
     fun getAddedDtm(): String? {

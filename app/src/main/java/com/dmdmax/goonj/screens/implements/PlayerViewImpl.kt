@@ -1,7 +1,6 @@
 package com.dmdmax.goonj.screens.implements
 
 import android.content.Context
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dmdmax.goonj.R
@@ -25,6 +25,7 @@ import com.dmdmax.goonj.player.ExoPlayerManager
 import com.dmdmax.goonj.screens.activities.PlayerActivity
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.PlayerView
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
@@ -52,12 +53,16 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
 
     private lateinit var mShare: LinearLayout;
     private lateinit var mLiveChannelRecommendationLayout: LinearLayout;
+    private lateinit var mRecommendedVideosLayout: LinearLayout;
     private lateinit var mEpisodesLayout: LinearLayout;
 
     private lateinit var mRecommendedLiveChannels: RecyclerView;
     private lateinit var mEpisodes: RecyclerView;
     private lateinit var mRecommendedHeadlines: RecyclerView;
     private lateinit var mRecommendedEntertainmentChannels: RecyclerView;
+    private lateinit var mRecommendedVideos: RecyclerView;
+
+    private lateinit var mNetworkStatusTextView: TextView;
 
     constructor(inflater: LayoutInflater, parent: ViewGroup?) {
         setRootView(inflater.inflate(R.layout.activity_player, parent, false));
@@ -70,11 +75,14 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
         mPlayer = findViewById(R.id.video_view);
 
         mTitle = findViewById(R.id.title);
+        mRecommendedVideosLayout = findViewById(R.id.recommended_videos_layout);
+        mNetworkStatusTextView = findViewById(R.id.network_status);
         mChannelTitle = findViewById(R.id.channel_title);
         mLiveOrVod = findViewById(R.id.liveOrVod);
         mShare = findViewById(R.id.share);
         mBack = findViewById(R.id.back_arrow);
         mRecommendedLiveChannels = findViewById(R.id.recommended_live_channels);
+        mRecommendedVideos = findViewById(R.id.recommended_videos);
         mLiveChannelRecommendationLayout = findViewById(R.id.live_channels_recommendation_layout);
         mEpisodesLayout = findViewById(R.id.episodes_layout);
 
@@ -85,6 +93,7 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
         setRecyclerView(mRecommendedHeadlines);
         setRecyclerView(mRecommendedLiveChannels)
         setRecyclerView(mRecommendedEntertainmentChannels)
+        setVerticalRecyclerView(mRecommendedVideos)
         setVerticalRecyclerView(mEpisodes)
 
         mBack.setOnClickListener(this);
@@ -137,6 +146,7 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
 
             displayHeadlines();
             displayEntertainmentChannels();
+            mRecommendedVideosLayout.visibility = View.GONE;
         } else {
             if(
                 model.category == PaywallComedyFragment.SLUG ||
@@ -175,6 +185,7 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
 
                 displayHeadlines();
                 displayEntertainmentChannels();
+                displayRecommendedVideos();
             }
         }
 
@@ -314,6 +325,33 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
         }
     }
 
+    private fun displayRecommendedVideos() {
+        mRecommendedVideosLayout.visibility = View.GONE;
+        var queryString = "?id=${PlayerActivity.ARGS_VIDEO!!.getId()}";
+        if(mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) != null && !mPrefs.getUserId(PaywallGoonjFragment.SLUG).equals("null")){
+            queryString = queryString.plus("&msisdn=${mPrefs.getMsisdn(PaywallGoonjFragment.SLUG)}");
+        }
+
+        RestClient(getContext(), Constants.API_BASE_URL + Constants.Companion.EndPoints.RECOMMENDED_VIDEOS + queryString, RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
+            override fun onSuccess(response: String?) {
+                mRecommendedVideosLayout.visibility = View.VISIBLE;
+                mRecommendedVideos.adapter = GenericCategoryAdapter(getContext(), JSONParser.getFeedFlipped(response, null), null, object: GenericCategoryAdapter.OnItemClickListener {
+                    override fun onVideoClick(position: Int, video: Video, tabModel: TabModel?) {
+                        PlayerActivity.ARGS_CHANNEL = null;
+                        PlayerActivity.ARGS_VIDEO = null;
+                        PlayerActivity.ARGS_VIDEO = video;
+                        displayView(MediaModel.getVodMediaModel(video, mPrefs.getGlobalBitrate()!!), null);
+                    }
+                });
+            }
+
+            override fun onFailed(code: Int, reason: String?) {
+                getLogger().println("onFailed:- " + reason);
+                mRecommendedVideosLayout.visibility = View.GONE;
+            }
+        }).exec();
+    }
+
     private fun displayHeadlines() {
         RestClient(getContext(), Constants.API_BASE_URL + Constants.Companion.EndPoints.VIDEO_BY_CATEGORY + "news", RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
             override fun onSuccess(response: String?) {
@@ -399,6 +437,18 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
         mPlayerManager.setFullScreen(isFull)
     }
 
+    override fun updateNetworkState(isConnected: Boolean) {
+        mNetworkStatusTextView.visibility = View.VISIBLE;
+        mNetworkStatusTextView.text = if(isConnected) "Back Online" else "No Internet Connection";
+        mNetworkStatusTextView.setBackgroundColor(if(isConnected) ContextCompat.getColor(getContext(), R.color.green) else ContextCompat.getColor(getContext(), R.color.colorRed));
+        if(isConnected){
+            android.os.Handler().postDelayed({
+                mNetworkStatusTextView.visibility = View.GONE;
+            }, 3000);
+        }
+        mPlayerManager.updateNetworkState(isConnected);
+    }
+
     fun getHeight(context: Context): Int {
         val displayMetrics = context.resources.displayMetrics
         val fullHeight = displayMetrics.heightPixels / displayMetrics.density
@@ -420,6 +470,7 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
     }
 
     private fun setVerticalRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.isNestedScrollingEnabled = false;
         val horizontalLayoutManager = LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = horizontalLayoutManager
     }

@@ -140,7 +140,6 @@
             android:textAllCaps="true"/>
 
         <TextView
-            android:id="@+id/goto_text"
             app:layout_constraintTop_toBottomOf="@id/cancellation_text"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

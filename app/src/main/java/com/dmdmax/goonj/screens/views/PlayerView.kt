@@ -19,4 +19,5 @@ interface PlayerView: ObservableView<PlayerView.Listener> {
     fun releasePlayer();
     fun getPlayer(): com.google.android.exoplayer2.ui.PlayerView;
     fun setFullscreen(isFull: Boolean)
+    fun updateNetworkState(isConnected: Boolean);
 }

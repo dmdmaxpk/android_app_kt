@@ -17,7 +17,6 @@ import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.activities.PlayerActivity
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.storage.GoonjPrefs
-import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Utility
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso

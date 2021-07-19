@@ -3,7 +3,6 @@ package com.dmdmax.goonj.firebase_events
 import android.content.Context
 import android.os.Bundle
 import com.dmdmax.goonj.utility.Logger
-import com.dmdmax.goonj.utility.Utility
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics

@@ -15,10 +15,12 @@ import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.screens.fragments.hometabs.GenericCategoryFragment
 import com.dmdmax.goonj.screens.fragments.hometabs.LiveTvFragment
 import com.dmdmax.goonj.screens.views.HomeView
-import com.dmdmax.goonj.utility.*
+import com.dmdmax.goonj.utility.Constants
+import com.dmdmax.goonj.utility.CustomViewPager
+import com.dmdmax.goonj.utility.JSONParser
+import com.dmdmax.goonj.utility.Logger
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 
 class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
 

@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">Goonj</string>
     <string name="facebook_app_id">1907140572877408</string>
-    <string name="str_get_started">Stream your favourite\ntv channels</string>
     <string name="skip">Skip</string>
     <string name="join_now">Join Now</string>
-    <string name="login_text">We are striving to deliver a digital platform where\nlicensed Live TV, News, Current Affairs and Sports\nare delivered in a personalized manner to our users.</string>
     <string name="watch_live_tv_anytime_anywhere">watch live tv anytime, anywhere</string>
     <string name="telenor_number">telenor number</string>
     <string name="easypaisa_number">continue with easypaisa</string>

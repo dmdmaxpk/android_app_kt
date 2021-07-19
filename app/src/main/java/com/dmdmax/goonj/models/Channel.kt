@@ -1,7 +1,6 @@
 package com.dmdmax.goonj.models
 
 import com.dmdmax.goonj.utility.Constants
-import com.google.gson.annotations.SerializedName
 import org.json.JSONObject
 import java.io.Serializable
 

@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Dark application theme. -->
-    <style name="DarkApplicationTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/darkColorPrimary</item>
-        <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
-        <item name="colorAccent">@color/darkColorAccent</item>
-    </style>
 
     <!-- Light application theme. -->
-
-    <style name="DarkApplicationTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
 
     <style name="CustomAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
         <item name="colorAccent">@color/cloudy_gray</item>

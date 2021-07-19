@@ -5,7 +5,6 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
@@ -25,9 +24,6 @@ import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.WelcomeView
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Logger
-import com.dmdmax.goonj.utility.Utility
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import org.greenrobot.eventbus.EventBus
 
 class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
@@ -52,10 +48,30 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
     }
 
     private fun initialize(){
+        var firstNetworkStatusBroadcast = true;
         mPrefs = GoonjPrefs(this);
         mView.initialize();
         mView.bindBottomAdapter()
         onBottomClick(0);
+
+        NetWorkManger.networkStatus.observe(this, Observer {
+            val event = MessageEvent(MessageEvent.EventNames.NETWORK_CONNECTED, null);
+            when (it) {
+                CONNECTED -> {
+                    Logger.println("Internet is connected")
+                    event.value = true;
+                }
+                DISCONNECTED -> {
+                    Logger.println("Internet disconnected")
+                    event.value = false;
+                }
+            }
+
+            if(!firstNetworkStatusBroadcast) {
+                EventBus.getDefault().post(event);
+            }
+            firstNetworkStatusBroadcast = false;
+        })
     }
 
     override fun onResume() {
