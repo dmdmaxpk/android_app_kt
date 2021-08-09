@@ -6,30 +6,62 @@ import android.content.Context
 import android.os.Build
 import android.os.Process.myPid
 import androidx.multidex.MultiDex
+import com.dmdmax.goonj.R
+import com.dmdmax.goonj.receivers.OneSignalNotificationReceiver
 import com.dmdmax.goonj.network.ConnectivityProvider
 import com.dmdmax.goonj.utility.Logger
+import com.facebook.ads.AudienceNetworkAds
 import com.google.android.exoplayer2.util.Util
+import com.google.android.gms.analytics.GoogleAnalytics
+import com.google.android.gms.analytics.Tracker
 import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
+import com.onesignal.OneSignal
+import com.survicate.surveys.Survicate
 import java.net.CookieHandler
 import java.net.CookieManager
+import java.util.HashMap
 
 class BaseApplication: Application() {
 
     protected var userAgent: String? = null
     private var defaultCookieManager: CookieManager? = null
+    private var mInstance: BaseApplication? = null
 
     override fun onCreate() {
         super.onCreate();
+        mInstance = this;
 
-        // Initialize firebase app.
-        FirebaseApp.initializeApp(applicationContext);
-        Logger.println("Firebase App Initialized!");
+        try{
+            // Initialize firebase app.
+            FirebaseApp.initializeApp(applicationContext);
+
+            Logger.println("Firebase App Initialized!");
+        }catch (e: Exception){
+            e.printStackTrace()
+            Logger.println("Exception: "+e.message)
+        }
 
         userAgent = Util.getUserAgent(this, "ExoPlayerDemo")
 
         if (isMainProcess()) {
             ConnectivityProvider.createProvider(this).subscribe()
         }
+
+        // Init One-Signal tool integration
+        OneSignal.startInit(this)
+            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+            .setNotificationReceivedHandler(OneSignalNotificationReceiver())
+            .unsubscribeWhenNotificationsAreDisabled(true)
+            .init()
+
+        // Analytics Tracker init
+        getGoogleAnalyticsTracker();
+
+        Survicate.init(this)
+
+        // Initialize the Audience Network SDK
+        AudienceNetworkAds.initialize(this)
     }
 
     fun setCookies() {
@@ -72,5 +104,13 @@ class BaseApplication: Application() {
             }
         }
         return null
+    }
+
+    fun getInstance(): BaseApplication? {
+        return mInstance
+    }
+
+    fun getGoogleAnalyticsTracker(): Tracker? {
+        return GoogleAnalytics.getInstance(this).newTracker(R.xml.analytics_tracker)
     }
 }

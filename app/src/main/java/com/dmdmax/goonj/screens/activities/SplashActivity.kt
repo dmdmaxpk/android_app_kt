@@ -191,7 +191,7 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
                 }
             }
         }
-        else{
+        else {
             Logger.println("onCompleted - SplashActivity");
             if(mView.getPrefs().isInterestedTopicDone()){
                 Logger.println("onCompleted - 1 - SplashActivity");

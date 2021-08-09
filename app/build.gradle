@@ -1,9 +1,22 @@
-plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'com.google.gms.google-services'
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/'}
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.12.5'
+    }
 }
+
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
+repositories {
+    maven { url 'https://maven.google.com' }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -13,10 +26,11 @@ android {
         applicationId "com.dmdmax.goonj"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 3013
-        versionName "3.0.1.3"
+        versionCode 3014
+        versionName "3.0.1.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [onesignal_app_id: "9549eaf3-2fc1-4c28-be54-3d2d65db3bf3", onesignal_google_project_number: "REMOTE"]
     }
 
     buildTypes {
@@ -41,9 +55,18 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.google.android.gms:play-services-analytics-impl:17.0.0'
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // One signal
+    implementation ('com.onesignal:OneSignal:3.16.0'){
+        exclude group: 'com.google.android.gms', module: 'play-services-base'
+        exclude group: 'com.google.android.gms', module: 'play-services-basement'
+        exclude group: 'com.google.android.gms', module: 'play-services-location'
+        exclude group: 'com.google.firebase', module: 'firebase-messaging'
+    }
 
     // Exo player and ads lib
     implementation 'com.google.android.exoplayer:exoplayer:2.9.3'
@@ -55,11 +78,10 @@ dependencies {
     // Google's  Libs
     //implementation('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') { transitive = true; }
     implementation 'com.google.firebase:firebase-core:18.0.0'
-    implementation 'com.google.firebase:firebase-analytics:18.0.0'
-    implementation 'com.google.firebase:firebase-config:20.0.2'
-    implementation 'com.google.firebase:firebase-messaging:21.0.1'
-
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.firebase:firebase-analytics:19.0.0'
+    implementation 'com.google.firebase:firebase-config:21.0.1'
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     // Utilities
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
@@ -81,6 +103,9 @@ dependencies {
 
     // Facebook
     implementation 'com.facebook.android:facebook-android-sdk:5.0.0'
+    implementation 'com.facebook.android:audience-network-sdk:5.1.0'
+
+    implementation 'com.survicate:survicate-sdk:1.+'
 
     // MultiDex
     implementation 'com.android.support:multidex:1.0.3'

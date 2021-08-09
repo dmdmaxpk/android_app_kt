@@ -22,4 +22,7 @@
     <string name="subscribe_now">subscribe now</string>
     <string name="comedy_shows">comedy shows</string>
     <string name="by_subscribing_you_are_agreeing_to_weekly_auto_renewal_charging">By subscribing you are agreeing to weekly auto renewal charging</string>
+
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="default_notification_channel_name" translatable="true">GoonjDefaultNoti</string>
 </resources>

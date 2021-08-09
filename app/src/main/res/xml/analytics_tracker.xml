@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- End current session if app sleeps for a period of time -->
+    <integer name="ga_sessionTimeout">300</integer>
+
+    <!--  The propeidy id associated with this analytics tracker -->
+    <string name="ga_trackingId">UA-69091505-3</string>
+
+
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <!-- Enable automatic Activity measurement -->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+</resources>

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1037854113344-9cu2ikbp604nd32drjjsi1bdepa2q9cm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dmdmax.goonj",
+            "certificate_hash": "43b5924fa28bad1058120648b3af3b6b9daf6f0a"
+          }
+        },
+        {
           "client_id": "1037854113344-9rh9fla3q6h86frk7ss7jfvs2c06rrgl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -23,19 +31,19 @@
           }
         },
         {
+          "client_id": "1037854113344-ctcha5t9kt4b488ebjn48kd1cjbhh94r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dmdmax.goonj",
+            "certificate_hash": "24566b6d75ca7a386cb850934e896a4fb3276a26"
+          }
+        },
+        {
           "client_id": "1037854113344-vamlv4monq7l8upm3ifcevea4fgrl1g6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.dmdmax.goonj",
             "certificate_hash": "86e4a817e1a0e9e176e2966c6ac1b899505941e2"
-          }
-        },
-        {
-          "client_id": "1037854113344-9cu2ikbp604nd32drjjsi1bdepa2q9cm.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.dmdmax.goonj",
-            "certificate_hash": "43b5924fa28bad1058120648b3af3b6b9daf6f0a"
           }
         },
         {
