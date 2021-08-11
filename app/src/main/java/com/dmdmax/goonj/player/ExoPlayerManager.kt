@@ -2,6 +2,7 @@ package com.dmdmax.goonj.player
 
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.drm.DrmStore
 import android.net.Uri
 import android.os.Handler
 import android.view.View
@@ -20,6 +21,7 @@ import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Utility
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.drm.*
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
 import com.google.android.exoplayer2.source.BehindLiveWindowException
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -30,11 +32,27 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import java.util.*
+import com.google.android.exoplayer2.source.ads.AdsMediaSource.MediaSourceFactory
+import com.google.android.exoplayer2.source.dash.DashMediaSource
+import com.google.android.exoplayer2.upstream.*
+import com.google.android.exoplayer2.C
+
+import com.google.android.exoplayer2.drm.FrameworkMediaDrm
+
+import com.google.android.exoplayer2.drm.DefaultDrmSessionManager
+
+import com.google.android.exoplayer2.drm.FrameworkMediaCrypto
+
+import com.google.android.exoplayer2.drm.DrmSessionManager
+
+import org.greenrobot.eventbus.util.ErrorDialogManager.factory
+
+import com.google.android.exoplayer2.drm.HttpMediaDrmCallback
+import com.google.android.exoplayer2.source.dash.DashChunkSource
+import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
+import org.greenrobot.eventbus.util.ErrorDialogManager
 
 
 class ExoPlayerManager: View.OnClickListener {
@@ -73,12 +91,7 @@ class ExoPlayerManager: View.OnClickListener {
     private var isFullScreen = false;
 
     fun init(context: Context, playerView: PlayerView) {
-        mPlayer = ExoPlayerFactory.newSimpleInstance(
-                context,
-                DefaultRenderersFactory(context),
-                DefaultTrackSelector(),
-                DefaultLoadControl()
-        )
+        mPlayer = ExoPlayerFactory.newSimpleInstance(context, DefaultRenderersFactory(context), DefaultTrackSelector(), DefaultLoadControl(), buildDrmSessionManager(context, "https://widevine-dash.ezdrm.com/proxy?pX=82488E"))
         this.mPlayerView = playerView;
         mPrefs = GoonjPrefs(context);
         this.mContext = context;
@@ -102,7 +115,6 @@ class ExoPlayerManager: View.OnClickListener {
         mExoBitrateGrid = this.mPlayerView.findViewById(R.id.exo_bitrate_grid);
 
         setIconsOnPlayers();
-
         addListeners();
     }
 
@@ -164,14 +176,14 @@ class ExoPlayerManager: View.OnClickListener {
                 url =
                     mediaModel.url + "?user_id=" + mPrefs.getUserId(PaywallGoonjFragment.SLUG) + "&uid=" + Utility.getDeviceId(mContext) + "&media_id=" + mediaModel.id
                 val commands = arrayOf(
-                        "-k",
-                        Constants.SECURITY_KEY,
-                        "-w",
-                        Constants.SECURITY_WINDOW,
-                        "-n",
-                        Constants.SECURITY_TOKEN_NAME,
-                        "-a",
-                        Constants.SECURITY_ACL
+                    "-k",
+                    Constants.SECURITY_KEY,
+                    "-w",
+                    Constants.SECURITY_WINDOW,
+                    "-n",
+                    Constants.SECURITY_TOKEN_NAME,
+                    "-a",
+                    Constants.SECURITY_ACL
                 )
                 val token: String = AkamaiToken.main(commands)
                 url = "$url&$token"
@@ -181,9 +193,10 @@ class ExoPlayerManager: View.OnClickListener {
             }
         }
         url = url.replace(" ".toRegex(), "%20")
+        url = "http://10.0.1.21/drmdash/RB-N6-11-08-21_,baseline_144,main_360,main_480,.m4v.urlset/manifest.mpd";
         Logger.println("Stream URL: $url")
 
-        var mediaSource: MediaSource? = buildMediaSource(Uri.parse(url), null, mediaModel.isLive)
+        var mediaSource: MediaSource? = buildMediaSource(Uri.parse(url), null, buildUserAgent(mediaModel.isLive))
 
         if (mediaSource != null) {
             if(mMediaModel.shouldMaintainState){
@@ -338,39 +351,62 @@ class ExoPlayerManager: View.OnClickListener {
         )
     }
 
-    private fun buildMediaSource(uri: Uri, adTag: String?, live: Boolean): MediaSource? {
+    private fun buildUserAgent(live: Boolean): String {
         val msisdn = if (mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) != null) mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) else if (mPrefs.getMsisdn(PaywallComedyFragment.SLUG) != null) mPrefs.getMsisdn(PaywallComedyFragment.SLUG) else "null"
         val userId = if (mPrefs.getUserId(PaywallGoonjFragment.SLUG) != null) mPrefs.getUserId(PaywallGoonjFragment.SLUG) else "null"
         val userAgent = "msisdn_${msisdn}_${(if(live) "ua:goonjlive" else "ua:goonjvod")}_uid_${userId}";
         Logger.println("USER_AGENT: ${userAgent}")
-        val mHlsDsFactory: HlsDataSourceFactory = DefaultHlsDataSourceFactory(
-                DefaultDataSourceFactory(
-                        mContext, Util.getUserAgent(
-                        mContext,
-                        userAgent
-                ), DefaultBandwidthMeter()
-                )
-        );
+        return userAgent;
+    }
+
+    private fun buildMediaSource(uri: Uri, adTag: String?, userAgent: String): MediaSource? {
+        val userAgent = "ExoPlayer-Drm"
+        val dashChunkSourceFactory: DashChunkSource.Factory = DefaultDashChunkSource.Factory(
+            DefaultHttpDataSourceFactory("userAgent", DefaultBandwidthMeter()))
+        val manifestDataSourceFactory = DefaultHttpDataSourceFactory(userAgent)
+
+        return DashMediaSource.Factory(dashChunkSourceFactory, manifestDataSourceFactory).createMediaSource(uri)
+
+
+
+
+    /*val mHlsDsFactory: HlsDataSourceFactory = DefaultHlsDataSourceFactory(DefaultDataSourceFactory(mContext, Util.getUserAgent(mContext, userAgent), DefaultBandwidthMeter()));
 
         if (uri.lastPathSegment != null && (uri.lastPathSegment!!.contains("mp3") || uri.lastPathSegment!!.contains("mp4"))) {
-            return ExtractorMediaSource.Factory(DefaultHttpDataSourceFactory(userAgent)).createMediaSource(
-                    uri
-            )
+            Logger.println("Returning mp3/mp4 factory")
+            return ExtractorMediaSource.Factory(DefaultHttpDataSourceFactory(userAgent)).createMediaSource(uri)
         } else if (uri.lastPathSegment != null && uri.lastPathSegment!!.contains("m3u8")) {
+            Logger.println("Returning HLS datasource factory")
             if (adTag == null) {
                 return HlsMediaSource.Factory(mHlsDsFactory).createMediaSource(uri)
             } else {
                 try {
                     val imaSdkSettings = ImaSdkFactory.getInstance().createImaSdkSettings()
                     mAdsLoader = ImaAdsLoader.Builder(mContext).setImaSdkSettings(imaSdkSettings).buildForAdTag(Uri.parse(adTag))
-                    //return new AdsMediaSource(new HlsMediaSource.Factory(mHlsDsFactory).createMediaSource(uri), mHlsDsFactory, loader, playerView.getOverlayFrameLayout());
                     return HlsMediaSource.Factory(mHlsDsFactory).createMediaSource(uri)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
+        }else {
+            Logger.println("Returning bash source factory")
+            val factory = DefaultDataSourceFactory(mContext, Util.getUserAgent(mContext, userAgent), DefaultBandwidthMeter());
+            return DashMediaSource.Factory(factory).createMediaSource(uri);
         }
-        return null
+        Logger.println("Returning null")
+        return null*/
+    }
+
+    private fun buildDrmSessionManager(mContext: Context, licenseUrl: String): DefaultDrmSessionManager<FrameworkMediaCrypto?> {
+        val licenseDataSourceFactory: HttpDataSource.Factory = DefaultHttpDataSourceFactory(Util.getUserAgent(mContext, (mContext as BaseActivity).application.packageName))
+        val drmCallback = HttpMediaDrmCallback(licenseUrl, licenseDataSourceFactory)
+
+
+        return  DefaultDrmSessionManager(
+            C.WIDEVINE_UUID,
+            FrameworkMediaDrm.newInstance(C.WIDEVINE_UUID),
+            drmCallback,
+            null, true)
     }
 
     fun updateNetworkState(isConnected: Boolean) {
