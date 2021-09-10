@@ -341,7 +341,7 @@ class ExoPlayerManager: View.OnClickListener {
     private fun buildMediaSource(uri: Uri, adTag: String?, live: Boolean): MediaSource? {
         val msisdn = if (mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) != null) mPrefs.getMsisdn(PaywallGoonjFragment.SLUG) else if (mPrefs.getMsisdn(PaywallComedyFragment.SLUG) != null) mPrefs.getMsisdn(PaywallComedyFragment.SLUG) else "null"
         val userId = if (mPrefs.getUserId(PaywallGoonjFragment.SLUG) != null) mPrefs.getUserId(PaywallGoonjFragment.SLUG) else "null"
-        val userAgent = "msisdn_${msisdn}_${(if(live) "ua:goonjlive" else "ua:goonjvod")}_uid_${userId}";
+        val userAgent = "msisdn:${msisdn}#$#${(if(live) "ua:goonjlive" else "ua:goonjvod")}#$#uid:${userId}#$#category:${mMediaModel.category}#$#video_id:${mMediaModel.id}";
         Logger.println("USER_AGENT: ${userAgent}")
         val mHlsDsFactory: HlsDataSourceFactory = DefaultHlsDataSourceFactory(
                 DefaultDataSourceFactory(
