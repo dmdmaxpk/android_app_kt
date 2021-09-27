@@ -45,7 +45,6 @@ class LiveTvFragment: BaseFragment(), LiveTvView.Listener {
 
     override fun onStart() {
         super.onStart()
-        mView.getLogger().println("onStart")
         mView.registerListener(this);
     }
 

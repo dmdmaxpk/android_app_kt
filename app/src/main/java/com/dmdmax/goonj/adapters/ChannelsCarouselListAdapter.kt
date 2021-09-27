@@ -45,7 +45,6 @@ class ChannelsCarouselListAdapter: RecyclerView.Adapter<ChannelsCarouselListAdap
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Logger.println(list!![holder.adapterPosition].getThumbnail());
         Picasso.get().load(list!![holder.adapterPosition].getThumbnail())
             .into(holder.thumbnail, object : Callback {
                 override fun onSuccess() {

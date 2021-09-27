@@ -38,13 +38,13 @@ class Utility {
                     connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
             if (capabilities != null) {
                 if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                    Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    //Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_CELLULAR")
                     return true
                 } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                    Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_WIFI")
+                    //Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_WIFI")
                     return true
                 } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                    Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    //Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_ETHERNET")
                     return true
                 }
             }
@@ -194,44 +194,6 @@ class Utility {
             } else {
                 ""
             }
-        }
-
-        fun shootReportingParams(
-                context: Context?,
-                vodId: String?,
-                title: String?,
-                isLive: Boolean,
-                source: String?,
-                durationInSec: Int,
-                category: String?
-        ) {
-            val ssoId: String = DeviceInfo.getDeviceId(context)!!;
-            val calendar = Calendar.getInstance()
-            val arrayList: ArrayList<Params> = ArrayList<Params>()
-            arrayList.add(Params("sso_id", ssoId))
-            arrayList.add(Params("video_id", vodId))
-            arrayList.add(Params("media_type", if (isLive) "live" else "vod"))
-            arrayList.add(Params("source", if (isLive) title else source))
-            arrayList.add(Params("carrier", "telenor"))
-            arrayList.add(Params("app", "goonj"))
-            arrayList.add(Params("duration", durationInSec))
-            arrayList.add(Params("month", calendar[Calendar.MONTH]))
-            arrayList.add(Params("year", calendar[Calendar.YEAR]))
-            arrayList.add(Params("day", calendar[Calendar.DAY_OF_MONTH]))
-            if (category != null) arrayList.add(Params("category", category)) else arrayList.add(
-                    Params(
-                            "category",
-                            ""
-                    )
-            )
-            val obj = getJSONObject(arrayList)
-//        if (!isLive && durationInSec > 3) RestClient(
-//            context,
-//            Constants.REPORTING_URL,
-//            RestClient.Method.POST,
-//            obj,
-//            null
-//        ).executeReq()
         }
 
         fun getJSONObject(parameters: ArrayList<Params>): JSONObject {

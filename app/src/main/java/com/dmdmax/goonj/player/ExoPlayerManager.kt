@@ -12,6 +12,7 @@ import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseApplication
 import com.dmdmax.goonj.models.BitRatesModel
 import com.dmdmax.goonj.models.MediaModel
+import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.storage.GoonjPrefs
@@ -24,10 +25,12 @@ import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
 import com.google.android.exoplayer2.source.BehindLiveWindowException
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.source.hls.DefaultHlsDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
@@ -35,6 +38,13 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import java.util.*
+
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
+import com.dmdmax.goonj.network.*
+import com.dmdmax.goonj.network.client.NetworkOperationListener
+import com.dmdmax.goonj.network.client.RestClient
 
 
 class ExoPlayerManager: View.OnClickListener {
@@ -71,6 +81,8 @@ class ExoPlayerManager: View.OnClickListener {
     private lateinit var mFooter: LinearLayout;
     private lateinit var mFullscreen: LinearLayout;
     private var isFullScreen = false;
+
+    private var scheduler: ScheduledExecutorService? = null;
 
     fun init(context: Context, playerView: PlayerView) {
         mPlayer = ExoPlayerFactory.newSimpleInstance(
@@ -242,40 +254,52 @@ class ExoPlayerManager: View.OnClickListener {
     private fun addListeners() {
         mExoVolume.setOnClickListener(this);
         mExoSettings.setOnClickListener(this);
+
         this.mPlayerView.player.addListener(object : Player.EventListener {
+
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 super.onPlayerStateChanged(playWhenReady, playbackState)
 
                 // Loading Time
                 if (playbackState == Player.STATE_READY) {
-                    Logger.println("USE CONTROLLER: ${!mMediaModel.isLive}")
+                    Logger.println("onPlayerStateChanged - USE CONTROLLER: ${!mMediaModel.isLive}")
 
                     //showController();
                     mPlayerView.useController = true;
 
                     mTimelines.visibility = if(mMediaModel.isLive) View.INVISIBLE else View.VISIBLE;
 
-                    Logger.println("STATE_READY");
+                    Logger.println("onPlayerStateChanged - STATE_READY");
                     if (mPlayerView.player.playWhenReady) {
                         // Currently playing
                         mExoPause.visibility = View.VISIBLE;
                         mExoPlay.visibility = View.GONE;
+                        schedule();
                     } else {
                         // Stopped
                         mExoPause.visibility = View.GONE;
                         mExoPlay.visibility = View.VISIBLE;
+                        if(scheduler != null){
+                            scheduler?.shutdown();
+                        }
                     }
                     mExoBuffering.visibility = View.GONE;
                 } else if (playbackState == Player.STATE_BUFFERING) {
-                    Logger.println("STATE_BUFFERING");
+                    Logger.println("onPlayerStateChanged - STATE_BUFFERING");
                     mExoPause.visibility = View.GONE;
                     mExoPlay.visibility = View.GONE;
                     mExoBuffering.visibility = View.VISIBLE;
+                    if(scheduler != null){
+                        scheduler?.shutdown();
+                    }
                 } else {
-                    Logger.println("ELSE");
+                    Logger.println("onPlayerStateChanged - ELSE");
                     mExoPause.visibility = View.GONE;
                     mExoPlay.visibility = View.VISIBLE;
-                    mExoBuffering.visibility = View.GONE;
+                    mExoBuffering.visibility = View.GONE
+                    if(scheduler != null){
+                        scheduler?.shutdown();
+                    }
                 }
             }
 
@@ -284,12 +308,12 @@ class ExoPlayerManager: View.OnClickListener {
                 Logger.println("onPlayerError: "+error?.message);
                 if(error != null && error.sourceException != null && error.sourceException is BehindLiveWindowException){
                     // Behind live window exception
-                    Logger.println("onPlayerError: INSIDE LIVE WINDOW");
+                    Logger.println("onPlayerError - INSIDE LIVE WINDOW");
                     init(mContext, mPlayerView);
                     playMedia(mMediaModel);
                 }else{
                     // Behind live window exception
-                    Logger.println("onPlayerError: INSIDE ELSE");
+                    Logger.println("onPlayerError - INSIDE ELSE");
                     if(!Utility.isConnectedToInternet(mContext)){
                         // No internet
                         mMediaModel.shouldMaintainState = true;
@@ -299,6 +323,25 @@ class ExoPlayerManager: View.OnClickListener {
                         init(mContext, mPlayerView);
                         playMedia(mMediaModel);
                     }
+                }
+                if(scheduler != null){
+                    scheduler?.shutdown();
+                }
+            }
+
+            override fun onSeekProcessed() {
+                super.onSeekProcessed()
+                Logger.println("onSeekProcessed")
+                if(scheduler != null){
+                    scheduler?.shutdown();
+                }
+            }
+
+            override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
+                super.onTracksChanged(trackGroups, trackSelections)
+                Logger.println("onTrackChanged")
+                if(scheduler != null){
+                    scheduler?.shutdown();
                 }
             }
         })
@@ -382,5 +425,43 @@ class ExoPlayerManager: View.OnClickListener {
 
     fun release(){
         mPlayer.release();
+    }
+
+    fun schedule(){
+        scheduler = Executors.newScheduledThreadPool(1);
+
+        Logger.println("isShutDown: "+ scheduler?.isShutdown)
+        if((this.mPrefs.getUserId(PaywallGoonjFragment.SLUG) != null || !this.mPrefs.getUserId(PaywallGoonjFragment.SLUG).equals("null"))){
+            val r = Runnable {
+                val total = this.mPlayerView.player.contentDuration;
+                val rightNow = this.mPlayerView.player.contentPosition;
+                val percentage =  ((rightNow.toDouble().div(total.toDouble())) * 100).toInt();
+                Logger.println("Total percentage watched: "+percentage);
+
+                if(percentage > 50 && !this.mMediaModel.isLive){
+                    sendPreferences();
+                    scheduler?.shutdown();
+                }
+
+            }
+
+            scheduler?.scheduleAtFixedRate(r, 0, 3, TimeUnit.SECONDS)
+        }
+    }
+
+    fun sendPreferences(){
+        val postBody = ArrayList<Params>()
+        postBody.add(Params("category", this.mMediaModel.category))
+        postBody.add(Params("sub_category", this.mMediaModel.subCategory))
+        postBody.add(Params("user_id", this.mPrefs.getUserId(PaywallGoonjFragment.SLUG)));
+
+        RestClient(this.mContext, Constants.API_BASE_URL + "preference/save", RestClient.Companion.Method.POST, postBody, object : NetworkOperationListener{
+            override fun onSuccess(response: String?) {
+                Logger.println("sendPreferences - onSuccess" + response);
+            }
+            override fun onFailed(code: Int, reason: String?) {
+                Logger.println("sendPreferences - onFailed" + reason);
+            }
+        }).exec();
     }
 }

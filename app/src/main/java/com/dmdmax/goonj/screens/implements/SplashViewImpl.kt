@@ -28,10 +28,16 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.google.gson.JsonObject
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import org.json.JSONObject
 import java.lang.Exception
-
+import com.dmdmax.goonj.utility.*
+import com.dmdmax.goonj.models.Params
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
+import com.dmdmax.goonj.network.client.NetworkOperationListener;
+import com.dmdmax.goonj.network.client.RestClient;
 
 class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 
@@ -55,11 +61,13 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
                 // Get new FCM registration token
                 val token = task.result
                 getPrefs().setFcmToken(token)
-                Logger.println("FCM TOKEN GENERATED: $token")
+                Logger.println("NEW FCM TOKEN: $token");
+                registerUserIfNotAlreadyRegistered(token)
             });
         }
         else {
-            Logger.println("FCM CURRENT TOKEN: ${getPrefs().getFcmToken()}")
+            Logger.println("FCM TOKEN EXIST: ${getPrefs().getFcmToken()}")
+            registerUserIfNotAlreadyRegistered(getPrefs().getFcmToken()!!);
         }
 
 
@@ -90,6 +98,37 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
                     versionChecker()
                 }
         }, 3000)
+    }
+
+    private fun registerUserIfNotAlreadyRegistered(fcm: String){
+        if(getPrefs().getUserId(PaywallGoonjFragment.SLUG) == null || getPrefs().getUserId(PaywallGoonjFragment.SLUG).equals("null")){
+            getLogger().println("USER ID NOT EXIST");
+            val devicdId = Utility.getDeviceId(getContext());
+
+            val paramsArrayList = ArrayList<Params>()
+            paramsArrayList.add(Params("device_id", devicdId));
+            paramsArrayList.add(Params("fcm_token", fcm));
+            paramsArrayList.add(Params("source", "app"));
+
+            RestClient(getContext(), Constants.API_BASE_URL + "user/create_user", RestClient.Companion.Method.POST, paramsArrayList, object : NetworkOperationListener {
+                override fun onSuccess(response: String?) {
+                    try {
+                        Logger.println("User creation:" + response);
+                        val rootObj: JSONObject = JSONObject(response);
+                        getPrefs().setUserId(rootObj.getString("_id"), PaywallGoonjFragment.SLUG);
+                        getPrefs().setDeviceId(devicdId!!)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailed(code: Int, reason: String?) {
+                    Logger.println("user creation failed")
+                }
+            }).exec();
+        }else{
+            getLogger().println("USER ID EXIST");
+        }
     }
 
     private fun versionChecker() {

@@ -39,9 +39,24 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
     }
 
     private fun checkUrl() {
-        Logger.println("checkUrl - SplashActivity");
+        //Logger.println("checkUrl - SplashActivity");
 
         val intent = intent
+        val bundle: Bundle? = if(intent != null) intent.extras else null;
+
+        if(bundle != null && bundle.containsKey("notification_id")){
+            // Notification id found, send callback
+            RestClient(this, Constants.API_BASE_URL + "notification/update?id=${bundle.getString("notification_id")}", RestClient.Companion.Method.PUT, null, object: NetworkOperationListener{
+                override fun onSuccess(response: String?) {
+                    Logger.println("checkUrl - notification/update - onSuccess: " + response)
+                }
+
+                override fun onFailed(code: Int, reason: String?) {
+                    Logger.println("checkUrl - notification/update - onFailed: " + reason)
+                }
+            }).exec();
+        }
+
         val data = intent.data
         if (data != null) {
             // Check for VOD
@@ -192,13 +207,10 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
             }
         }
         else {
-            Logger.println("onCompleted - SplashActivity");
             if(mView.getPrefs().isInterestedTopicDone()){
-                Logger.println("onCompleted - 1 - SplashActivity");
                 startActivity(Intent(this, WelcomeActivity::class.java));
                 finish();
             }else{
-                Logger.println("onCompleted - 2 - SplashActivity");
                 startActivity(Intent(this, GetStartedActivity::class.java));
                 finish();
             }

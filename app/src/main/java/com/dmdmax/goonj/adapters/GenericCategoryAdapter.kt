@@ -43,7 +43,6 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.mListItems = listItems;
         this.mTabModel = tabModel;
         this.mListener = listener;
-        Logger.println("Total Items In Adapter: "+mListItems.size)
     }
 
     internal class ThumbsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -168,8 +167,6 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
         thumbsViewHolder.mTitle.text = mListItems[position].getTitle();
         thumbsViewHolder.mCount.text = mListItems[position].getViewsCount().toString() + " views";
 
-        //thumbsViewHolder.mCount.text = ((100..1000).random().toString() + " views");
-
         thumbsViewHolder.mTimeAgo.text = Utility.getAgoTime(mListItems.get(position).getPublishDtm());
         val thumb = if (mTabModel?.getSlug() == PaywallComedyFragment.SLUG) mListItems[position].getThumbnailUrl() else mListItems[position].getThumbnail(mListItems[position].getSlug());
         Picasso.get().load(thumb).into(thumbsViewHolder.mThumbnail, object : Callback {
@@ -192,8 +189,6 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private fun bindEpisodeViewHolder(thumbsViewHolder: ThumbsViewHolder, position: Int, listener: OnItemClickListener?) {
         thumbsViewHolder.mTitle.text = mListItems[position].getTitle();
-        //thumbsViewHolder.mCount.text = mListItems[position].getViewsCount().toString() + " views";
-        //thumbsViewHolder.mTimeAgo.text = Utility.getAgoTime(mListItems.get(position).getPublishDtm());
         Picasso.get().load(mListItems[position].getThumbnailUrl()).into(thumbsViewHolder.mThumbnail, object : Callback {
             override fun onSuccess() {
                 thumbsViewHolder.mSpinKitView.visibility = View.GONE;
