@@ -12,6 +12,8 @@ public class Constants {
 
     companion object {
 
+        var IS_FCM_TOKEN_PROCESSING = false;
+
         var ACCESS_TOKEN = "1234"
 
         var IS_PAYMENT_PROCESSING_STARTED = false

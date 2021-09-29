@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Handler
 import android.view.LayoutInflater
@@ -38,6 +39,8 @@ import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.network.client.NetworkOperationListener;
 import com.dmdmax.goonj.network.client.RestClient;
+import com.dmdmax.goonj.receivers.NotificationListener
+import java.io.Console
 
 class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 
@@ -50,6 +53,15 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 
     override fun getRemoteConfigs() {
         mPrefs = GoonjPrefs(getContext());
+        val versionName = getContext().packageManager.getPackageInfo(getContext().packageName, 0).versionName;
+
+        if(versionName.equals("3.0.1.8") && !mPrefs.isFlushedPreviousFcmToken() && (mPrefs.getFcmToken() != null || mPrefs.getFcmToken()!! != "null")){
+            getPrefs().setFcmToken(null);
+            mPrefs.flushPreviousFcmToken();
+            Logger.println("FCM TOKEN FLUSHED");
+        }else{
+            Logger.println("FCM TOKEN ALREADY FLUSHED");
+        }
 
         if (getPrefs().getFcmToken() == null) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -60,14 +72,13 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 
                 // Get new FCM registration token
                 val token = task.result
-                getPrefs().setFcmToken(token)
+                mPrefs.setFcmToken(token)
                 Logger.println("NEW FCM TOKEN: $token");
-                registerUserIfNotAlreadyRegistered(token)
+                Utility.sendRegistrationToServer(getContext(), token);
             });
         }
         else {
-            Logger.println("FCM TOKEN EXIST: ${getPrefs().getFcmToken()}")
-            registerUserIfNotAlreadyRegistered(getPrefs().getFcmToken()!!);
+            Logger.println("OLD FCM TOKEN: ${getPrefs().getFcmToken()}")
         }
 
 
@@ -98,37 +109,6 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
                     versionChecker()
                 }
         }, 3000)
-    }
-
-    private fun registerUserIfNotAlreadyRegistered(fcm: String){
-        if(getPrefs().getUserId(PaywallGoonjFragment.SLUG) == null || getPrefs().getUserId(PaywallGoonjFragment.SLUG).equals("null")){
-            getLogger().println("USER ID NOT EXIST");
-            val devicdId = Utility.getDeviceId(getContext());
-
-            val paramsArrayList = ArrayList<Params>()
-            paramsArrayList.add(Params("device_id", devicdId));
-            paramsArrayList.add(Params("fcm_token", fcm));
-            paramsArrayList.add(Params("source", "app"));
-
-            RestClient(getContext(), Constants.API_BASE_URL + "user/create_user", RestClient.Companion.Method.POST, paramsArrayList, object : NetworkOperationListener {
-                override fun onSuccess(response: String?) {
-                    try {
-                        Logger.println("User creation:" + response);
-                        val rootObj: JSONObject = JSONObject(response);
-                        getPrefs().setUserId(rootObj.getString("_id"), PaywallGoonjFragment.SLUG);
-                        getPrefs().setDeviceId(devicdId!!)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-
-                override fun onFailed(code: Int, reason: String?) {
-                    Logger.println("user creation failed")
-                }
-            }).exec();
-        }else{
-            getLogger().println("USER ID EXIST");
-        }
     }
 
     private fun versionChecker() {

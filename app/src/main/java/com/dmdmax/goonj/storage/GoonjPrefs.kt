@@ -407,6 +407,14 @@ class GoonjPrefs {
         return prefs!!.getString("fcmToken", null)
     }
 
+    fun flushPreviousFcmToken() {
+        editor!!.putBoolean("flushPreviousFcmToken", true).commit()
+    }
+
+    fun isFlushedPreviousFcmToken(): Boolean {
+        return prefs!!.getBoolean("flushPreviousFcmToken", false)
+    }
+
     fun setDeviceId(id: String) {
         editor!!.putString("device_id", id).commit()
     }

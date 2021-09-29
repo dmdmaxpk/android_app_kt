@@ -9,6 +9,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import androidx.core.app.NotificationCompat
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.models.Params
@@ -118,35 +119,10 @@ class NotificationListener : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        Logger.println("onNewToken $token");
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // FCM registration token to your app server.
-        sendRegistrationToServer(token)
-    }
-
-    private fun sendRegistrationToServer(token: String) {
-        GoonjPrefs(this@NotificationListener).setFcmToken(token)
-        val deviceId = if (GoonjPrefs(this).getDeviceId() == null) Utility.getDeviceId(this) else GoonjPrefs(this).getDeviceId();
-
-        val paramsArrayList = ArrayList<Params>()
-        paramsArrayList.add(Params("device_id", deviceId));
-        paramsArrayList.add(Params("fcm_token", token));
-
-        RestClient(this@NotificationListener, Constants.API_BASE_URL + "user/update_fcm_token", RestClient.Companion.Method.PUT, paramsArrayList, object : NetworkOperationListener {
-            override fun onSuccess(response: String?) {
-                try {
-                    Logger.println("FCM updated:" + response);
-                    GoonjPrefs(this@NotificationListener).setDeviceId(deviceId!!);
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
-            override fun onFailed(code: Int, reason: String?) {
-                Logger.println("fcm updated failed")
-            }
-        }).exec();
+        Utility.sendRegistrationToServer(this@NotificationListener, token)
     }
 }
