@@ -15,6 +15,7 @@ class MediaModel {
     var slug: String? = null;
     var shouldMaintainState = false
     var category: String? = null;
+    var subCategory: String? = null;
     var secondsLapsed: Long = 0;
 
     companion object {
@@ -31,6 +32,7 @@ class MediaModel {
             model.title = video.getTitle();
             model.filename = video.getFileName();
             model.category = video.getCategory();
+            model.subCategory = video.getSubCategory();
             return model;
         }
 

@@ -45,7 +45,6 @@ class ComedyBannerCarouselListAdapter: RecyclerView.Adapter<ComedyBannerCarousel
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.name.text = list!![holder.adapterPosition].getTitle();
-        Logger.println("POSTER ${list!![holder.adapterPosition].getTitle()} - "+list!![holder.adapterPosition].getPosterUrl())
         Picasso.get().load(list!![holder.adapterPosition].getPosterUrl())
             .into(holder.thumbnail, object : Callback {
                 override fun onSuccess() {

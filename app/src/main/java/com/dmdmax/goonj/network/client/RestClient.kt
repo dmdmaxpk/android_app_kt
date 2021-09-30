@@ -94,13 +94,12 @@ class RestClient {
     }
 
     private fun getAuthHeaders(category: String?): HashMap<String, String> {
-        Logger.println("AUTH HEADERS:  $category");
+        //Logger.println("AUTH HEADERS:  $category");
         val headers = HashMap<String, String>()
         if (category != null && category == PaywallBinjeeFragment.SLUG) {
             val creds = String.format("%s:%s", Constants.Companion.EndPoints.BINJEE_USERNAME,Constants.Companion.EndPoints.BINJEE_PASSWORD)
             //val auth = "Basic " + toBase64(creds);
             val auth = "Basic YiFuajMzMHIhZyFuQEk1OmIhbmozM2F0MG4zdHcwdGhyMzM=";
-            Logger.println("AUTH: $auth");
             headers["Authorization"] = auth;
         }else if (category != null && category == PaywallComedyFragment.SLUG) {
             headers["API-KEY"] = Constants.COMEDY_API_KEY!!
@@ -132,7 +131,6 @@ class RestClient {
 
     private fun getResponse(category: String?) {
         try {
-            Logger.println("URL: $mLink")
             if (Method.GET.equals(mMethod)) {
                 val jRequest: StringRequest = object : StringRequest(Method.GET, mLink, StringSuccessListener(), ErrorListener()) {
                     override fun getHeaders(): Map<String, String> {

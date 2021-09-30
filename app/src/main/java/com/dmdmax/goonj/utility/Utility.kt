@@ -13,7 +13,10 @@ import android.view.Window
 import android.view.WindowManager
 import com.dmdmax.goonj.models.Channel
 import com.dmdmax.goonj.models.Params
+import com.dmdmax.goonj.network.client.NetworkOperationListener
+import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.screens.activities.SplashActivity
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import org.json.JSONArray
@@ -38,13 +41,13 @@ class Utility {
                     connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
             if (capabilities != null) {
                 if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                    Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    //Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_CELLULAR")
                     return true
                 } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                    Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_WIFI")
+                    //Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_WIFI")
                     return true
                 } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                    Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    //Logger.println("Internet - " + "NetworkCapabilities.TRANSPORT_ETHERNET")
                     return true
                 }
             }
@@ -194,44 +197,6 @@ class Utility {
             } else {
                 ""
             }
-        }
-
-        fun shootReportingParams(
-                context: Context?,
-                vodId: String?,
-                title: String?,
-                isLive: Boolean,
-                source: String?,
-                durationInSec: Int,
-                category: String?
-        ) {
-            val ssoId: String = DeviceInfo.getDeviceId(context)!!;
-            val calendar = Calendar.getInstance()
-            val arrayList: ArrayList<Params> = ArrayList<Params>()
-            arrayList.add(Params("sso_id", ssoId))
-            arrayList.add(Params("video_id", vodId))
-            arrayList.add(Params("media_type", if (isLive) "live" else "vod"))
-            arrayList.add(Params("source", if (isLive) title else source))
-            arrayList.add(Params("carrier", "telenor"))
-            arrayList.add(Params("app", "goonj"))
-            arrayList.add(Params("duration", durationInSec))
-            arrayList.add(Params("month", calendar[Calendar.MONTH]))
-            arrayList.add(Params("year", calendar[Calendar.YEAR]))
-            arrayList.add(Params("day", calendar[Calendar.DAY_OF_MONTH]))
-            if (category != null) arrayList.add(Params("category", category)) else arrayList.add(
-                    Params(
-                            "category",
-                            ""
-                    )
-            )
-            val obj = getJSONObject(arrayList)
-//        if (!isLive && durationInSec > 3) RestClient(
-//            context,
-//            Constants.REPORTING_URL,
-//            RestClient.Method.POST,
-//            obj,
-//            null
-//        ).executeReq()
         }
 
         fun getJSONObject(parameters: ArrayList<Params>): JSONObject {
@@ -467,6 +432,70 @@ class Utility {
             }
 
             return numberString;
+        }
+
+        fun sendRegistrationToServer(context: Context, token: String) {
+            if(!Constants.IS_FCM_TOKEN_PROCESSING){
+                Logger.println("onNewToken $token");
+
+                Constants.IS_FCM_TOKEN_PROCESSING = true;
+                val deviceId = getDeviceId(context);
+                val prefs = GoonjPrefs(context);
+
+                if(prefs.getUserId(PaywallGoonjFragment.SLUG) == null || prefs.getUserId(PaywallGoonjFragment.SLUG).equals("null")){
+
+                    //FIRST TIME
+                    prefs.setFcmToken(token);
+
+                    val paramsArrayList = ArrayList<Params>()
+                    paramsArrayList.add(Params("device_id", deviceId));
+                    paramsArrayList.add(Params("fcm_token", token));
+                    paramsArrayList.add(Params("source", "app"));
+
+                    RestClient(context, Constants.API_BASE_URL + "user/create_user", RestClient.Companion.Method.POST, paramsArrayList, object : NetworkOperationListener {
+                        override fun onSuccess(response: String?) {
+                            try {
+                                Logger.println("User creation :$response");
+                                val rootObj = JSONObject(response);
+                                prefs.setUserId(rootObj.getString("_id"), PaywallGoonjFragment.SLUG);
+                                prefs.setDeviceId(deviceId!!)
+                                Constants.IS_FCM_TOKEN_PROCESSING = false;
+                            } catch (e: java.lang.Exception) {
+                                Constants.IS_FCM_TOKEN_PROCESSING = false;
+                                e.printStackTrace()
+                            }
+                        }
+
+                        override fun onFailed(code: Int, reason: String?) {
+                            Constants.IS_FCM_TOKEN_PROCESSING = false;
+                            Logger.println("user creation failed")
+                        }
+                    }).exec();
+                }
+                else{
+                    // Update existing record
+                    val paramsArrayList = ArrayList<Params>()
+                    paramsArrayList.add(Params("user_id", prefs.getUserId(PaywallGoonjFragment.SLUG)));
+                    paramsArrayList.add(Params("fcm_token", token));
+
+                    RestClient(context, Constants.API_BASE_URL + "user/update_fcm_token", RestClient.Companion.Method.PUT, paramsArrayList, object : NetworkOperationListener {
+                        override fun onSuccess(response: String?) {
+                            try {
+                                Logger.println("FCM updated: $response");
+                                Constants.IS_FCM_TOKEN_PROCESSING = false;
+                            } catch (e: java.lang.Exception) {
+                                e.printStackTrace()
+                                Constants.IS_FCM_TOKEN_PROCESSING = false;
+                            }
+                        }
+
+                        override fun onFailed(code: Int, reason: String?) {
+                            Logger.println("fcm updated failed")
+                            Constants.IS_FCM_TOKEN_PROCESSING = false;
+                        }
+                    }).exec();
+                }
+            }
         }
     }
 }

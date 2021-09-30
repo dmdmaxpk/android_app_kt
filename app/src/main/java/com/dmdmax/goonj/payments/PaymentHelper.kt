@@ -48,6 +48,7 @@ class PaymentHelper {
         mList.add(Params("source", source));
         mList.add(Params("package_id", packageModel?.id));
         mList.add(Params("payment_source", mPaymentSource));
+        mList.add(Params("fcm_token", mPrefs.getFcmToken()));
 
         RestClient(mContext, Constants.API_BASE_URL + Constants.Companion.EndPoints.SEND_OTP, RestClient.Companion.Method.POST, mList, object : NetworkOperationListener {
             override fun onSuccess(response: String?) {
@@ -192,7 +193,12 @@ class PaymentHelper {
     }
 
     fun checkBillingStatus(msisdn: String, listener: BillingStatusCheckListener?) {
-        val params = arrayListOf(Params("msisdn", msisdn), Params("package_id", mPrefs.getSubscribedPackageId(PaywallGoonjFragment.SLUG)));
+        val packageId = mPrefs.getSubscribedPackageId(PaywallGoonjFragment.SLUG);
+        Logger.println("PACKAGE ID ${packageId}")
+        val params = arrayListOf<Params>()
+        params.add(Params("msisdn", msisdn));
+        params.add(Params("package_id", packageId));
+
         RestClient(mContext, Constants.API_BASE_URL + Constants.Companion.EndPoints.CHECK_GOONJ_SUBSCRIPTION, RestClient.Companion.Method.POST, params, object : NetworkOperationListener {
             override fun onSuccess(response: String?) {
                 Logger.println("PaymentHelper - checkBillingStatus: $response");
@@ -208,6 +214,7 @@ class PaymentHelper {
                     mPrefs.setUserId(rootObj.getJSONObject("data").getString("user_id"), PaywallGoonjFragment.SLUG)
                     listener?.onStatus(code, status)
                 } else {
+                    mPrefs.setSubscriptionStatus("not_billed", PaywallGoonjFragment.SLUG);
                     listener?.onStatus(code, PaymentHelper.Companion.PaymentStatus.NOT_SUBSCRIBED)
                 }
             }

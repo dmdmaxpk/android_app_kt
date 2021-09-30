@@ -26,6 +26,9 @@ class Video: Serializable {
     @SerializedName("category")
     private var category: String? = null
 
+    @SerializedName("sub_category")
+    private var subCategory: String? = null
+
     @SerializedName("source")
     private var source: String? = null
 
@@ -144,6 +147,10 @@ class Video: Serializable {
         this.category = category
     }
 
+    fun setSubCategory(subCategory: String?) {
+        this.subCategory = subCategory
+    }
+
     fun setSource(source: String?) {
         this.source = source
     }
@@ -254,6 +261,10 @@ class Video: Serializable {
 
     fun getCategory(): String? {
         return category
+    }
+
+    fun getSubCategory(): String? {
+        return subCategory
     }
 
     fun getSource(): String? {

@@ -58,11 +58,11 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
             val event = MessageEvent(MessageEvent.EventNames.NETWORK_CONNECTED, null);
             when (it) {
                 CONNECTED -> {
-                    Logger.println("Internet is connected")
+                    //Logger.println("Internet is connected")
                     event.value = true;
                 }
                 DISCONNECTED -> {
-                    Logger.println("Internet disconnected")
+                    //Logger.println("Internet disconnected")
                     event.value = false;
                 }
             }

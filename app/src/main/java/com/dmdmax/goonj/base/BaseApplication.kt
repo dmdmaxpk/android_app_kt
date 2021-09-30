@@ -17,7 +17,7 @@ import com.google.android.gms.analytics.Tracker
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.onesignal.OneSignal
-import com.survicate.surveys.Survicate
+
 import java.net.CookieHandler
 import java.net.CookieManager
 import java.util.HashMap
@@ -58,7 +58,7 @@ class BaseApplication: Application() {
         // Analytics Tracker init
         getGoogleAnalyticsTracker();
 
-        Survicate.init(this)
+        //Survicate.init(this)
 
         // Initialize the Audience Network SDK
         AudienceNetworkAds.initialize(this)

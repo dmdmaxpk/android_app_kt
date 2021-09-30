@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Handler
 import android.view.LayoutInflater
@@ -28,10 +29,18 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.google.gson.JsonObject
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import org.json.JSONObject
 import java.lang.Exception
-
+import com.dmdmax.goonj.utility.*
+import com.dmdmax.goonj.models.Params
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
+import com.dmdmax.goonj.network.client.NetworkOperationListener;
+import com.dmdmax.goonj.network.client.RestClient;
+import com.dmdmax.goonj.receivers.NotificationListener
+import java.io.Console
 
 class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 
@@ -44,6 +53,15 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 
     override fun getRemoteConfigs() {
         mPrefs = GoonjPrefs(getContext());
+        val versionName = getContext().packageManager.getPackageInfo(getContext().packageName, 0).versionName;
+
+        if(versionName.equals("3.0.1.8") && !mPrefs.isFlushedPreviousFcmToken() && (mPrefs.getFcmToken() != null)){
+            getPrefs().setFcmToken(null);
+            mPrefs.flushPreviousFcmToken();
+            Logger.println("FCM TOKEN FLUSHED");
+        }else{
+            Logger.println("FCM TOKEN ALREADY FLUSHED");
+        }
 
         if (getPrefs().getFcmToken() == null) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -54,12 +72,13 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 
                 // Get new FCM registration token
                 val token = task.result
-                getPrefs().setFcmToken(token)
-                Logger.println("FCM TOKEN GENERATED: $token")
+                mPrefs.setFcmToken(token)
+                Logger.println("NEW FCM TOKEN: $token");
+                Utility.sendRegistrationToServer(getContext(), token);
             });
         }
         else {
-            Logger.println("FCM CURRENT TOKEN: ${getPrefs().getFcmToken()}")
+            Logger.println("OLD FCM TOKEN: ${getPrefs().getFcmToken()}")
         }
 
 

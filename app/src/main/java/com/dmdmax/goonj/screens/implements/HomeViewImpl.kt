@@ -58,7 +58,7 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
             }
 
             override fun onPageSelected(position: Int) {
-                Logger.println("Page selected")
+                //Logger.println("Page selected")
             }
 
             override fun onPageScrollStateChanged(state: Int) {
