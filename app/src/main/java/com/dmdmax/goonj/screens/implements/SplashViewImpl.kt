@@ -55,7 +55,7 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
         mPrefs = GoonjPrefs(getContext());
         val versionName = getContext().packageManager.getPackageInfo(getContext().packageName, 0).versionName;
 
-        if(versionName.equals("3.0.1.8") && !mPrefs.isFlushedPreviousFcmToken() && (mPrefs.getFcmToken() != null || mPrefs.getFcmToken()!! != "null")){
+        if(versionName.equals("3.0.1.8") && !mPrefs.isFlushedPreviousFcmToken() && (mPrefs.getFcmToken() != null)){
             getPrefs().setFcmToken(null);
             mPrefs.flushPreviousFcmToken();
             Logger.println("FCM TOKEN FLUSHED");

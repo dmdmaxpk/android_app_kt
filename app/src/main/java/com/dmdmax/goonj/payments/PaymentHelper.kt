@@ -214,6 +214,7 @@ class PaymentHelper {
                     mPrefs.setUserId(rootObj.getJSONObject("data").getString("user_id"), PaywallGoonjFragment.SLUG)
                     listener?.onStatus(code, status)
                 } else {
+                    mPrefs.setSubscriptionStatus("not_billed", PaywallGoonjFragment.SLUG);
                     listener?.onStatus(code, PaymentHelper.Companion.PaymentStatus.NOT_SUBSCRIBED)
                 }
             }

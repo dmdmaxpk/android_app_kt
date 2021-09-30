@@ -122,6 +122,7 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
                             p.packages = mPackages;
                             paywalls.add(p)
                         }
+
                         for (i in paywalls.indices) {
                             val view: View = LayoutInflater.from(getContext()).inflate(R.layout.package_unsub_details_layout, null, false)
                             val paywall = paywalls[i]
@@ -133,7 +134,6 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
                             listView.adapter = mAdapter
                             paywallDetails.addView(view)
                         }
-
 
                         RestClient(getContext(), Constants.COMEDY_BASE_URL + Constants.Companion.EndPoints.GET_COMEDY_PACKAGES, RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
                                 override fun onSuccess(response: String?) {
