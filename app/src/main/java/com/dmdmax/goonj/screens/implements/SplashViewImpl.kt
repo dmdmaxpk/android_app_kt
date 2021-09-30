@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
@@ -53,9 +54,15 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 
     override fun getRemoteConfigs() {
         mPrefs = GoonjPrefs(getContext());
-        val versionName = getContext().packageManager.getPackageInfo(getContext().packageName, 0).versionName;
+        val versionCode: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            getContext().packageManager.getPackageInfo(getContext().packageName, 0).longVersionCode.toInt();
+        } else {
+            getContext().packageManager.getPackageInfo(getContext().packageName, 0).versionCode
+        };
 
-        if(versionName.equals("3.0.1.8") && !mPrefs.isFlushedPreviousFcmToken() && (mPrefs.getFcmToken() != null)){
+        Logger.println("LONG VERSION CODE: $versionCode")
+
+        if(versionCode >= 3018 && !mPrefs.isFlushedPreviousFcmToken() && (mPrefs.getFcmToken() != null)){
             getPrefs().setFcmToken(null);
             mPrefs.flushPreviousFcmToken();
             Logger.println("FCM TOKEN FLUSHED");

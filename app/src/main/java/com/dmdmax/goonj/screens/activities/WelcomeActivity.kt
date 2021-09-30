@@ -23,7 +23,10 @@ import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.WelcomeView
 import com.dmdmax.goonj.storage.GoonjPrefs
+import com.dmdmax.goonj.utility.GoonjAdManager
 import com.dmdmax.goonj.utility.Logger
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import org.greenrobot.eventbus.EventBus
 
 class WelcomeActivity : BaseActivity(), WelcomeView.Listener {

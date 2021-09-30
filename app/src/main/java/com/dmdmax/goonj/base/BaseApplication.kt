@@ -7,20 +7,17 @@ import android.os.Build
 import android.os.Process.myPid
 import androidx.multidex.MultiDex
 import com.dmdmax.goonj.R
-import com.dmdmax.goonj.receivers.OneSignalNotificationReceiver
 import com.dmdmax.goonj.network.ConnectivityProvider
+import com.dmdmax.goonj.receivers.OneSignalNotificationReceiver
 import com.dmdmax.goonj.utility.Logger
 import com.facebook.ads.AudienceNetworkAds
 import com.google.android.exoplayer2.util.Util
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
 import com.google.firebase.FirebaseApp
-import com.google.firebase.FirebaseOptions
 import com.onesignal.OneSignal
-
 import java.net.CookieHandler
 import java.net.CookieManager
-import java.util.HashMap
 
 class BaseApplication: Application() {
 

@@ -28,10 +28,9 @@ import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.PlayerView
 import com.dmdmax.goonj.storage.GoonjPrefs
-import com.dmdmax.goonj.utility.Constants
-import com.dmdmax.goonj.utility.JSONParser
-import com.dmdmax.goonj.utility.Logger
-import com.dmdmax.goonj.utility.Utility
+import com.dmdmax.goonj.utility.*
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -205,6 +204,18 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
                     Logger.println("*** $reason")
                 }
             }).exec()
+
+
+        if(!model.isLive){
+            MobileAds.initialize(getContext());
+            /*MobileAds.setRequestConfiguration(
+                RequestConfiguration.Builder()
+                    .setTestDeviceIds(listOf("2138f018-f7c0-46b1-bc25-ca9770d3c4f5"))
+                    .build()
+            )*/
+            val manager = GoonjAdManager();
+            manager.loadInterstitialAd(getContext());
+        }
     }
 
     private fun displayEpisodes(){
