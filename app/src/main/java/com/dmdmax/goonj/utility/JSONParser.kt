@@ -132,7 +132,12 @@ class JSONParser {
                         if(slug != null){
                             model.setSlug(slug);
                         }
-                        list.add(model)
+                        list.add(model);
+
+                        if(slug != "headlines" && i % 3 == 0){
+                            val model = Video(Video.TileType.TILE_TYPE_CUSTOM_AD)
+                            list.add(model);
+                        }
                     } catch (e: Exception) {
                         Logger.println("Exception Message: " + e.message)
                     }
@@ -168,6 +173,11 @@ class JSONParser {
                             model.setSlug(slug);
                         }
                         list.add(model)
+
+                        if(slug != "headlines" && i % 3 == 0){
+                            val model = Video(Video.TileType.TILE_TYPE_CUSTOM_AD)
+                            list.add(model);
+                        }
                     } catch (e: Exception) {
                         Logger.println("Exception Message: " + e.message)
                     }

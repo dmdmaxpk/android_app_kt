@@ -19,6 +19,8 @@ import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.utility.Logger
 import com.dmdmax.goonj.utility.Utility
 import com.github.ybq.android.spinkit.SpinKitView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
@@ -62,6 +64,15 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    internal class AdsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+        val mAdView: AdView
+
+        init {
+            mAdView = view.findViewById(R.id.adView)
+        }
+    }
+
     internal class FooterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val mProgressBar: ProgressBar
@@ -88,6 +99,7 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
             TileType.TILE_TYPE_EPISODE -> 2
             TileType.TILE_TYPE_FOOTER -> 3
             TileType.TILE_TYPE_THUMBNAIL_FLIP -> 4
+            TileType.TILE_TYPE_CUSTOM_AD -> 5
             else -> 0
         }
     }
@@ -127,6 +139,8 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 )
             )
 
+            5 -> AdsViewHolder(LayoutInflater.from(mContext).inflate(R.layout.infeed_ads_view, parent, false))
+
             else -> ThumbsViewHolder(
                 LayoutInflater.from(mContext).inflate(
                     R.layout.generic_category_item,
@@ -153,6 +167,11 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
             3 -> {
                 val footerViewHolder = holder as FooterViewHolder
                 bindFooterViewHolder(footerViewHolder)
+            }
+
+            5 -> {
+                val adViewHolder = holder as AdsViewHolder
+                bindAdViewHolder(adViewHolder)
             }
 
             else -> {
@@ -207,6 +226,11 @@ class GenericCategoryAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private fun bindFooterViewHolder(thumbsViewHolder: FooterViewHolder) {
 
+    }
+
+    private fun bindAdViewHolder(holder: AdsViewHolder) {
+        val adRequest = AdRequest.Builder().build()
+        holder.mAdView.loadAd(adRequest)
     }
 
     private fun bindCarouselView(viewHolder: CarouselViewHolder, position: Int, listener: OnItemClickListener?) {

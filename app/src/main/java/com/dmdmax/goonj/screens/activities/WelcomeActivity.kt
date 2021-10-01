@@ -75,6 +75,7 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
             }
             firstNetworkStatusBroadcast = false;
         })
+        MobileAds.initialize(this);
     }
 
     override fun onResume() {

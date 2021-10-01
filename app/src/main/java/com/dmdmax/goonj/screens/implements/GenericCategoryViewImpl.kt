@@ -46,12 +46,7 @@ class GenericCategoryViewImpl: BaseObservableView<GenericCategoryView.Listener>,
 
     override fun loadVideos(category: TabModel){
         tabModel = category;
-        RestClient(
-            getContext(),
-            Constants.API_BASE_URL + Constants.Companion.EndPoints.VIDEO_BY_CATEGORY + category.getCategory(),
-            RestClient.Companion.Method.GET,
-            null,
-            object : NetworkOperationListener {
+        RestClient(getContext(), Constants.API_BASE_URL + Constants.Companion.EndPoints.VIDEO_BY_CATEGORY + category.getCategory(), RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
                 override fun onSuccess(response: String?) {
                     mList.addAll(JSONParser.getFeed(response, null));
                     mFooter = Video(Video.TileType.TILE_TYPE_FOOTER);

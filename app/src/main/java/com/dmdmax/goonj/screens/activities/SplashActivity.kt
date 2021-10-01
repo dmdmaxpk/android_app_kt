@@ -8,7 +8,9 @@ import com.dmdmax.goonj.models.Video
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.SplashView
+import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.*
 import org.json.JSONArray
 
@@ -42,17 +44,17 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
         //Logger.println("checkUrl - SplashActivity");
 
         val intent = intent
-        val bundle: Bundle? = if(intent != null) intent.extras else null;
+        val bundle: Bundle? = intent?.extras;
 
         if(bundle != null && bundle.containsKey("notification_id")){
             // Notification id found, send callback
-            RestClient(this, Constants.API_BASE_URL + "notification/update?id=${bundle.getString("notification_id")}", RestClient.Companion.Method.PUT, null, object: NetworkOperationListener{
+            RestClient(this, Constants.API_BASE_URL + "notification/update?id=${bundle.getString("notification_id")}&user_id=${GoonjPrefs(this).getUserId(PaywallGoonjFragment.SLUG)}", RestClient.Companion.Method.PUT, null, object: NetworkOperationListener{
                 override fun onSuccess(response: String?) {
-                    Logger.println("checkUrl - notification/update - onSuccess: " + response)
+                    Logger.println("checkUrl - notification/update - onSuccess: $response")
                 }
 
                 override fun onFailed(code: Int, reason: String?) {
-                    Logger.println("checkUrl - notification/update - onFailed: " + reason)
+                    Logger.println("checkUrl - notification/update - onFailed: $reason")
                 }
             }).exec();
         }

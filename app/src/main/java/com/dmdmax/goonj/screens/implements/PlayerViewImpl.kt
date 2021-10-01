@@ -207,12 +207,12 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
 
 
         if(!model.isLive){
-            MobileAds.initialize(getContext());
             /*MobileAds.setRequestConfiguration(
                 RequestConfiguration.Builder()
                     .setTestDeviceIds(listOf("2138f018-f7c0-46b1-bc25-ca9770d3c4f5"))
                     .build()
             )*/
+            MobileAds.initialize(getContext());
             val manager = GoonjAdManager();
             manager.loadInterstitialAd(getContext());
         }
@@ -366,7 +366,7 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
     private fun displayHeadlines() {
         RestClient(getContext(), Constants.API_BASE_URL + Constants.Companion.EndPoints.VIDEO_BY_CATEGORY + "news", RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
             override fun onSuccess(response: String?) {
-                mRecommendedHeadlines.adapter = HeadlinesCarouselListAdapter(JSONParser.getFeed(response, null), getContext(), object: HeadlinesCarouselListAdapter.OnItemClickListener {
+                mRecommendedHeadlines.adapter = HeadlinesCarouselListAdapter(JSONParser.getFeed(response, "headlines"), getContext(), object: HeadlinesCarouselListAdapter.OnItemClickListener {
                     override fun onClick(video: Video) {
                         PlayerActivity.ARGS_CHANNEL = null;
                         PlayerActivity.ARGS_VIDEO = null;
