@@ -460,6 +460,7 @@ class Utility {
                                 prefs.setUserId(rootObj.getString("_id"), PaywallGoonjFragment.SLUG);
                                 prefs.setDeviceId(deviceId!!)
                                 Constants.IS_FCM_TOKEN_PROCESSING = false;
+                                sendActivityToServer(context, rootObj.getString("_id"))
                             } catch (e: java.lang.Exception) {
                                 Constants.IS_FCM_TOKEN_PROCESSING = false;
                                 e.printStackTrace()
@@ -495,6 +496,30 @@ class Utility {
                         }
                     }).exec();
                 }
+            }
+        }
+
+        fun sendActivityToServer(context: Context, userId: String?) {
+            if(userId != null){
+                val paramsArrayList = ArrayList<Params>()
+                paramsArrayList.add(Params("user_id", userId));
+
+                RestClient(context, Constants.API_BASE_URL + "user/activity", RestClient.Companion.Method.POST, paramsArrayList, object : NetworkOperationListener {
+                    override fun onSuccess(response: String?) {
+                        try {
+                            Logger.println("User activity :$response");
+                        } catch (e: java.lang.Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    override fun onFailed(code: Int, reason: String?) {
+                        Constants.IS_FCM_TOKEN_PROCESSING = false;
+                        Logger.println("user activity failed: $reason")
+                    }
+                }).exec();
+            }else{
+                Logger.println("USER ID ID NULL")
             }
         }
     }

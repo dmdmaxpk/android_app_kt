@@ -62,7 +62,7 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 
         Logger.println("LONG VERSION CODE: $versionCode")
 
-        if(versionCode >= 3018 && !mPrefs.isFlushedPreviousFcmToken() && (mPrefs.getFcmToken() != null)){
+        if(versionCode == 3018 && !mPrefs.isFlushedPreviousFcmToken() && (mPrefs.getFcmToken() != null)){
             getPrefs().setFcmToken(null);
             mPrefs.flushPreviousFcmToken();
             Logger.println("FCM TOKEN FLUSHED");
@@ -83,9 +83,11 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
                 Logger.println("NEW FCM TOKEN: $token");
                 Utility.sendRegistrationToServer(getContext(), token);
             });
-        }
-        else {
+        } else {
             Logger.println("OLD FCM TOKEN: ${getPrefs().getFcmToken()}")
+            Handler().postDelayed(Runnable {
+                Utility.sendActivityToServer(getContext(), mPrefs.getUserId(PaywallGoonjFragment.SLUG));
+            }, 3000)
         }
 
 
