@@ -62,10 +62,10 @@ class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 
         Logger.println("LONG VERSION CODE: $versionCode")
 
-        if(versionCode == 3018 && !mPrefs.isFlushedPreviousFcmToken() && (mPrefs.getFcmToken() != null)){
+        if(mPrefs.getUserId(PaywallGoonjFragment.SLUG) == null || mPrefs.getUserId(PaywallGoonjFragment.SLUG).equals("null")){
             getPrefs().setFcmToken(null);
             mPrefs.flushPreviousFcmToken();
-            Logger.println("FCM TOKEN FLUSHED");
+            Logger.println("FCM TOKEN FLUSHED BECAUSE OF NULL USER ID");
         }else{
             Logger.println("FCM TOKEN ALREADY FLUSHED");
         }
