@@ -306,27 +306,32 @@ class ExoPlayerManager: View.OnClickListener {
             override fun onPlayerError(error: ExoPlaybackException?) {
                 super.onPlayerError(error)
                 Logger.println("onPlayerError: "+error?.message);
-                if(error != null && error.sourceException != null && error.sourceException is BehindLiveWindowException){
+
+                if(scheduler != null){
+                    scheduler?.shutdown();
+                    Logger.println("Scheduler shut down!")
+                }
+
+                // Behind live window exception or any other exception of player
+                if(!Utility.isConnectedToInternet(mContext)){
+                    // No internet
+                    mMediaModel.shouldMaintainState = true;
+                    mMediaModel.secondsLapsed = mPlayer.currentPosition
+                }else{
+                    // Internet is available
+                    init(mContext, mPlayerView);
+                    playMedia(mMediaModel);
+                }
+
+
+                /*if(error != null && error.sourceException != null && error.sourceException is BehindLiveWindowException){
                     // Behind live window exception
                     Logger.println("onPlayerError - INSIDE LIVE WINDOW");
                     init(mContext, mPlayerView);
                     playMedia(mMediaModel);
                 }else{
-                    // Behind live window exception
-                    Logger.println("onPlayerError - INSIDE ELSE");
-                    if(!Utility.isConnectedToInternet(mContext)){
-                        // No internet
-                        mMediaModel.shouldMaintainState = true;
-                        mMediaModel.secondsLapsed = mPlayer.currentPosition
-                    }else{
-                        // Internet is available
-                        init(mContext, mPlayerView);
-                        playMedia(mMediaModel);
-                    }
-                }
-                if(scheduler != null){
-                    scheduler?.shutdown();
-                }
+
+                }*/
             }
 
             override fun onSeekProcessed() {
