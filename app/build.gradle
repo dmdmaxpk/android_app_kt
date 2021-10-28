@@ -19,15 +19,15 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         multiDexEnabled true
         applicationId "com.dmdmax.goonj"
         minSdkVersion 19
-        targetSdkVersion 29
-        versionCode 3025
-        versionName "3.0.2.5"
+        targetSdkVersion 30
+        versionCode 3027
+        versionName "3.0.2.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [onesignal_app_id: "9549eaf3-2fc1-4c28-be54-3d2d65db3bf3", onesignal_google_project_number: "REMOTE"]

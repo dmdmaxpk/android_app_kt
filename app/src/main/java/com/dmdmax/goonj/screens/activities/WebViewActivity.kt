@@ -87,6 +87,6 @@ class WebViewActivity : BaseActivity() {
         settings.domStorageEnabled = true
         settings.javaScriptEnabled = true
         settings.javaScriptCanOpenWindowsAutomatically = true
-        webView!!.loadUrl(url)
+        webView!!.loadUrl(url!!)
     }
 }
