@@ -50,6 +50,7 @@ class BaseApplication: Application() {
             .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
             .setNotificationReceivedHandler(OneSignalNotificationReceiver())
             .unsubscribeWhenNotificationsAreDisabled(true)
+            .filterOtherGCMReceivers(true)
             .init()
 
         // Analytics Tracker init

@@ -77,7 +77,7 @@ class BottomMenuChannelAdapter: RecyclerView.Adapter<BottomMenuChannelAdapter.My
                 PlayerActivity.ARGS_CHANNEL = list!![holder.adapterPosition];
                 PlayerActivity.ARGS_CHANNELS = list!!;
 
-                if(mPrefs.getSubscriptionStatus(PaywallGoonjFragment.SLUG) == PaymentHelper.Companion.PaymentStatus.STATUS_BILLED){
+                if(mPrefs.getSubscriptionStatus(PaywallGoonjFragment.SLUG) == PaymentHelper.Companion.PaymentStatus.STATUS_BILLED && mPrefs.getStreamable(PaywallGoonjFragment.SLUG)){
                     if(!(context as BaseActivity is PlayerActivity)){
                         BaseViewFactory(LayoutInflater.from(context)).toPlayerScreen(list!![holder.adapterPosition], list!!);
                     }else{

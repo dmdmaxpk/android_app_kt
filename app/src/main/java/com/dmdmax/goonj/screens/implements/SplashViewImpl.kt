@@ -2,10 +2,7 @@ package com.dmdmax.goonj.screens.implements
 
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
@@ -13,35 +10,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.base.BaseObservableView
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.SplashView
 import com.dmdmax.goonj.storage.GoonjPrefs
-import com.dmdmax.goonj.utility.Constants
+import com.dmdmax.goonj.utility.*
 import com.dmdmax.goonj.utility.Constants.ThumbnailManager.getVodThumbnail
-import com.dmdmax.goonj.utility.Logger
-import com.dmdmax.goonj.utility.Utility
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.google.gson.JsonObject
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import org.json.JSONObject
-import java.lang.Exception
-import com.dmdmax.goonj.utility.*
-import com.dmdmax.goonj.models.Params
-import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
-import com.dmdmax.goonj.network.client.NetworkOperationListener;
-import com.dmdmax.goonj.network.client.RestClient;
-import com.dmdmax.goonj.receivers.NotificationListener
-import java.io.Console
 
 class SplashViewImpl: BaseObservableView<SplashView.Listener>, SplashView {
 

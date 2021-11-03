@@ -77,7 +77,7 @@ class LiveTvFragment: BaseFragment(), LiveTvView.Listener {
 
     override fun onChannelClick(channel: Channel, paywallSlug: String) {
         PlayerActivity.ARGS_CHANNEL = channel;
-        if(mPrefs.getSubscriptionStatus(PaywallGoonjFragment.SLUG) == PaymentHelper.Companion.PaymentStatus.STATUS_BILLED || mPrefs.getSubscriptionStatus(PaywallGoonjFragment.SLUG) == PaymentHelper.Companion.PaymentStatus.STATUS_TRIAL){
+        if((mPrefs.getSubscriptionStatus(PaywallGoonjFragment.SLUG) == PaymentHelper.Companion.PaymentStatus.STATUS_BILLED || mPrefs.getSubscriptionStatus(PaywallGoonjFragment.SLUG) == PaymentHelper.Companion.PaymentStatus.STATUS_TRIAL) && mPrefs.getStreamable(PaywallGoonjFragment.SLUG)){
             getCompositionRoot().getViewFactory().toPlayerScreen(channel, null);
         }else{
             getCompositionRoot().getViewFactory().toPaywallScreen(channel, paywallSlug);
