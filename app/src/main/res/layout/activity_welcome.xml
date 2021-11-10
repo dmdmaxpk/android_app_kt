@@ -59,8 +59,33 @@
         <LinearLayout
             android:id="@+id/footer_layout"
             android:layout_width="match_parent"
-            android:layout_height="62dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/adLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+                <ImageView
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:id="@+id/ad_image"
+                    android:layout_width="320dp"
+                    android:layout_height="50dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/banner_app"/>
+                <ImageView
+                    android:id="@+id/cross"
+                    android:src="@drawable/close_circle"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:cropToPadding="true"
+                    android:scaleType="fitXY"
+                    android:layout_marginTop="0dp"/>
+            </LinearLayout>
+
             <View
                 android:background="#27292E"
                 android:layout_width="match_parent"

@@ -9,6 +9,14 @@ import com.dmdmax.goonj.adapters.BottomGridAdapter
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.BottomMenu
 import com.dmdmax.goonj.screens.views.WelcomeView
+import androidx.core.content.ContextCompat.startActivity
+
+import android.content.ActivityNotFoundException
+
+import android.content.Intent
+import android.net.Uri
+import com.dmdmax.goonj.utility.Constants
+
 
 class Welcomelmpl: BaseObservableView<WelcomeView.Listener>, WelcomeView, View.OnClickListener {
 
@@ -22,6 +30,10 @@ class Welcomelmpl: BaseObservableView<WelcomeView.Listener>, WelcomeView, View.O
     private lateinit var mList: ArrayList<BottomMenu>;
     private lateinit var mAdapter: BottomGridAdapter;
 
+    private lateinit var mAdLayout: LinearLayout;
+    private lateinit var mCross: ImageView;
+    private lateinit var mAdImage: ImageView;
+
     constructor(inflater: LayoutInflater, parent: ViewGroup?) {
         setRootView(inflater.inflate(R.layout.activity_welcome, parent, false));
     }
@@ -31,9 +43,16 @@ class Welcomelmpl: BaseObservableView<WelcomeView.Listener>, WelcomeView, View.O
         mBottomGrid = findViewById(R.id.bottom_grid);
         mHeaderLayout = findViewById(R.id.header_layout);
         mFooterLayout = findViewById(R.id.footer_layout);
+        mAdLayout = findViewById(R.id.adLayout);
+        mCross = findViewById(R.id.cross); mCross.setOnClickListener(this);
+        mAdImage = findViewById(R.id.ad_image); mAdImage.setOnClickListener(this);
 
         mUser = findViewById(R.id.user); mUser.setOnClickListener(this);
         mSearch = findViewById(R.id.search); mSearch.setOnClickListener(this);
+
+        if(!Constants.YOUTUBE_CHANNEL_SUBSCRIBE_AD){
+            mAdLayout.visibility = View.GONE;
+        }
     }
 
 
@@ -89,6 +108,21 @@ class Welcomelmpl: BaseObservableView<WelcomeView.Listener>, WelcomeView, View.O
             mSearch -> {
                 for (listener in getListeners()) {
                     listener.onSearchClick();
+                }
+            }
+
+            mCross -> {
+                mAdLayout.visibility = View.GONE;
+            }
+
+            mAdImage -> {
+                mAdLayout.visibility = View.GONE;
+
+                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/channel/UCE126WZCUfLqOpcxRo55KYg"))
+                try {
+                    getContext().startActivity(webIntent)
+                } catch (ex: ActivityNotFoundException) {
+                    ex.printStackTrace()
                 }
             }
         }

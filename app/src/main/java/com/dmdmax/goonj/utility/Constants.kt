@@ -101,6 +101,7 @@ public class Constants {
         var IS_UPDATE_AVAILABLE: Boolean = false;
         lateinit var UPDATE_MESSAGE: String;
         var CONTACT_US_NUMBER: String? = null
+        var YOUTUBE_CHANNEL_SUBSCRIBE_AD: Boolean = true;
 
 
         object EndPoints {

@@ -17,6 +17,10 @@
         <value>03401832782</value>
     </entry>
     <entry>
+        <key>youtube_channel_subscribe_ad</key>
+        <value>true</value>
+    </entry>
+    <entry>
         <key>corona_banner_visibility</key>
         <value>false</value>
     </entry>

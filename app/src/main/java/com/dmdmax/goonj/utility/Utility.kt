@@ -284,6 +284,7 @@ class Utility {
             //Constants.PAYWALL_BASE_URL = "http://staging.api.goonj.pk/v2/";
             //Constants.PAYWALL_BASE_URL = "http://3.126.102.117:5000/";
             //Constants.API_BASE_URL = "http://staging.api.goonj.pk/v2/";
+            Constants.YOUTUBE_CHANNEL_SUBSCRIBE_AD = `object`.getBoolean("youtube_channel_subscribe_ad")
             Constants.CONTACT_US_NUMBER = `object`.getString("contact_us_number")
             Constants.CDN_STATIC_URL = `object`.getString("cdn_static")
             Constants.TERMS_URL = `object`.getString("terms_url")

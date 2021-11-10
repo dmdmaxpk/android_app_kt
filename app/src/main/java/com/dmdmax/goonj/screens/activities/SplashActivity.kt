@@ -67,12 +67,14 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
                 i.putExtra("action", DeepLinkingManager.Mapper.OPEN_UN_SUB)
                 startActivity(i)
                 finish()
-            } else if (data.toString().contains("/subscribe")) {
+            }
+            else if (data.toString().contains("/subscribe")) {
                 val i = Intent(this@SplashActivity, WelcomeActivity::class.java)
                 i.putExtra("action", DeepLinkingManager.Mapper.OPEN_LIVE_BOTTOM_MENU)
                 startActivity(i)
                 finish()
-            } else if (data.toString().contains("/news")) {
+            }
+            else if (data.toString().contains("/news")) {
                 val i = Intent(this@SplashActivity, WelcomeActivity::class.java)
                 var tabIndex = 0
                 val link = data.toString()
@@ -88,7 +90,8 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
                 i.putExtra("action", DeepLinkingManager.Mapper.OPEN_NEWS)
                 startActivity(i)
                 finish()
-            } else {
+            }
+            else {
                 val videoId = Utility.getVideoIdForVOD(data.toString())
                 if (videoId!!.isEmpty()) {
                     // Means no VOD, check for others
@@ -207,8 +210,7 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
                         }).exec()
                 }
             }
-        }
-        else {
+        } else {
             if(mView.getPrefs().isInterestedTopicDone()){
                 startActivity(Intent(this, WelcomeActivity::class.java));
                 finish();
