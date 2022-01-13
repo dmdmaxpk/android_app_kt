@@ -2,6 +2,7 @@ package com.dmdmax.goonj.screens.implements
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.base.BaseObservableView
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.screens.fragments.hometabs.GenericCategoryFragment
+import com.dmdmax.goonj.screens.fragments.hometabs.HomeTabLiveTvFragment
 import com.dmdmax.goonj.screens.fragments.hometabs.LiveTvFragment
 import com.dmdmax.goonj.screens.views.HomeView
 import com.dmdmax.goonj.utility.Constants
@@ -67,6 +69,14 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
         })
     }
 
+    override fun setOrientation(isFull: Boolean){
+        if(isFull){
+            mTopBar?.visibility = View.GONE
+        }else{
+            mTopBar?.visibility = View.VISIBLE;
+        }
+    }
+
     private fun getChildFragments(): ArrayList<BaseFragment>{
         val fragmentList: ArrayList<BaseFragment> = arrayListOf();
         val tabsModelList: ArrayList<TabModel> = arrayListOf();
@@ -75,7 +85,10 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
         for (tab in tabsModelList) {
             val bundle = Bundle()
             bundle.putSerializable(GenericCategoryFragment.ARGS_TAB, tab)
-            if(tab.getTabName()!!.toLowerCase().equals("live tv")){
+
+            if(tab.getCategory().equals("live")){
+                fragmentList.add(HomeTabLiveTvFragment.newInstance(bundle))
+            }else if(tab.getTabName()!!.toLowerCase().equals("live tv")){
                 fragmentList.add(LiveTvFragment.newInstance(bundle))
             }else{
                 fragmentList.add(GenericCategoryFragment.newInstance(bundle))

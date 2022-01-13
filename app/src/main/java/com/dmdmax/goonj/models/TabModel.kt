@@ -4,14 +4,15 @@ import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 
 class TabModel: java.io.Serializable {
     private  var tabName: String? = null;
-    private  var slug:kotlin.String? = null;
-    private  var carousel:kotlin.String? = null;
-    private  var category:kotlin.String? = null;
-    private  var url:kotlin.String? = null;
-    private  var desc:kotlin.String? = null;
-    private  var style:kotlin.String? = null
+    private  var slug: String? = null;
+    private  var carousel: String? = null;
+    private  var category: String? = null;
+    private  var url: String? = null;
+    private  var desc: String? = null;
+    private  var style: String? = null
+    private var resourceId: String? = null;
 
-    constructor(tabName: String, slug: String?, carousel: String, category: String, url: String?, desc: String?, style: String?) {
+    constructor(tabName: String, slug: String?, carousel: String, category: String, url: String?, desc: String?, style: String?, resourceId: String?) {
         this.tabName = tabName
         this.slug = slug
         this.carousel = carousel
@@ -19,14 +20,16 @@ class TabModel: java.io.Serializable {
         this.url = url
         this.desc = desc
         this.style = style
+        this.resourceId = resourceId
     }
 
-    constructor(tabName: String, carousel: String, category: String, style: String, url: String) {
+    constructor(tabName: String, carousel: String, category: String, style: String, url: String, resourceId: String?) {
         this.tabName = tabName
         this.carousel = carousel
         this.category = category
         this.style = style
         this.url = url
+        this.resourceId = resourceId
     }
 
     fun getStyle(): String? {
@@ -57,9 +60,13 @@ class TabModel: java.io.Serializable {
         return slug
     }
 
+    fun getResourceId(): String? {
+        return resourceId;
+    }
+
     companion object {
         fun getEpisodeTab(): TabModel{
-            return TabModel("episode", PaywallComedyFragment.SLUG, "null", "episode", null, null, null);
+            return TabModel("episode", PaywallComedyFragment.SLUG, "null", "episode", null, null, null, null);
         }
     }
 }
