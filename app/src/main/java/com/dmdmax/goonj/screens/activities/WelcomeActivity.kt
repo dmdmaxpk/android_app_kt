@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
@@ -26,6 +27,7 @@ import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.WelcomeView
 import com.dmdmax.goonj.storage.GoonjPrefs
+import com.dmdmax.goonj.utility.DeepLinkingManager
 import com.dmdmax.goonj.utility.GoonjAdManager
 import com.dmdmax.goonj.utility.Logger
 import com.google.android.gms.ads.MobileAds
@@ -79,6 +81,10 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
             firstNetworkStatusBroadcast = false;
         })
         MobileAds.initialize(this);
+
+        Handler().postDelayed(Runnable {
+            processDeepLinks();
+        }, 1000);
     }
 
     override fun onResume() {
@@ -206,6 +212,13 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
             newUiOptions = newUiOptions and View.SYSTEM_UI_FLAG_IMMERSIVE.inv()
             newUiOptions = newUiOptions and View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY.inv()
             decorView.systemUiVisibility = newUiOptions
+        }
+    }
+
+    private fun processDeepLinks(){
+        val action = intent.getStringExtra("action").toString();
+        if(action == DeepLinkingManager.Mapper.OPEN_UN_SUB){
+            startActivity(Intent(this@WelcomeActivity, SubscriptionActivity::class.java))
         }
     }
 }
