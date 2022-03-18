@@ -102,7 +102,8 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
                             val p = Paywall()
                             p.id = data.getJSONObject(i).getString("_id")
                             p.active = data.getJSONObject(i).getBoolean("active")
-                            p.name = data.getJSONObject(i).getString("paywall_name")
+                            //p.name = data.getJSONObject(i).getString("paywall_name")
+                            p.name = "Live"
                             p.desc = data.getJSONObject(i).getString("paywall_desc")
                             p.slug = data.getJSONObject(i).getString("slug")
 
@@ -144,7 +145,7 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
                                             val p = Paywall()
                                             p.id = "123"
                                             p.active = true;
-                                            p.name = "Comedy Paywall"
+                                            p.name = "Comedy"
                                             p.desc = "No Desc"
                                             p.slug = PaywallComedyFragment.SLUG
                                             val mPackages = arrayListOf<PackageModel>()
@@ -181,7 +182,7 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
                                         val p = Paywall()
                                         p.id = "123"
                                         p.active = true;
-                                        p.name = "Binjee Paywall"
+                                        p.name = "Binjee"
                                         p.desc = "No Desc"
                                         p.slug = PaywallBinjeeFragment.SLUG
                                         val mPackages = arrayListOf<PackageModel>()
