@@ -94,47 +94,8 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
         paywallDetails.addView(packagesPb)
         packagesPb.setVisibility(View.VISIBLE)
         RestClient(getContext(), Constants.PAYWALL_BASE_URL + Constants.Companion.EndPoints.PAYWALL, RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
-                override fun onSuccess(response: String?) {
+                override fun onSuccess(response1: String?) {
                     try {
-                        val paywalls = arrayListOf<Paywall>();
-                        val data = JSONObject(response).getJSONArray("data")
-                        for (i in 0 until data.length()) {
-                            val p = Paywall()
-                            p.id = data.getJSONObject(i).getString("_id")
-                            p.active = data.getJSONObject(i).getBoolean("active")
-                            //p.name = data.getJSONObject(i).getString("paywall_name")
-                            p.name = "Live"
-                            p.desc = data.getJSONObject(i).getString("paywall_desc")
-                            p.slug = data.getJSONObject(i).getString("slug")
-
-                            val mPackages = arrayListOf<PackageModel>();
-                            val packages = data.getJSONObject(i).getJSONArray("packages")
-                            for (j in 0 until packages.length()) {
-                                val mPackage = PackageModel();
-                                mPackage.id = packages.getJSONObject(j).getString("_id");
-                                mPackage.name = packages.getJSONObject(j).getString("package_name")
-                                mPackage.desc = packages.getJSONObject(j).getString("package_desc")
-                                mPackage.price = packages.getJSONObject(j).getString("display_price_point");
-                                mPackage.paywallId = packages.getJSONObject(j).getString("paywall_id");
-                                mPackage.slug = p.slug;
-
-                                mPackages.add(mPackage)
-                            }
-                            p.packages = mPackages;
-                            paywalls.add(p)
-                        }
-
-                        for (i in paywalls.indices) {
-                            val view: View = LayoutInflater.from(getContext()).inflate(R.layout.package_unsub_details_layout, null, false)
-                            val paywall = paywalls[i]
-                            val paywallName = view.findViewById<TextView>(R.id.paywallName)
-                            val listView: WrapContentListView = view.findViewById(R.id.packageDetails)
-                            paywallName.text = paywall.name
-                            val packages: List<PackageModel> = paywall.packages;
-                            val mAdapter = PackageListAdapter(packages, PaywallGoonjFragment.SLUG, getContext());
-                            listView.adapter = mAdapter
-                            paywallDetails.addView(view)
-                        }
 
                         RestClient(getContext(), Constants.COMEDY_BASE_URL + Constants.Companion.EndPoints.GET_COMEDY_PACKAGES, RestClient.Companion.Method.GET, null, object : NetworkOperationListener {
                                 override fun onSuccess(response: String?) {
@@ -203,6 +164,53 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
                                         val mAdapter = PackageListAdapter(packages, PaywallBinjeeFragment.SLUG, getContext());
                                         listView.adapter = mAdapter
                                         paywallDetails.addView(view)
+
+
+
+
+
+                                        // Live paywall
+                                        val paywalls2 = arrayListOf<Paywall>();
+                                        val data2 = JSONObject(response1).getJSONArray("data")
+
+                                        for (i in 0 until data2.length()) {
+                                            val p = Paywall()
+                                            p.id = data2.getJSONObject(i).getString("_id")
+                                            p.active = data2.getJSONObject(i).getBoolean("active")
+                                            //p.name = data.getJSONObject(i).getString("paywall_name")
+                                            p.name = "Live"
+                                            p.desc = data2.getJSONObject(i).getString("paywall_desc")
+                                            p.slug = data2.getJSONObject(i).getString("slug")
+
+                                            val mPackages = arrayListOf<PackageModel>();
+                                            val packages = data2.getJSONObject(i).getJSONArray("packages")
+                                            for (j in 0 until packages.length()) {
+                                                val mPackage = PackageModel();
+                                                mPackage.id = packages.getJSONObject(j).getString("_id");
+                                                mPackage.name = packages.getJSONObject(j).getString("package_name")
+                                                mPackage.desc = packages.getJSONObject(j).getString("package_desc")
+                                                mPackage.price = packages.getJSONObject(j).getString("display_price_point");
+                                                mPackage.paywallId = packages.getJSONObject(j).getString("paywall_id");
+                                                mPackage.slug = p.slug;
+
+                                                mPackages.add(mPackage)
+                                            }
+                                            p.packages = mPackages;
+                                            paywalls2.add(p)
+                                        }
+
+                                        for (i in paywalls2.indices) {
+                                            val view: View = LayoutInflater.from(getContext()).inflate(R.layout.package_unsub_details_layout, null, false)
+                                            val paywall = paywalls2[i]
+                                            val paywallName = view.findViewById<TextView>(R.id.paywallName)
+                                            val listView: WrapContentListView = view.findViewById(R.id.packageDetails)
+                                            paywallName.text = paywall.name
+                                            val packages: List<PackageModel> = paywall.packages;
+                                            val mAdapter = PackageListAdapter(packages, PaywallGoonjFragment.SLUG, getContext());
+                                            listView.adapter = mAdapter
+                                            paywallDetails.addView(view)
+                                        }
+
 
                                     } catch (e: java.lang.Exception) {
                                         e.printStackTrace()
