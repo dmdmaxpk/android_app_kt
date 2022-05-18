@@ -19,18 +19,18 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         multiDexEnabled true
         applicationId "com.dmdmax.goonj"
         minSdkVersion 19
-        targetSdkVersion 30
-        versionCode 3034
-        versionName "3.0.3.4"
+        targetSdkVersion 31
+        versionCode 3035
+        versionName "3.0.3.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [onesignal_app_id: "9549eaf3-2fc1-4c28-be54-3d2d65db3bf3", onesignal_google_project_number: "REMOTE"]
+        //manifestPlaceholders = [onesignal_app_id: "9549eaf3-2fc1-4c28-be54-3d2d65db3bf3", onesignal_google_project_number: "REMOTE"]
     }
 
     buildTypes {
@@ -60,7 +60,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:20.4.0'
 
     // One signal
-    implementation ('com.onesignal:OneSignal:3.16.0'){
+    implementation ('com.onesignal:OneSignal:[4.0.0, 4.99.99]'){
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-basement'
         exclude group: 'com.google.android.gms', module: 'play-services-location'
@@ -103,7 +103,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:5.0.0'
     implementation 'com.facebook.android:audience-network-sdk:5.1.0'
 
-    implementation 'com.survicate:survicate-sdk:1.+'
+    implementation 'com.survicate:survicate-sdk:1.4.1'
 
     // MultiDex
     implementation 'com.android.support:multidex:1.0.3'

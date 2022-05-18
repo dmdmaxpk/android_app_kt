@@ -8,7 +8,6 @@ import android.os.Process.myPid
 import androidx.multidex.MultiDex
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.network.ConnectivityProvider
-import com.dmdmax.goonj.receivers.OneSignalNotificationReceiver
 import com.dmdmax.goonj.utility.Logger
 import com.facebook.ads.AudienceNetworkAds
 import com.google.android.exoplayer2.util.Util
@@ -29,6 +28,8 @@ class BaseApplication: Application() {
         super.onCreate();
         mInstance = this;
 
+        var appId = "9549eaf3-2fc1-4c28-be54-3d2d65db3bf3";
+
         try{
             // Initialize firebase app.
             FirebaseApp.initializeApp(applicationContext);
@@ -46,12 +47,19 @@ class BaseApplication: Application() {
         }
 
         // Init One-Signal tool integration
-        OneSignal.startInit(this)
-            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-            .setNotificationReceivedHandler(OneSignalNotificationReceiver())
-            .unsubscribeWhenNotificationsAreDisabled(true)
-            .filterOtherGCMReceivers(true)
-            .init()
+        // Enable verbose OneSignal logging to debug issues if needed.
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this);
+        OneSignal.setAppId(appId);
+
+//        OneSignal.startInit(this)
+//            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+//            .setNotificationReceivedHandler(OneSignalNotificationReceiver())
+//            .unsubscribeWhenNotificationsAreDisabled(true)
+//            .filterOtherGCMReceivers(true)
+//            .init()
 
         // Analytics Tracker init
         getGoogleAnalyticsTracker();

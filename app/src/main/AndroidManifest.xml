@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dmdmax.goonj">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -33,6 +36,7 @@
         <activity android:name=".screens.activities.GetStartedActivity" />
         <activity android:name=".screens.activities.UserContentPrefsActivity" />
         <activity
+            android:exported="true"
             android:launchMode="singleTask"
             android:name=".screens.activities.SplashActivity">
             <intent-filter android:autoVerify="true">
