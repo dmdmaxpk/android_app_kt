@@ -26,8 +26,8 @@ android {
         applicationId "com.dmdmax.goonj"
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 3035
-        versionName "3.0.3.5"
+        versionCode 3036
+        versionName "3.0.3.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //manifestPlaceholders = [onesignal_app_id: "9549eaf3-2fc1-4c28-be54-3d2d65db3bf3", onesignal_google_project_number: "REMOTE"]
@@ -39,10 +39,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }

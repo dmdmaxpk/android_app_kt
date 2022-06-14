@@ -24,6 +24,7 @@ import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import org.json.JSONArray
+import org.json.JSONObject
 
 class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBillingView {
 
@@ -97,40 +98,55 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
     }
 
     override fun fetchPackages() {
-        RestClient(context!!, Constants.API_BASE_URL + Constants.Companion.EndPoints.PACKAGE, RestClient.Companion.Method.GET, null, object: NetworkOperationListener {
+        RestClient(context!!, "http://he.goonj.pk/he", RestClient.Companion.Method.GET, null, object: NetworkOperationListener {
             override fun onSuccess(response: String?) {
-                val list = arrayListOf<PackageModel>()
-                Logger.println("fetchPackages: $response");
-                val rootObj = JSONArray(response);
-                for(i in 0 until rootObj.length()){
-                    list.add(PackageModel(
-                            rootObj.getJSONObject(i).getString("_id"),
-                            rootObj.getJSONObject(i).getString("package_name"),
-                            rootObj.getJSONObject(i).getString("price_point_pkr"),
-                            rootObj.getJSONObject(i).getString("package_desc"),
-                            rootObj.getJSONObject(i).getString("slug"),
-                            rootObj.getJSONObject(i).getBoolean("default")
-                    ))
-                }
-
-                mProgressBar.visibility = View.GONE;
-                mMainLayout.visibility = View.VISIBLE;
-
-                if(mPaywall.mSelectedPackage != null){
-                    mDefaultPackage = list.find { packageModel -> packageModel.id == mPaywall.mSelectedPackage?.id }!!
-                }else{
-                    mDefaultPackage = list.find { packageModel -> packageModel.default }!!
+                val rootObj = JSONObject(response);
+                Logger.println("HE: $response");
+                if(rootObj.has("msisdn") && !rootObj.getString("msisdn").equals("null")) {
+                    mPrefs.setMsisdn(rootObj.getString("msisdn"), SLUG);
                 }
 
 
-                mPackageName.text = mDefaultPackage.name;
-                mPackagePrice.text = mDefaultPackage.text;
+                RestClient(context!!, Constants.API_BASE_URL + Constants.Companion.EndPoints.PACKAGE, RestClient.Companion.Method.GET, null, object: NetworkOperationListener {
+                    override fun onSuccess(response: String?) {
+                        val list = arrayListOf<PackageModel>()
+                        Logger.println("fetchPackages: $response");
+                        val rootObj = JSONArray(response);
+                        for(i in 0 until rootObj.length()){
+                            list.add(PackageModel(
+                                rootObj.getJSONObject(i).getString("_id"),
+                                rootObj.getJSONObject(i).getString("package_name"),
+                                rootObj.getJSONObject(i).getString("price_point_pkr"),
+                                rootObj.getJSONObject(i).getString("package_desc"),
+                                rootObj.getJSONObject(i).getString("slug"),
+                                rootObj.getJSONObject(i).getBoolean("default")
+                            ))
+                        }
+
+                        mProgressBar.visibility = View.GONE;
+                        mMainLayout.visibility = View.VISIBLE;
+
+                        if(mPaywall.mSelectedPackage != null){
+                            mDefaultPackage = list.find { packageModel -> packageModel.id == mPaywall.mSelectedPackage?.id }!!
+                        }else{
+                            mDefaultPackage = list.find { packageModel -> packageModel.default }!!
+                        }
+
+
+                        mPackageName.text = mDefaultPackage.name;
+                        mPackagePrice.text = mDefaultPackage.text;
+                    }
+
+                    override fun onFailed(code: Int, reason: String?) {
+                        TODO("Not yet implemented")
+                    }
+                }).exec();
             }
 
             override fun onFailed(code: Int, reason: String?) {
                 TODO("Not yet implemented")
             }
-        }).exec();
+        }).exec()
     }
 
     override fun processBilling(source: String) {
