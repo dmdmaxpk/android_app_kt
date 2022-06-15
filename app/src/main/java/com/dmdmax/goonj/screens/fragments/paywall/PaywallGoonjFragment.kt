@@ -18,17 +18,20 @@ import com.dmdmax.goonj.models.Paywall
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.payments.PaymentHelper
+import com.dmdmax.goonj.screens.activities.PlayerActivity
 import com.dmdmax.goonj.screens.activities.SigninActivity
 import com.dmdmax.goonj.screens.views.PaywallBillingView
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
+import com.dmdmax.goonj.utility.Toaster
 import org.json.JSONArray
 import org.json.JSONObject
 
 class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBillingView {
 
     private lateinit var mPaywall: Paywall;
+    private var isHEHappen = false;
 
     companion object {
         val SLUG = "live";
@@ -76,9 +79,11 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
 
         mTelenorNumber = view.findViewById(R.id.telenor_number);
         mTelenorNumber.setOnClickListener(this)
+        mTelenorNumber.visibility = View.INVISIBLE;
 
         mEasypaisaNumber = view.findViewById(R.id.ep_number)
         mEasypaisaNumber.setOnClickListener(this);
+        mEasypaisaNumber.visibility = View.INVISIBLE;
 
         mPaywall = arguments!!.getSerializable(ARGS_TAB) as Paywall
 
@@ -104,6 +109,10 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
                 Logger.println("HE: $response");
                 if(rootObj.has("msisdn") && !rootObj.getString("msisdn").equals("null")) {
                     mPrefs.setMsisdn(rootObj.getString("msisdn"), SLUG);
+                    mPrefs.setAccessToken(rootObj.getString("access_token"));
+                    mPrefs.setRefreshToken(rootObj.getString("refresh_token"))
+
+                    isHEHappen = true;
                 }
 
 
@@ -124,7 +133,8 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
                         }
 
                         mProgressBar.visibility = View.GONE;
-                        mMainLayout.visibility = View.VISIBLE;
+                        mTelenorNumber.visibility = View.VISIBLE;
+                        mEasypaisaNumber.visibility = View.VISIBLE;
 
                         if(mPaywall.mSelectedPackage != null){
                             mDefaultPackage = list.find { packageModel -> packageModel.id == mPaywall.mSelectedPackage?.id }!!
@@ -151,13 +161,44 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
 
     override fun processBilling(source: String) {
         try{
-            EventManager.getInstance(context!!).fireEvent(EventManager.Events.GOONJ_PAYWALL_PAY_CLICK);
-            val intent = Intent(context, SigninActivity::class.java);
-            intent.putExtra(ARG_SUBSCRIPTION_SOURCE, SLUG);
-            intent.putExtra(ARG_PAYMENT_SOURCE, source);
-            intent.putExtra(ARGS_DEFAULT_PACKAGE, mDefaultPackage);
-            startActivity(intent);
-            (context as BaseActivity).finish()
+            if(isHEHappen){
+                mTelenorNumber.visibility = View.INVISIBLE;
+                mEasypaisaNumber.visibility = View.INVISIBLE;
+                mProgressBar.visibility = View.VISIBLE;
+
+                val helper = PaymentHelper(requireContext(), "telenor");
+                helper.subscribeNow(mPrefs.getMsisdn(SLUG), mDefaultPackage, "telenor", null, object: PaymentHelper.SubscribeNowListener {
+                    override fun onSubscriptionResponse(billed: Boolean, response: String?, allowedToStream: Boolean) {
+                        Logger.println("subscribeNow: $response");
+
+                        if (billed && allowedToStream) {
+                            if (PlayerActivity.ARGS_CHANNEL != null || PlayerActivity.ARGS_VIDEO != null) {
+                                getCompositionRoot().getViewFactory().toPlayerScreen(null, null);
+                            }
+                            Toaster.printToast(
+                                requireContext(),
+                                "Subscribed successfully"
+                            );
+                            (requireContext() as BaseActivity).finish()
+                        } else {
+                            Toaster.printToast(
+                                requireContext(),
+                                "Failed to subscribe, please check your balance and try again."
+                            )
+
+                            (requireContext() as BaseActivity).finish();
+                        }
+                    }
+                })
+            }else{
+                EventManager.getInstance(requireContext()).fireEvent(EventManager.Events.GOONJ_PAYWALL_PAY_CLICK);
+                val intent = Intent(context, SigninActivity::class.java);
+                intent.putExtra(ARG_SUBSCRIPTION_SOURCE, SLUG);
+                intent.putExtra(ARG_PAYMENT_SOURCE, source);
+                intent.putExtra(ARGS_DEFAULT_PACKAGE, mDefaultPackage);
+                startActivity(intent);
+                (requireContext() as BaseActivity).finish()
+            }
         }catch (e: Exception){
             e.printStackTrace()
         }

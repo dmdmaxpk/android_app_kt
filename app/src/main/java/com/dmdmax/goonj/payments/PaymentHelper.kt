@@ -138,6 +138,8 @@ class PaymentHelper {
         RestClient(mContext, Constants.API_BASE_URL + Constants.Companion.EndPoints.SUBSCRIBE, RestClient.Companion.Method.POST, postBody, object : NetworkOperationListener {
             override fun onSuccess(response: String?) {
 
+                Logger.println("onSuccess: " + response);
+
                 val rootObj = JSONObject(response);
                 val code = rootObj.getInt("code")
 
@@ -184,6 +186,7 @@ class PaymentHelper {
 
             override fun onFailed(code: Int, reason: String?) {
                 TODO("Not yet implemented")
+                Logger.println("onFailed: " + reason);
             }
         }).exec();
     }

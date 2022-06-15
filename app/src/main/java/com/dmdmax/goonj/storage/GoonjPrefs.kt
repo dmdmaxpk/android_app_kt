@@ -108,7 +108,7 @@ class GoonjPrefs {
     }
 
     fun setMsisdn(num: String, slug: String) {
-        var number = "";
+        var number = num;
         if(num.startsWith("92")) {
             number = num.replaceFirst("92", "0");
         }
