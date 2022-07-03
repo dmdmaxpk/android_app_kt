@@ -83,7 +83,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
 
         mEasypaisaNumber = view.findViewById(R.id.ep_number)
         mEasypaisaNumber.setOnClickListener(this);
-        mEasypaisaNumber.visibility = View.INVISIBLE;
+        //mEasypaisaNumber.visibility = View.INVISIBLE;
 
         mPaywall = arguments!!.getSerializable(ARGS_TAB) as Paywall
 
@@ -121,30 +121,37 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
                         val list = arrayListOf<PackageModel>()
                         Logger.println("fetchPackages: $response");
                         val rootObj = JSONArray(response);
-                        for(i in 0 until rootObj.length()){
-                            list.add(PackageModel(
-                                rootObj.getJSONObject(i).getString("_id"),
-                                rootObj.getJSONObject(i).getString("package_name"),
-                                rootObj.getJSONObject(i).getString("price_point_pkr"),
-                                rootObj.getJSONObject(i).getString("package_desc"),
-                                rootObj.getJSONObject(i).getString("slug"),
-                                rootObj.getJSONObject(i).getBoolean("default")
-                            ))
+                        for(i in 0 until rootObj.length()) {
+                            list.add(
+                                PackageModel(
+                                    rootObj.getJSONObject(i).getString("_id"),
+                                    rootObj.getJSONObject(i).getString("package_name"),
+                                    rootObj.getJSONObject(i).getString("price_point_pkr"),
+                                    rootObj.getJSONObject(i).getString("package_desc"),
+                                    rootObj.getJSONObject(i).getString("slug"),
+                                    rootObj.getJSONObject(i).getBoolean("default")
+                                )
+                            )
                         }
 
                         mProgressBar.visibility = View.GONE;
                         mTelenorNumber.visibility = View.VISIBLE;
-                        mEasypaisaNumber.visibility = View.VISIBLE;
+                        //mEasypaisaNumber.visibility = View.VISIBLE;
 
-                        if(mPaywall.mSelectedPackage != null){
-                            mDefaultPackage = list.find { packageModel -> packageModel.id == mPaywall.mSelectedPackage?.id }!!
-                        }else{
-                            mDefaultPackage = list.find { packageModel -> packageModel.default }!!
+                        try{
+                            if(mPaywall.mSelectedPackage != null){
+                                mDefaultPackage = list.find { packageModel -> packageModel.id == mPaywall.mSelectedPackage?.id }!!
+                            }else{
+                                mDefaultPackage = list.find { packageModel -> packageModel.default }!!
+                            }
+                        }catch (e: Exception) {
+                            Logger.println("Exception: " + e.message);
                         }
 
-
+                        Logger.println("Default Package: " + mDefaultPackage.name + " - " + mDefaultPackage.price);
                         mPackageName.text = mDefaultPackage.name;
                         mPackagePrice.text = mDefaultPackage.text;
+                        mPrefs.setSubscribedPackageId(mDefaultPackage.id, SLUG);
                     }
 
                     override fun onFailed(code: Int, reason: String?) {
@@ -163,7 +170,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
         try{
             if(isHEHappen){
                 mTelenorNumber.visibility = View.INVISIBLE;
-                mEasypaisaNumber.visibility = View.INVISIBLE;
+                //mEasypaisaNumber.visibility = View.INVISIBLE;
                 mProgressBar.visibility = View.VISIBLE;
 
                 val helper = PaymentHelper(requireContext(), "telenor");
@@ -175,10 +182,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
                             if (PlayerActivity.ARGS_CHANNEL != null || PlayerActivity.ARGS_VIDEO != null) {
                                 getCompositionRoot().getViewFactory().toPlayerScreen(null, null);
                             }
-                            Toaster.printToast(
-                                requireContext(),
-                                "Subscribed successfully"
-                            );
+                            //Toaster.printToast(requireContext(), "Subscribed successfully");
                             (requireContext() as BaseActivity).finish()
                         } else {
                             Toaster.printToast(
