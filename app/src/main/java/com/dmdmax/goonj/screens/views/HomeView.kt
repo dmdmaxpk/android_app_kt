@@ -9,4 +9,5 @@ interface HomeView: ObservableView<HomeView.Listener> {
     }
 
     fun  initialize();
+    fun setOrientation(isFull: Boolean)
 }

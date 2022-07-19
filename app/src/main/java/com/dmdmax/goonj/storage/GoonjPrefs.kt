@@ -107,7 +107,12 @@ class GoonjPrefs {
         return getVideosList(prefs!!.getString(KEY_PREMIUM, ""))
     }
 
-    fun setMsisdn(number: String, slug: String) {
+    fun setMsisdn(num: String, slug: String) {
+        var number = num;
+        if(num.startsWith("92")) {
+            number = num.replaceFirst("92", "0");
+        }
+
         Logger.println("Prefs - setMsisdn - $number - $slug")
         if (slug.equals(PaywallGoonjFragment.SLUG)) {
             setLiveMsisdn(number)

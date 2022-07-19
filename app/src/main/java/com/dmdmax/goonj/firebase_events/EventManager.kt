@@ -46,6 +46,7 @@ open class EventManager {
 
     fun fireEvent(event: String){
         mFirebaseAnalytics.logEvent("V2_${event}", null)
+        Logger.println("V2_${event}");
     }
 
     object Events {

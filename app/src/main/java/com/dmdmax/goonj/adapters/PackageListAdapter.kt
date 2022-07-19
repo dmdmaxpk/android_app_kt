@@ -64,15 +64,16 @@ class PackageListAdapter: BaseAdapter {
         val subsText = view.findViewById<TextView>(R.id.subs_text);
         packageName.text = mPackagesList[position].name
 
-        if(slug == PaywallGoonjFragment.SLUG && mPrefs.getSubscriptionStatus(slug).equals("billed")){
+        Logger.println("goonj: "+mPrefs.getSubscriptionStatus(slug));
+        if(slug == PaywallGoonjFragment.SLUG && (mPrefs.getSubscriptionStatus(slug).equals("billed") || mPrefs.getSubscriptionStatus(slug).equals("trial"))){
             if(mPrefs.getSubscribedPackageId(slug).equals(mPackagesList[position].id)){
                 smallPb.visibility = View.GONE;
-                subsText.text = "Unsubscribe";
+                subsText.text = "Sign-out";
                 subStatusLayout.visibility = View.VISIBLE;
                 subStatusLayout.background = ContextCompat.getDrawable(mContext, R.drawable.unsubscribe);
             }else{
                 smallPb.visibility = View.GONE;
-                subsText.text = "Subscribe Now";
+                subsText.text = "Sign-in Now";
                 subStatusLayout.visibility = View.VISIBLE;
                 subStatusLayout.background = ContextCompat.getDrawable(mContext, R.drawable.subscribe_now);
             }
@@ -80,13 +81,13 @@ class PackageListAdapter: BaseAdapter {
         else {
             if(mPrefs.getSubscriptionStatus(slug).equals("billed")){
                 smallPb.visibility = View.GONE;
-                subsText.text = "Unsubscribe";
+                subsText.text = "Sign-out";
                 subStatusLayout.visibility = View.VISIBLE;
                 subStatusLayout.background = ContextCompat.getDrawable(mContext, R.drawable.unsubscribe);
             }
             else{
                 smallPb.visibility = View.GONE;
-                subsText.text = "Subscribe Now";
+                subsText.text = "Sign-in Now";
                 subStatusLayout.visibility = View.VISIBLE;
                 subStatusLayout.background = ContextCompat.getDrawable(mContext, R.drawable.subscribe_now);
             }
@@ -97,7 +98,7 @@ class PackageListAdapter: BaseAdapter {
             Logger.println("BUTTON CLICKED");
             if(slug == PaywallGoonjFragment.SLUG){
                 // goonj paywall
-                if(mPrefs.getSubscriptionStatus(slug).equals("billed")){
+                if(mPrefs.getSubscriptionStatus(slug).equals("billed") || mPrefs.getSubscriptionStatus(slug).equals("trial")){
                     val subPackageId: String? = mPrefs.getSubscribedPackageId(slug)
                     if (subPackageId == mPackagesList[position].id && mPrefs.isOtpValidated()) {
                         // same package id - it means just unsubscribe
@@ -322,7 +323,7 @@ class PackageListAdapter: BaseAdapter {
     }
 
     private fun unSubUser(mPackage: PackageModel, nextBilling: String?, billingStatus: String?, slug: String) {
-        var message = "Are you sure you want to unsubscribe from " + mPackage.name + "?"
+        var message = "Are you sure you want to sign-out from " + mPackage.name + "?"
         if (nextBilling != null) {
             message =
                 "Your " + (if (billingStatus == "trial") "free tiral" else "subscription") + " is valid till " + nextBilling + ". " + message
@@ -336,7 +337,7 @@ class PackageListAdapter: BaseAdapter {
             if (slug == PaywallComedyFragment.SLUG) {
                 ComedyPaymentHelper(mContext).unsubscribe(mPackage.id, mPrefs.getUserId(slug)!!, object: ComedyPaymentHelper.UnsubscribedListener {
                     override fun onStatus(code: Int, status: String) {
-                        Toaster.printToast(mContext, "Unsubscribed!")
+                        Toaster.printToast(mContext, "Signed-out!")
                         //mPrefs.setComedyAutoRenewal(false)
                         notifyDataSetChanged()
                         dialog.dismiss()
@@ -345,7 +346,7 @@ class PackageListAdapter: BaseAdapter {
             }else if (slug == PaywallBinjeeFragment.SLUG) {
                 BinjeePaymentHelper(mContext).unsubscribe(mPrefs.getMsisdn(slug)!!, object: BinjeePaymentHelper.UnsubscribedListener {
                     override fun onStatus(code: Int, status: String) {
-                        Toaster.printToast(mContext, "Unsubscribed!")
+                        Toaster.printToast(mContext, "Signed-out!")
                         //mPrefs.setComedyAutoRenewal(false)
                         notifyDataSetChanged()
                         dialog.dismiss()
@@ -367,10 +368,10 @@ class PackageListAdapter: BaseAdapter {
                                 val root = JSONObject(response)
                                 if (root.getInt("code") == 0) {
                                     mPrefs.setSubscriptionStatus(PaymentHelper.Companion.PaymentStatus.NOT_SUBSCRIBED, PaywallGoonjFragment.SLUG);
-                                    Toaster.printToast(mContext, root.getString("message"))
+                                    Toaster.printToast(mContext, "Signed-out")
                                     notifyDataSetChanged();
                                 } else {
-                                    Toaster.printToast(mContext, "Un-subscription Failed")
+                                    Toaster.printToast(mContext, "Signin-out Failed")
                                 }
                                 if (dialog.isShowing) dialog.dismiss()
                             } catch (e: java.lang.Exception) {
@@ -396,7 +397,7 @@ class PackageListAdapter: BaseAdapter {
         val numberVerifiedTxt = dialog.findViewById<TextView>(R.id.numberVerifiedTxt)
         numberVerifiedTxt.text = "Change Package"
         waitingLayout.visibility = View.GONE
-        val text = "You will be charged " + mNewPackge.desc + " for this service until you unsubscribe"
+        val text = "You will be charged " + mNewPackge.desc + " for this service until you sign-out"
         textView.text = text
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mContext.getResources().getColor(R.color.light_blue))
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener { v: View? ->

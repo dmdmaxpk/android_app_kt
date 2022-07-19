@@ -47,4 +47,8 @@ class HomeFragment: BaseFragment(), HomeView.Listener {
     override fun goBack() {
         TODO("Not yet implemented")
     }
+
+    fun onFullscreen(isFull: Boolean){
+        mView.setOrientation(isFull)
+    }
 }

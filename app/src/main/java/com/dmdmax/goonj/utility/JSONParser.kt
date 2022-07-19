@@ -100,7 +100,8 @@ class JSONParser {
                             rootArray.getJSONObject(i).getString("category"),
                             if (rootArray.getJSONObject(i).has("url")) rootArray.getJSONObject(i).getString("url") else null,
                             if (rootArray.getJSONObject(i).has("desc")) rootArray.getJSONObject(i).getString("desc") else null,
-                            if (rootArray.getJSONObject(i).has("style")) rootArray.getJSONObject(i).getString("style") else null)
+                            if (rootArray.getJSONObject(i).has("style")) rootArray.getJSONObject(i).getString("style") else null,
+                            if (rootArray.getJSONObject(i).has("resource_id")) rootArray.getJSONObject(i).getString("resource_id") else null)
                     )
                 }
             } catch (e: Exception) {
@@ -134,10 +135,10 @@ class JSONParser {
                         }
                         list.add(model);
 
-                        if(slug != "headlines" && i % 3 == 0){
+                        /*if(slug != "headlines" && i % 3 == 0){
                             val model = Video(Video.TileType.TILE_TYPE_CUSTOM_AD)
                             list.add(model);
-                        }
+                        }*/
                     } catch (e: Exception) {
                         Logger.println("Exception Message: " + e.message)
                     }

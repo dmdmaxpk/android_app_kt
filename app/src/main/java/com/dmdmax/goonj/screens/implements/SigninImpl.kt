@@ -15,6 +15,7 @@ import com.dmdmax.goonj.payments.ComedyPaymentHelper
 import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
+import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.SigninView
 
 class SigninImpl: BaseObservableView<SigninView.Listener>, SigninView, View.OnClickListener {
@@ -42,6 +43,9 @@ class SigninImpl: BaseObservableView<SigninView.Listener>, SigninView, View.OnCl
         this.mSubscriptionSource = subscriptionSource;
 
         mMobileNumber = findViewById(R.id.mobile_number_et);
+        if(getPrefs().getMsisdn(PaywallGoonjFragment.SLUG) != null){
+            mMobileNumber.setText(getPrefs().getMsisdn(PaywallGoonjFragment.SLUG));
+        }
 
         mNext = findViewById(R.id.next);
         mNext.setOnClickListener(this);
