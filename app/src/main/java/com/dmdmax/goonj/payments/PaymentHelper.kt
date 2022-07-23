@@ -142,6 +142,7 @@ class PaymentHelper {
 
                 val rootObj = JSONObject(response);
                 val code = rootObj.getInt("code")
+                var streamable = false;
 
                 if (code == 0 || code == 11 || code == 9) {
                     mPrefs.setOtpValidated(true)
@@ -150,13 +151,14 @@ class PaymentHelper {
                     }
                     var status = "billed";
                     if(code == 11){
+                        streamable = true;
                         status = "trial"
                         EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_TRIAL_ACTIVATED);
                     }
                     mPrefs.setMsisdn(msisdn!!, PaywallGoonjFragment.SLUG);
                     mPrefs.setSubscriptionStatus(status, PaywallGoonjFragment.SLUG)
 
-                    var streamable = false;
+
                     if(rootObj.has("is_allowed_to_stream")){
                         streamable = rootObj.getBoolean("is_allowed_to_stream");
                     }else if(code == 0 && rootObj.has("message")){

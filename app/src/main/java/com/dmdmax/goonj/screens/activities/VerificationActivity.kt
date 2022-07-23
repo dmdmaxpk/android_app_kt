@@ -112,7 +112,9 @@ class VerificationActivity : BaseActivity(), VerificationView.Listener {
                                 if(PlayerActivity.ARGS_CHANNEL != null || PlayerActivity.ARGS_VIDEO != null){
                                     getCompositionRoot().getViewFactory().toPlayerScreen(null, null);
                                 }
-                                Toaster.printToast(this@VerificationActivity, "Subscribed successfully");
+                                val rootObj = JSONObject(response);
+                                val code = rootObj.getInt("code")
+                                Toaster.printToast(this@VerificationActivity, if(code == 11) "Free trial activated" else "Subscribed successfully");
                                 finish()
                             }else{
                                 Toaster.printToast(this@VerificationActivity, "Failed to subscribe, please check your balance and try agian.")
