@@ -26,8 +26,8 @@ android {
         applicationId "com.dmdmax.goonj"
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 3038
-        versionName "3.0.3.8"
+        versionCode 3039
+        versionName "3.0.3.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //manifestPlaceholders = [onesignal_app_id: "9549eaf3-2fc1-4c28-be54-3d2d65db3bf3", onesignal_google_project_number: "REMOTE"]
