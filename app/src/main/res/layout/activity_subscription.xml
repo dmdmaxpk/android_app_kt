@@ -23,7 +23,7 @@
             android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:text="subscriptions"
+            android:text="Miscellaneous"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,6 +39,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/paywallDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,7 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:orientation="vertical"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -72,7 +74,8 @@
                 android:id="@+id/contact_us_layout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/light_navy_blue">
+                android:background="@color/light_navy_blue"
+                android:visibility="gone">
                 <TextView
                     android:text="Click here to contact us"
                     android:textSize="14sp"

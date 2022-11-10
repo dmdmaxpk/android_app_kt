@@ -54,19 +54,12 @@ class BaseApplication: Application() {
         OneSignal.initWithContext(this);
         OneSignal.setAppId(appId);
 
-//        OneSignal.startInit(this)
-//            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-//            .setNotificationReceivedHandler(OneSignalNotificationReceiver())
-//            .unsubscribeWhenNotificationsAreDisabled(true)
-//            .filterOtherGCMReceivers(true)
-//            .init()
+        // promptForPushNotifications will show the native Android notification permission prompt.
+        // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
+        OneSignal.promptForPushNotifications();
 
         // Analytics Tracker init
         getGoogleAnalyticsTracker();
-
-        //Survicate.init(this)
-
-        // Initialize the Audience Network SDK
         AudienceNetworkAds.initialize(this)
     }
 

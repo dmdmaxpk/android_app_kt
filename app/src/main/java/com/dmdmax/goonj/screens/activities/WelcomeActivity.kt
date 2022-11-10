@@ -81,10 +81,6 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
             firstNetworkStatusBroadcast = false;
         })
         MobileAds.initialize(this);
-
-        Handler().postDelayed(Runnable {
-            processDeepLinks();
-        }, 1000);
     }
 
     override fun onResume() {
@@ -212,13 +208,6 @@ class WelcomeActivity : BaseActivity(), WelcomeView.Listener {
             newUiOptions = newUiOptions and View.SYSTEM_UI_FLAG_IMMERSIVE.inv()
             newUiOptions = newUiOptions and View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY.inv()
             decorView.systemUiVisibility = newUiOptions
-        }
-    }
-
-    private fun processDeepLinks(){
-        val action = intent.getStringExtra("action").toString();
-        if(action == DeepLinkingManager.Mapper.OPEN_UN_SUB){
-            startActivity(Intent(this@WelcomeActivity, SubscriptionActivity::class.java))
         }
     }
 }

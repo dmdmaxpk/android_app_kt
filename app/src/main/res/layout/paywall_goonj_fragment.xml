@@ -39,6 +39,7 @@
             android:textSize="16sp"/>
 
         <TextView
+            android:visibility="invisible"
             android:layout_marginTop="10dp"
             android:id="@+id/free_trial_text"
             app:layout_constraintTop_toBottomOf="@id/watch_live_tv_anytime_anywhere"
@@ -168,6 +169,7 @@
             android:textAllCaps="true"/>
 
         <TextView
+            android:visibility="gone"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:text="Rs. 15 + tax/week will be deducted from your\nmobile balance after free trial."

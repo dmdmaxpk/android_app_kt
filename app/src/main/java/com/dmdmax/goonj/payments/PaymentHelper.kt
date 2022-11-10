@@ -108,7 +108,7 @@ class PaymentHelper {
 
                         mPrefs.setOtpValidated(false);
                         listener?.verifyOtp(false, response, false)
-                        Toaster.printToast(mContext, rootObj.getString("message"));
+                        //Toaster.printToast(mContext, rootObj.getString("message"));
                     }
                 }
             }
@@ -165,7 +165,7 @@ class PaymentHelper {
                         EventManager.getInstance(mContext).fireEvent("${EventManager.Events.GOONJ_PAYWALL_MESSAGE}${rootObj.getString("message").replace(" ", "_")}");
 
                         //{"code":0,"message":"Package successfully switched.","gw_transaction_id":"gw_logger-5fyhkp89j9tx-2021-05-28,11:49"}
-                        Toaster.printToast(mContext, rootObj.getString("message"));
+                        Toaster.printToast(mContext, "Sign in success.");
                         streamable = true;
                     }else{
                         if(code == 0){
@@ -173,7 +173,7 @@ class PaymentHelper {
                             EventManager.getInstance(mContext).triggerFacebookSubscribeEvent(mPackage.name, "goonj", paymentSource)
                         }else if(code == 9){
                             EventManager.getInstance(mContext).fireEvent(EventManager.Events.GOONJ_PAYWALL_ALREADY_SUBSCRIBED);
-                            Toaster.printToast(mContext, rootObj.getString("message"))
+                            Toaster.printToast(mContext, "Sign in success!")
                             streamable = true;
                         }
                     }

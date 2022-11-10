@@ -32,7 +32,7 @@ class NotificationListener : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
-        Logger.println("NotificationListener: "+remoteMessage.data);
+        /*Logger.println("NotificationListener: "+remoteMessage.data);
 
         // Check if message contains a data payload.
         Logger.println("onMessageReceived")
@@ -55,10 +55,6 @@ class NotificationListener : FirebaseMessagingService() {
                 notification_id = remoteMessage.data["notification_id"]
             }
             sendNotification(title, img, url, notification_id)
-        }
-
-        /*if(remoteMessage.getNotification() != null){
-            Logger.println("ChannelId: "+remoteMessage.getNotification().getChannelId());
         }*/
 
     }
@@ -76,7 +72,14 @@ class NotificationListener : FirebaseMessagingService() {
         intent.putExtras(bundle);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        var pendingIntent: PendingIntent;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        }else {
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        }
 
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)

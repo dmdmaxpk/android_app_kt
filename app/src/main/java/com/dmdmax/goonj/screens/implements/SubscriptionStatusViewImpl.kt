@@ -86,7 +86,7 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
             (getContext() as BaseActivity).finish();
         }
 
-        displayPaywallDetails();
+        //displayPaywallDetails();
     }
 
     private fun displayPaywallDetails() {

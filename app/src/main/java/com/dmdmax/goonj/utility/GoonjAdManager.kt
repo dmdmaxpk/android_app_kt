@@ -38,9 +38,9 @@ class GoonjAdManager {
                 Logger.println("Ad was dismissed")
             }
 
-            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                Logger.println("Ad failed to show.")
-            }
+//            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+//                Logger.println("Ad failed to show.")
+//            }
 
             override fun onAdShowedFullScreenContent() {
                 Logger.println("Ad showed fullscreen content.")

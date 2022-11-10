@@ -168,7 +168,7 @@ class PackageListAdapter: BaseAdapter {
                     // unsubscribe
                     ComedyPaymentHelper(mContext).unsubscribe(mPackagesList[position].id, mPrefs.getUserId(slug)!!, object: ComedyPaymentHelper.UnsubscribedListener {
                         override fun onStatus(code: Int, status: String) {
-                            Toaster.printToast(mContext, "Unsubscribed successfully");
+                            Toaster.printToast(mContext, "Signed out successfully");
                             notifyDataSetChanged();
                         }
                     });
@@ -185,7 +185,7 @@ class PackageListAdapter: BaseAdapter {
                     // unsubscribe
                     BinjeePaymentHelper(mContext).unsubscribe(mPrefs.getMsisdn(slug)!!, object: BinjeePaymentHelper.UnsubscribedListener {
                         override fun onStatus(code: Int, status: String) {
-                            Toaster.printToast(mContext, "Unsubscribed successfully");
+                            Toaster.printToast(mContext, "Signed out successfully");
                             notifyDataSetChanged();
                         }
                     });

@@ -103,7 +103,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
     }
 
     override fun fetchPackages() {
-        RestClient(context!!, "http://he.goonj.pk/he", RestClient.Companion.Method.GET, null, object: NetworkOperationListener {
+        /*RestClient(context!!, "http://he.goonj.pk/he", RestClient.Companion.Method.GET, null, object: NetworkOperationListener {
             override fun onSuccess(response: String?) {
                 val rootObj = JSONObject(response);
                 Logger.println("HE: $response");
@@ -116,54 +116,57 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
                 }
 
 
-                RestClient(context!!, Constants.API_BASE_URL + Constants.Companion.EndPoints.PACKAGE, RestClient.Companion.Method.GET, null, object: NetworkOperationListener {
-                    override fun onSuccess(response: String?) {
-                        val list = arrayListOf<PackageModel>()
-                        Logger.println("fetchPackages: $response");
-                        val rootObj = JSONArray(response);
-                        for(i in 0 until rootObj.length()) {
-                            list.add(
-                                PackageModel(
-                                    rootObj.getJSONObject(i).getString("_id"),
-                                    rootObj.getJSONObject(i).getString("package_name"),
-                                    rootObj.getJSONObject(i).getString("price_point_pkr"),
-                                    rootObj.getJSONObject(i).getString("package_desc"),
-                                    rootObj.getJSONObject(i).getString("slug"),
-                                    rootObj.getJSONObject(i).getBoolean("default")
-                                )
-                            )
-                        }
 
-                        mProgressBar.visibility = View.GONE;
-                        mTelenorNumber.visibility = View.VISIBLE;
-                        //mEasypaisaNumber.visibility = View.VISIBLE;
-
-                        try{
-                            if(mPaywall.mSelectedPackage != null){
-                                mDefaultPackage = list.find { packageModel -> packageModel.id == mPaywall.mSelectedPackage?.id }!!
-                            }else{
-                                mDefaultPackage = list.find { packageModel -> packageModel.default }!!
-                            }
-                        }catch (e: Exception) {
-                            Logger.println("Exception: " + e.message);
-                        }
-
-                        Logger.println("Default Package: " + mDefaultPackage.name + " - " + mDefaultPackage.price);
-                        mPackageName.text = mDefaultPackage.name;
-                        mPackagePrice.text = mDefaultPackage.text;
-                        mPrefs.setSubscribedPackageId(mDefaultPackage.id, SLUG);
-                    }
-
-                    override fun onFailed(code: Int, reason: String?) {
-                        TODO("Not yet implemented")
-                    }
-                }).exec();
             }
 
             override fun onFailed(code: Int, reason: String?) {
                 TODO("Not yet implemented")
             }
-        }).exec()
+        }).exec()*/
+
+
+        RestClient(context!!, Constants.API_BASE_URL + Constants.Companion.EndPoints.PACKAGE, RestClient.Companion.Method.GET, null, object: NetworkOperationListener {
+            override fun onSuccess(response: String?) {
+                val list = arrayListOf<PackageModel>()
+                Logger.println("fetchPackages: $response");
+                val rootObj = JSONArray(response);
+                for(i in 0 until rootObj.length()) {
+                    list.add(
+                        PackageModel(
+                            rootObj.getJSONObject(i).getString("_id"),
+                            rootObj.getJSONObject(i).getString("package_name"),
+                            rootObj.getJSONObject(i).getString("price_point_pkr"),
+                            rootObj.getJSONObject(i).getString("package_desc"),
+                            rootObj.getJSONObject(i).getString("slug"),
+                            rootObj.getJSONObject(i).getBoolean("default")
+                        )
+                    )
+                }
+
+                mProgressBar.visibility = View.GONE;
+                mTelenorNumber.visibility = View.VISIBLE;
+                //mEasypaisaNumber.visibility = View.VISIBLE;
+
+                try{
+                    if(mPaywall.mSelectedPackage != null){
+                        mDefaultPackage = list.find { packageModel -> packageModel.id == mPaywall.mSelectedPackage?.id }!!
+                    }else{
+                        mDefaultPackage = list.find { packageModel -> packageModel.default }!!
+                    }
+                }catch (e: Exception) {
+                    Logger.println("Exception: " + e.message);
+                }
+
+                Logger.println("Default Package: " + mDefaultPackage.name + " - " + mDefaultPackage.price);
+                mPackageName.text = mDefaultPackage.name;
+                mPackagePrice.text = mDefaultPackage.text;
+                mPrefs.setSubscribedPackageId(mDefaultPackage.id, SLUG);
+            }
+
+            override fun onFailed(code: Int, reason: String?) {
+                TODO("Not yet implemented")
+            }
+        }).exec();
     }
 
     override fun processBilling(source: String) {

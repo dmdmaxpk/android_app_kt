@@ -71,7 +71,7 @@
             android:padding="15dp"
             android:cropToPadding="true"/>
         <TextView
-            android:text="Sign-In Details"
+            android:text="Others"
             android:fontFamily="@font/montserrat_bold"
             android:textStyle="bold"
             android:textSize="15sp"

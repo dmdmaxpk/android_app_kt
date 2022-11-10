@@ -4,15 +4,19 @@ import android.content.Intent
 import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
 import com.dmdmax.goonj.firebase_events.EventManager
+import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.models.Video
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
+import com.dmdmax.goonj.payments.PaymentHelper
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.SplashView
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.*
 import org.json.JSONArray
+import org.json.JSONObject
+import java.util.ArrayList
 
 class SplashActivity : BaseActivity(), SplashView.Listener {
 
@@ -61,14 +65,49 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
 
         val data = intent.data
         if (data != null) {
-            // Check for VOD
             if (data.toString().contains("unsubscribe?")) {
-                val i = Intent(this@SplashActivity, WelcomeActivity::class.java)
-                i.putExtra("action", DeepLinkingManager.Mapper.OPEN_UN_SUB)
-                startActivity(i)
-                finish()
+                //https://goonj.pk/unsubscribe?proxy=5B4xdvAiX6ZJ
+                //https://goonj.pk/unsubscribe?proxy=5B4xdvAiX6ZJ&pkg_id=QDfC
+
+                val userId = data.toString().split('?')[1].split("&")[0].split("=")[1];
+                val paramsArrayList = ArrayList<Params>()
+                paramsArrayList.add(Params("user_id", userId))
+                paramsArrayList.add(Params("source", "app"))
+
+
+                RestClient(this@SplashActivity, Constants.API_BASE_URL + Constants.Companion.EndPoints.UN_SUBSCRIBE, RestClient.Companion.Method.POST, paramsArrayList,
+                    object : NetworkOperationListener {
+                        override fun onSuccess(response: String?) {
+                            try {
+                                val root = JSONObject(response)
+                                if (root.getInt("code") == 0) {
+                                    GoonjPrefs(this@SplashActivity).setSubscriptionStatus(PaymentHelper.Companion.PaymentStatus.NOT_SUBSCRIBED, PaywallGoonjFragment.SLUG);
+                                    Toaster.printToast(this@SplashActivity, "Sign out success!");
+                                } else {
+                                    Toaster.printToast(this@SplashActivity, "Sign out Failed")
+                                }
+
+                                startActivity(Intent(this@SplashActivity, WelcomeActivity::class.java))
+                                finish()
+                            } catch (e: java.lang.Exception) {
+                                e.printStackTrace();
+                                Toaster.printToast(this@SplashActivity, "Exception occurred while signing out")
+
+                                startActivity(Intent(this@SplashActivity, WelcomeActivity::class.java))
+                                finish()
+                            }
+                        }
+
+                        override fun onFailed(code: Int, reason: String?) {
+                            Toaster.printToast(this@SplashActivity, "Failed to process request, possible cause: $reason")
+
+                            startActivity(Intent(this@SplashActivity, WelcomeActivity::class.java))
+                            finish()
+                        }
+                }).exec()
             }
             else if (data.toString().contains("/subscribe")) {
+
                 val i = Intent(this@SplashActivity, WelcomeActivity::class.java)
                 i.putExtra("action", DeepLinkingManager.Mapper.OPEN_LIVE_BOTTOM_MENU)
                 startActivity(i)
