@@ -148,7 +148,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
                 }
 
                 // Display Binjee
-                displayBinjee()
+                //displayBinjee()
 
             }
 
@@ -232,7 +232,7 @@ class LiveTvImpl: BaseObservableView<LiveTvView.Listener>, LiveTvView {
 
 
                 // Display Comedy
-                displayComedy();
+                //displayComedy();
             }
 
             override fun onFailed(code: Int, reason: String?) {

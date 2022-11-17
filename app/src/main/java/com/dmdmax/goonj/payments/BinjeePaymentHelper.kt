@@ -136,7 +136,7 @@ class BinjeePaymentHelper {
 
                         val status = rootObj.getString("resultString")
                         if (status == "success" || status == "User is already subscriber") {
-                            Toaster.printToast(mContext, "Subscribed!")
+                            //Toaster.printToast(mContext, "Subscribed!")
                             mPrefs.setSubscriptionStatus("billed", PaywallBinjeeFragment.SLUG)
 
                             // Validated

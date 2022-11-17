@@ -86,7 +86,7 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
             (getContext() as BaseActivity).finish();
         }
 
-        displayPaywallDetails();
+        //displayPaywallDetails();
     }
 
     private fun displayPaywallDetails() {
@@ -136,7 +136,7 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
                                             val packages: List<PackageModel> = paywall.packages;
                                             val mAdapter = PackageListAdapter(packages, PaywallComedyFragment.SLUG, getContext());
                                             listView.adapter = mAdapter
-                                            paywallDetails.addView(view)
+                                            //paywallDetails.addView(view)
                                         }
 
                                         // Binjee packages
@@ -163,7 +163,7 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
                                         val packages: List<PackageModel> = p.packages;
                                         val mAdapter = PackageListAdapter(packages, PaywallBinjeeFragment.SLUG, getContext());
                                         listView.adapter = mAdapter
-                                        paywallDetails.addView(view)
+                                        //paywallDetails.addView(view)
 
 
 
