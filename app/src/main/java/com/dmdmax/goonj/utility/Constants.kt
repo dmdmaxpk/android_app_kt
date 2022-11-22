@@ -285,7 +285,7 @@ public class Constants {
             } catch (e: UnsupportedEncodingException) {
                 e.printStackTrace()
             }
-            return if (tag == DBHelper.Companion.Tags.TAG_ANCHOR) Constants.CDN_STATIC_URL + Constants.ANCHOR_PIC + nameForUrl + PIC_EXTENSION else if (tag == DBHelper.Companion.Tags.TAG_PROGRAM) Constants.CDN_STATIC_URL + PROGRAMS_PIC + nameForUrl + PIC_EXTENSION else if (tag == DBHelper.Companion.Tags.TAG_CATEGORY) Constants.CDN_STATIC_URL + Constants.CATEGORY_PIC + name+".png" else "";
+            return ""; //if (tag == DBHelper.Companion.Tags.TAG_ANCHOR) Constants.CDN_STATIC_URL + Constants.ANCHOR_PIC + nameForUrl + PIC_EXTENSION else if (tag == DBHelper.Companion.Tags.TAG_PROGRAM) Constants.CDN_STATIC_URL + PROGRAMS_PIC + nameForUrl + PIC_EXTENSION else if (tag == DBHelper.Companion.Tags.TAG_CATEGORY) Constants.CDN_STATIC_URL + Constants.CATEGORY_PIC + name+".png" else "";
         }
     }
 }

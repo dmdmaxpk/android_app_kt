@@ -33,6 +33,6 @@ class Program {
     }
 
     fun getThumb(): String? {
-        return Constants.ThumbnailManager.getIconThumbs(name, DBHelper.Companion.Tags.TAG_PROGRAM);
+        return null; //Constants.ThumbnailManager.getIconThumbs(name, DBHelper.Companion.Tags.TAG_PROGRAM);
     }
 }

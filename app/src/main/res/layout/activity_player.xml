@@ -68,7 +68,7 @@
             <LinearLayout
                 android:layout_gravity="start"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
                     android:id="@+id/liveOrVod"
@@ -92,32 +92,47 @@
                     android:textColor="@color/white"
                     android:layout_marginLeft="10dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingRight="70dp"
+                    android:paddingRight="5dp"
                     android:maxLines="2"
-                    android:ellipsize="end"/>
+                    android:ellipsize="end"
+                    android:paddingLeft="5dp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_gravity="end|center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:id="@+id/share">
-                <TextView
-                    android:text="Share"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <ImageView
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/share"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"/>
-            </LinearLayout>
+
         </FrameLayout>
+        <LinearLayout
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <TextView
+                android:text="Share"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/share"
+                android:layout_gravity="left"
+                android:layout_weight="1"
+                android:gravity="center"/>
+            <TextView
+                android:text="|"
+                android:textColor="@color/cloudy_gray"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_width="5dp"
+                android:layout_height="30dp"/>
+            <TextView
+                android:text="Download Offline"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/download"
+                android:layout_weight="1"
+                android:gravity="center"/>
+        </LinearLayout>
         <FrameLayout
             app:layout_constraintTop_toBottomOf="@id/video_view_tail"
             app:layout_constraintLeft_toLeftOf="parent"

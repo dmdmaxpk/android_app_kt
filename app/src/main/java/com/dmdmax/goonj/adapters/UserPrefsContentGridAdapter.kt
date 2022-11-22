@@ -61,13 +61,13 @@ class UserPrefsContentGridAdapter: BaseAdapter {
             holder = convertView.tag as LiveViewHolder
         }
 
-        val item: Category = getItem(position);
+        /*val item: Category = getItem(position);
         val link: String = Constants.ThumbnailManager.getIconThumbs(item.getName().toLowerCase(), DBHelper.Companion.Tags.TAG_CATEGORY);
         Logger.println("URL - "+link)
         Picasso.get().load(link).into(holder.thumbnail);
-        holder.thumbnail.setBackgroundResource(R.drawable.category_not_selected_bg);
+        holder.thumbnail.setBackgroundResource(R.drawable.category_not_selected_bg);*/
 
-        if(item.isSelected()){
+        /*if(item.isSelected()){
             holder.foreground.visibility = View.VISIBLE;
             holder.tick.visibility = View.VISIBLE;
             holder.category.setTextColor(Color.WHITE)
@@ -75,9 +75,9 @@ class UserPrefsContentGridAdapter: BaseAdapter {
             holder.category.setTextColor(ContextCompat.getColor(mContext, R.color.cloudy_gray));
             holder.tick.visibility = View.GONE;
             holder.foreground.visibility = View.GONE;
-        }
+        }*/
 
-        holder.category.text = item.getName().capitalize();
+        //holder.category.text = item.getName().capitalize();
         return convertView
     }
 }

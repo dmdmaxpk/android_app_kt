@@ -44,7 +44,7 @@ class Anchor {
     }
 
     fun getThumb(): String? {
-        return if (thumb == null) Constants.ThumbnailManager.getIconThumbs(name!!, DBHelper.Companion.Tags.TAG_ANCHOR) else thumb
+        return null; //if (thumb == null) Constants.ThumbnailManager.getIconThumbs(name!!, DBHelper.Companion.Tags.TAG_ANCHOR) else thumb
     }
 
     fun setThumb(thumb: String?) {
