@@ -433,8 +433,11 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
             }
 
             mDownloadOffline -> {
+                //RB-N3-24-11-22.m4v
+                var splitedResult = mModel.filename!!.split(".");
+                var link = "https://androidvod.goonj.pk/download/" + splitedResult[0] + "_main_360." + splitedResult[1]; // RB-N5-24-11-22_main_360.m4v";
                 var downloadController = VideoDownloadController();
-                val path = downloadController.startDownloadAndSave(getContext(), "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4", "BigBuckBunny.mp4");
+                val path = downloadController.startDownloadAndSave(getContext(), link, mModel.filename);
                 mDBHelper.addEntry(mModel.id!!, null, mModel.title!!, mModel.filename!!, path)
 
             }

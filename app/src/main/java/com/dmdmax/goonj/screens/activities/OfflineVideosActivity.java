@@ -1,6 +1,7 @@
 package com.dmdmax.goonj.screens.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.dmdmax.goonj.R;
 import com.dmdmax.goonj.models.OfflineVideos;
 import com.dmdmax.goonj.storage.DBHelper;
+import com.dmdmax.goonj.utility.Toaster;
 
 import java.io.File;
 import java.util.List;
@@ -41,14 +43,18 @@ public class OfflineVideosActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Uri intentUri = Uri.fromFile(new File(offlineVideosList.get(position).getLocalPath()));
+                File file = new File(offlineVideosList.get(position).getLocalPath());
+                if(file.exists()){
 
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setDataAndType(intentUri, "video/mp4");
-                startActivity(intent);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("link", file.getPath());
 
+                    Intent intent = new Intent(OfflineVideosActivity.this, OfflineVideoPlayerActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else{
+                    Toaster.Companion.printToast(OfflineVideosActivity.this, "File doesn't exist");
+                }
             }
         });
     }

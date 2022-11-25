@@ -31,6 +31,7 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
 
         if(!Utility.isConnectedToInternet(this)) {
             startActivity(Intent(this@SplashActivity, OfflineVideosActivity::class.java));
+            finish();
         }else{
             mView.getRemoteConfigs();
             EventManager.getInstance(this).fireEvent("Splash${EventManager.Events.VIEW}");
