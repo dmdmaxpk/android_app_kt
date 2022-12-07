@@ -441,7 +441,7 @@ class ExoPlayerManager: View.OnClickListener {
                 val total = this.mPlayerView.player.contentDuration;
                 val rightNow = this.mPlayerView.player.contentPosition;
                 val percentage =  ((rightNow.toDouble().div(total.toDouble())) * 100).toInt();
-                Logger.println("Total percentage watched: "+percentage);
+                //Logger.println("Total percentage watched: "+percentage);
 
                 if(percentage > 50 && !this.mMediaModel.isLive){
                     sendPreferences();

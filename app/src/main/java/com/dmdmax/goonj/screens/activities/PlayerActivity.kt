@@ -1,5 +1,7 @@
 package com.dmdmax.goonj.screens.activities
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -22,6 +24,7 @@ import com.dmdmax.goonj.screens.views.PlayerView
 import com.dmdmax.goonj.utility.Logger
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.security.Permission
 
 class PlayerActivity : BaseActivity(), PlayerView.Listener {
 
@@ -113,6 +116,22 @@ class PlayerActivity : BaseActivity(), PlayerView.Listener {
 
     override fun onVodClick(video: Video) {
         TODO("Not yet implemented")
+    }
+
+    override fun requestRequiredPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1214)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if(requestCode == 1214) {
+            if(permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults.get(0) == PackageManager.PERMISSION_GRANTED){
+                mView.permissionResult(true);
+            }
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

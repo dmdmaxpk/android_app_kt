@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory
 import com.dmdmax.goonj.models.OfflineVideos
 import com.dmdmax.goonj.utility.Logger
 import java.io.ByteArrayOutputStream
-import java.io.Console
 import java.util.*
 
 
@@ -26,6 +25,8 @@ open class DBHelper: SQLiteOpenHelper {
         private const val COLUMN_OFFLINE_VIDEO_TITLE = "title"
         private const val COLUMN_OFFLINE_VIDEO_DESCRIPTION = "description"
         private const val COLUMN_OFFLINE_VIDEO_LOCAL_PATH = "localPath"
+        private const val COLUMN_OFFLINE_VIDEO_IS_ACTIVE = "isActive"
+        private const val COLUMN_OFFLINE_VIDEO_DOWNLOAD_ID = "downloadId"
     }
 
     constructor(context: Context) : super(context, DBHelper.DATABASE_NAME, null, 1) {
@@ -39,7 +40,9 @@ open class DBHelper: SQLiteOpenHelper {
                     "$COLUMN_OFFLINE_VIDEO_THUMBNAIL BLOB, " +
                     "$COLUMN_OFFLINE_VIDEO_TITLE VARCHAR(255), " +
                     "$COLUMN_OFFLINE_VIDEO_DESCRIPTION TEXT, " +
-                    "$COLUMN_OFFLINE_VIDEO_LOCAL_PATH TEXT" +
+                    "$COLUMN_OFFLINE_VIDEO_LOCAL_PATH TEXT, " +
+                    "$COLUMN_OFFLINE_VIDEO_IS_ACTIVE INTEGER, " +
+                    "$COLUMN_OFFLINE_VIDEO_DOWNLOAD_ID INTEGER" +
                     ")")
             //db!!.execSQL("CREATE TABLE $TABLE_FOLLOWING($COLUMN_ID VARCHAR(10) PRIMARY KEY, $COLUMN_TITLE VARCHAR(150), $COLUMN_TAG TINYINT)")
         } catch (e: Exception) {
@@ -53,7 +56,7 @@ open class DBHelper: SQLiteOpenHelper {
     }
 
     @Throws(SQLiteException::class)
-    fun addEntry(id: String, thumbnail: Bitmap?, title: String, desc: String, localPath: String) {
+    fun addEntry(id: String, thumbnail: Bitmap?, title: String, desc: String, localPath: String, downloadId: Long) {
         val db = writableDatabase
 
         val cv = ContentValues()
@@ -65,16 +68,23 @@ open class DBHelper: SQLiteOpenHelper {
         cv.put(COLUMN_OFFLINE_VIDEO_TITLE, title)
         cv.put(COLUMN_OFFLINE_VIDEO_DESCRIPTION, desc)
         cv.put(COLUMN_OFFLINE_VIDEO_LOCAL_PATH, localPath)
+        cv.put(COLUMN_OFFLINE_VIDEO_IS_ACTIVE, 0)
+        cv.put(COLUMN_OFFLINE_VIDEO_DOWNLOAD_ID, downloadId)
         db.insert(TABLE_OFFLINE_VIDEOS, null, cv)
         Logger.println("Record Added");
-        Logger.println("$id - $title - $desc - $localPath");
+        Logger.println("$id - $title - $desc - $localPath - $downloadId");
+    }
+
+    fun updateStatus(downloadId: Long) {
+        writableDatabase.execSQL("UPDATE $TABLE_OFFLINE_VIDEOS SET $COLUMN_OFFLINE_VIDEO_IS_ACTIVE = 1 WHERE $COLUMN_OFFLINE_VIDEO_DOWNLOAD_ID = $downloadId")
+        Logger.println("Status Updated");
     }
 
     fun getOfflineVideos(): ArrayList<OfflineVideos>? {
         val db = readableDatabase
         val list = ArrayList<OfflineVideos>()
         try {
-            val cursor = db.rawQuery("SELECT * FROM $TABLE_OFFLINE_VIDEOS", null);
+            val cursor = db.rawQuery("SELECT * FROM $TABLE_OFFLINE_VIDEOS WHERE $COLUMN_OFFLINE_VIDEO_IS_ACTIVE = 1", null);
             while (cursor.moveToNext()) {
                 val obj = OfflineVideos();
                 obj.id = cursor.getString(0);

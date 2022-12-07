@@ -11,6 +11,7 @@ interface PlayerView: ObservableView<PlayerView.Listener> {
         fun goBack();
         fun onLiveChannelClick(channel: Channel);
         fun onVodClick(video: Video);
+        fun requestRequiredPermissions();
     }
 
     fun  initialize(model: MediaModel, list: ArrayList<Channel>?);
@@ -20,4 +21,5 @@ interface PlayerView: ObservableView<PlayerView.Listener> {
     fun getPlayer(): com.google.android.exoplayer2.ui.PlayerView;
     fun setFullscreen(isFull: Boolean)
     fun updateNetworkState(isConnected: Boolean);
+    fun permissionResult(isGranted: Boolean);
 }

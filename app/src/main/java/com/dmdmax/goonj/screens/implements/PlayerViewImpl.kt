@@ -1,6 +1,9 @@
 package com.dmdmax.goonj.screens.implements
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.util.TypedValue
@@ -11,6 +14,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -433,15 +437,34 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
             }
 
             mDownloadOffline -> {
-                //RB-N3-24-11-22.m4v
-                var splitedResult = mModel.filename!!.split(".");
-                var link = "https://androidvod.goonj.pk/download/" + splitedResult[0] + "_main_360." + splitedResult[1]; // RB-N5-24-11-22_main_360.m4v";
-                var downloadController = VideoDownloadController();
-                val path = downloadController.startDownloadAndSave(getContext(), link, mModel.filename);
-                mDBHelper.addEntry(mModel.id!!, null, mModel.title!!, mModel.filename!!, path)
 
+                if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    //RB-N3-24-11-22.m4v
+                    startDownload(mModel.filename!!);
+                }else{
+                    for (listener in getListeners()) {
+                        listener.requestRequiredPermissions();
+                    }
+                }
             }
         }
+    }
+
+    private fun startDownload(filename: String) {
+        var splitedResult = filename.split(".");
+
+        var newFilName = mModel.title!!.lowercase().replace(" ", "-");
+        newFilName += "."+splitedResult[1];
+
+        var offlineVideo = OfflineVideos();
+        offlineVideo.id = mModel.id;
+        offlineVideo.title = mModel.title;
+        offlineVideo.image = null;
+
+        var link =
+            "https://androidvod.goonj.pk/download/" + splitedResult[0] + "_main_360." + splitedResult[1]; // RB-N5-24-11-22_main_360.m4v";
+        var downloadController = VideoDownloadController();
+        downloadController.startDownloadAndSave(getContext(), link, newFilName, offlineVideo);
     }
 
     override fun pauseStreaming(){
@@ -488,6 +511,16 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
             }, 3000);
         }
         mPlayerManager.updateNetworkState(isConnected);
+    }
+
+    override fun permissionResult(isGranted: Boolean) {
+        if(isGranted) {
+            startDownload(mModel.filename!!);
+        }else{
+            for (listener in getListeners()) {
+                listener.requestRequiredPermissions();
+            }
+        }
     }
 
     fun getHeight(context: Context): Int {

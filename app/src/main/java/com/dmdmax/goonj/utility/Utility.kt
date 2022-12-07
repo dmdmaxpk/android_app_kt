@@ -333,7 +333,7 @@ class Utility {
             } else {
                 Constants.GOONJ_URL + id + "_" + slug
             }
-            return "https://${url.replace(" ", "-").toLowerCase(Locale.getDefault())}"
+            return "https://${url.replace(" ", "-")}"
         }
 
         fun getNetworkIndex(networkList: List<Channel>, id: String?): Int {

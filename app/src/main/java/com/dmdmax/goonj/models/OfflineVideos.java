@@ -3,6 +3,16 @@ package com.dmdmax.goonj.models;
 public class OfflineVideos {
 
     private String id, title, desc, localPath;
+
+    public long getDownloadId() {
+        return downloadId;
+    }
+
+    public void setDownloadId(long downloadId) {
+        this.downloadId = downloadId;
+    }
+
+    private long downloadId;
     private byte[] image;
 
     public String getId() {
