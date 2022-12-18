@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.dmdmax.goonj.R
@@ -24,6 +25,8 @@ import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.Constants
 import com.dmdmax.goonj.utility.Logger
 import com.google.android.exoplayer2.ui.PlayerView
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import org.json.JSONArray
 
 class HomeTabLiveTvFragment: BaseFragment(), WelcomeActivity.FullScreenListener {
@@ -39,6 +42,7 @@ class HomeTabLiveTvFragment: BaseFragment(), WelcomeActivity.FullScreenListener 
     }
 
     private lateinit var mDescription: TextView;
+    private lateinit var mSchedule: ImageView;
     private lateinit var mPlayer: PlayerView;
     private lateinit var mPlayerManager: ExoPlayerManager;
     private lateinit var mTab: TabModel;
@@ -55,6 +59,7 @@ class HomeTabLiveTvFragment: BaseFragment(), WelcomeActivity.FullScreenListener 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mTab = arguments?.getSerializable(GenericCategoryFragment.ARGS_TAB) as TabModel
         mDescription = view.findViewById(R.id.description);
+        mSchedule = view.findViewById(R.id.schedule);
         mPlayer = view.findViewById(R.id.video_view)
         mPlayerLayout = view.findViewById(R.id.main_layout);
 
@@ -75,9 +80,20 @@ class HomeTabLiveTvFragment: BaseFragment(), WelcomeActivity.FullScreenListener 
 
 
         mDescription.text = mTab.getDesc();
+        if(mTab.getImageUrl() != null) {
+            Picasso.get().load(mTab.getImageUrl())
+                .into(mSchedule, object : Callback {
+                    override fun onSuccess() {
+
+                    }
+
+                    override fun onError(e: Exception) {
+                        mSchedule.setImageResource(R.drawable.no_image_found)
+                    }
+                })
+        }
 
         EventManager.getInstance(requireContext()).fireEvent(EventManager.Events.PLAY_CONTENT + mTab.getTabName()?.replace(" ", "_"))
-
         super.onViewCreated(view, savedInstanceState)
     }
 

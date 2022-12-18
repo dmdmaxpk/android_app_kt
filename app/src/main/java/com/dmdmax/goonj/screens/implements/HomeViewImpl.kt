@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.base.BaseFragment
 import com.dmdmax.goonj.base.BaseObservableView
+import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.TabModel
 import com.dmdmax.goonj.screens.fragments.hometabs.GenericCategoryFragment
 import com.dmdmax.goonj.screens.fragments.hometabs.HomeTabLiveTvFragment
@@ -31,7 +32,7 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
     private var mTabsLayout: TabLayout;
 
     private var mTopBar: FrameLayout? = null
-    private lateinit var mFirebaseRemoteConfig: FirebaseRemoteConfig;
+    val tabsModelList: ArrayList<TabModel> = arrayListOf();
 
     constructor(inflater: LayoutInflater, parent: ViewGroup, childFragmentManager: FragmentManager) {
         setRootView(inflater.inflate(R.layout.fragment_home, parent, false));
@@ -44,6 +45,7 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
     }
 
     override fun initialize() {
+        tabsModelList.addAll(JSONParser.getTabsList(Constants.CATEGORIES_STRING_JSON))
         val mList: ArrayList<BaseFragment> = getChildFragments();
         bindViewPager(mList);
     }
@@ -60,7 +62,7 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
             }
 
             override fun onPageSelected(position: Int) {
-                //Logger.println("Page selected")
+                EventManager.getInstance(getContext()).fireEvent(tabsModelList[position].getTabName().toString().replaceAfter(" ", "_"));
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -79,8 +81,7 @@ class HomeViewImpl: BaseObservableView<HomeView.Listener>, HomeView {
 
     private fun getChildFragments(): ArrayList<BaseFragment>{
         val fragmentList: ArrayList<BaseFragment> = arrayListOf();
-        val tabsModelList: ArrayList<TabModel> = arrayListOf();
-        tabsModelList.addAll(JSONParser.getTabsList(Constants.CATEGORIES_STRING_JSON))
+
 
         for (tab in tabsModelList) {
             val bundle = Bundle()
