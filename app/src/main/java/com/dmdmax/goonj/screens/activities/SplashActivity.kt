@@ -1,8 +1,10 @@
 package com.dmdmax.goonj.screens.activities
 
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import com.dmdmax.goonj.base.BaseActivity
+import com.dmdmax.goonj.controllers.VideoDownloadController
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.Params
 import com.dmdmax.goonj.models.Video
@@ -26,8 +28,14 @@ class SplashActivity : BaseActivity(), SplashView.Listener {
         super.onCreate(savedInstanceState);
         mView = getCompositionRoot().getViewFactory().getSplashViewImpl(null);
         setContentView(mView.getRootView());
-        mView.getRemoteConfigs();
-        EventManager.getInstance(this).fireEvent("Splash${EventManager.Events.VIEW}");
+
+        if(!Utility.isConnectedToInternet(this)) {
+            startActivity(Intent(this@SplashActivity, OfflineVideosActivity::class.java));
+            finish();
+        }else{
+            mView.getRemoteConfigs();
+            EventManager.getInstance(this).fireEvent("Splash${EventManager.Events.VIEW}");
+        }
     }
 
     override fun onStart() {

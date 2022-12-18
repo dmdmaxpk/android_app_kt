@@ -262,7 +262,10 @@ class Utility {
             Constants.HE_URL = `object`.getString("he_url")
             Constants.VOD_ADTAG_SOURCE = `object`.getString("vod_adtag_source")
             Constants.IS_PAYWALL_ENABLED = `object`.getBoolean("is_paywall_enabled")
+
             Constants.CATEGORIES_STRING_JSON = `object`.getString("v2_home_categories")
+            //Constants.CATEGORIES_STRING_JSON = "[   {     \"tabName\": \"T10 League\", \"slug\": \"t10\", \"category\": \"live\", \"carousel\": \"null\", \"url\": \"https://androidlive.goonj.pk/tten.m3u8\", \"desc\": \"Watch T10 League - Live Cricket Free\", \"resource_id\": \"qFPqs3j\"  },    { \"tabName\": \"LIVE TV\",     \"category\": \"live-tv\",     \"carousel\": \"null\"   },   {     \"tabName\": \"NEWS\",     \"category\": \"news\",     \"carousel\": \"anchor\"   },   {     \"tabName\": \"ENTERTAINMENT\",     \"category\": \"entertainment\",     \"carousel\": \"null\"   },   {     \"tabName\": \"DRAMA\",     \"category\": \"drama\",     \"carousel\": \"null\"   },   {     \"tabName\": \"SPORTS\",     \"category\": \"sports\",     \"carousel\": \"null\"   },   {     \"tabName\": \"VIRAL\",     \"category\": \"viral\",     \"carousel\": \"null\"   },   {     \"tabName\": \"FOOD\",     \"category\": \"food\",     \"carousel\": \"null\"   } ]"
+
             Constants.EXTERNAL_HOME_SLIDER_STRING_JSON = `object`.getString("v2_external_home_slider")
             Constants.CATEGORIES_CHANNEL_JSON = `object`.getString("v2_channel_categories")
             Constants.COMEDY_CATEGORIES_STRING_JSON = `object`.getString("comedy_categories_json")
@@ -333,7 +336,7 @@ class Utility {
             } else {
                 Constants.GOONJ_URL + id + "_" + slug
             }
-            return "https://${url.replace(" ", "-").toLowerCase(Locale.getDefault())}"
+            return "https://${url.replace(" ", "-")}"
         }
 
         fun getNetworkIndex(networkList: List<Channel>, id: String?): Int {

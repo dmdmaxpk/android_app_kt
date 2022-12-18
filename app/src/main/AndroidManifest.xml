@@ -13,32 +13,61 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-
-        android:usesCleartextTraffic="true"
         android:name=".base.BaseApplication"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Goonj">
+        android:theme="@style/Theme.Goonj"
+        android:usesCleartextTraffic="true">
 
-        <activity android:name=".screens.activities.PaywallActivity"/>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.dmdmax.goonj.provider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/paths" />
+        </provider>
+
+        <activity
+            android:name=".screens.activities.OfflineVideoPlayerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".screens.activities.OfflineVideosActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity android:name=".screens.activities.PaywallActivity" />
         <activity android:name=".screens.activities.SubscriptionActivity" />
         <activity android:name=".screens.activities.MyProfileActivity" />
         <activity android:name=".screens.activities.WebViewActivity" />
-        <activity android:name=".screens.activities.PlayerActivity" android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name=".screens.activities.WelcomeActivity" android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".screens.activities.PlayerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".screens.activities.WelcomeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".screens.activities.VerificationActivity" />
         <activity android:name=".screens.activities.SigninActivity" />
         <activity android:name=".screens.activities.LoginActivity" />
         <activity android:name=".screens.activities.GetStartedActivity" />
         <activity android:name=".screens.activities.UserContentPrefsActivity" />
         <activity
+            android:name=".screens.activities.SplashActivity"
             android:exported="true"
-            android:launchMode="singleTask"
-            android:name=".screens.activities.SplashActivity">
+            android:launchMode="singleTask">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -52,7 +81,6 @@
                     android:host="www.goonj.pk"
                     android:scheme="https" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -63,19 +91,15 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.survicate.surveys.workspaceKey"
             android:value="d308c69bb1ab1bb731b1390b327773f6" />
-
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="true" />
@@ -97,17 +121,25 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".receivers.FileDownloadBroadcast"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".receivers.NotificationListener"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-8209802528239642~8972743631"/>
+            android:value="ca-app-pub-8209802528239642~8972743631" />
     </application>
 
 </manifest>

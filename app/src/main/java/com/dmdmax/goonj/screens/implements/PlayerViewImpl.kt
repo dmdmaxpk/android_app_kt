@@ -1,6 +1,11 @@
 package com.dmdmax.goonj.screens.implements
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +14,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +23,7 @@ import com.dmdmax.goonj.adapters.ChannelsCarouselListAdapter
 import com.dmdmax.goonj.adapters.GenericCategoryAdapter
 import com.dmdmax.goonj.adapters.HeadlinesCarouselListAdapter
 import com.dmdmax.goonj.base.BaseObservableView
+import com.dmdmax.goonj.controllers.VideoDownloadController
 import com.dmdmax.goonj.firebase_events.EventManager
 import com.dmdmax.goonj.models.*
 import com.dmdmax.goonj.network.client.NetworkOperationListener
@@ -27,10 +34,10 @@ import com.dmdmax.goonj.screens.fragments.paywall.PaywallBinjeeFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallComedyFragment
 import com.dmdmax.goonj.screens.fragments.paywall.PaywallGoonjFragment
 import com.dmdmax.goonj.screens.views.PlayerView
+import com.dmdmax.goonj.storage.DBHelper
 import com.dmdmax.goonj.storage.GoonjPrefs
 import com.dmdmax.goonj.utility.*
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -50,7 +57,8 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
     private lateinit var mPlayer: com.google.android.exoplayer2.ui.PlayerView;
     private lateinit var mPrefs: GoonjPrefs;
 
-    private lateinit var mShare: LinearLayout;
+    private lateinit var mShare: TextView;
+    private lateinit var mDownloadOffline: TextView;
     private lateinit var mLiveChannelRecommendationLayout: LinearLayout;
     private lateinit var mRecommendedVideosLayout: LinearLayout;
     private lateinit var mEpisodesLayout: LinearLayout;
@@ -62,6 +70,9 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
     private lateinit var mRecommendedVideos: RecyclerView;
 
     private lateinit var mNetworkStatusTextView: TextView;
+
+    private lateinit var mDBHelper: DBHelper;
+    private lateinit var mModel: MediaModel;
 
     constructor(inflater: LayoutInflater, parent: ViewGroup?) {
         setRootView(inflater.inflate(R.layout.activity_player, parent, false));
@@ -78,7 +89,17 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
         mNetworkStatusTextView = findViewById(R.id.network_status);
         mChannelTitle = findViewById(R.id.channel_title);
         mLiveOrVod = findViewById(R.id.liveOrVod);
+
         mShare = findViewById(R.id.share);
+        val content = SpannableString(mShare.text)
+        content.setSpan(UnderlineSpan(), 0, content.length, 0)
+        mShare.text = content;
+
+        mDownloadOffline = findViewById(R.id.download);
+        val otherContent = SpannableString(mDownloadOffline.text)
+        otherContent.setSpan(UnderlineSpan(), 0, otherContent.length, 0)
+        mDownloadOffline.text = otherContent;
+
         mBack = findViewById(R.id.back_arrow);
         mRecommendedLiveChannels = findViewById(R.id.recommended_live_channels);
         mRecommendedVideos = findViewById(R.id.recommended_videos);
@@ -97,6 +118,7 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
 
         mBack.setOnClickListener(this);
         mShare.setOnClickListener(this);
+        mDownloadOffline.setOnClickListener(this);
 
         mPlayerManager = ExoPlayerManager();
         mPrefs = GoonjPrefs(getContext());
@@ -105,6 +127,9 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
         mPlayerManager.init(getContext(), mPlayer);
 
         displayView(model, list);
+
+        mDBHelper = DBHelper(getContext());
+        this.mModel = model;
     }
 
     private fun displayView(model: MediaModel, list: ArrayList<Channel>?){
@@ -203,8 +228,7 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
                 override fun onFailed(code: Int, reason: String?) {
                     Logger.println("*** $reason")
                 }
-            }).exec()
-
+            }).exec();
 
         if(!model.isLive){
             /*MobileAds.setRequestConfiguration(
@@ -411,7 +435,36 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
                 }
 
             }
+
+            mDownloadOffline -> {
+
+                if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    //RB-N3-24-11-22.m4v
+                    startDownload(mModel.filename!!);
+                }else{
+                    for (listener in getListeners()) {
+                        listener.requestRequiredPermissions();
+                    }
+                }
+            }
         }
+    }
+
+    private fun startDownload(filename: String) {
+        var splitedResult = filename.split(".");
+
+        var newFilName = mModel.title!!.lowercase().replace(" ", "-");
+        newFilName += "."+splitedResult[1];
+
+        var offlineVideo = OfflineVideos();
+        offlineVideo.id = mModel.id;
+        offlineVideo.title = mModel.title;
+        offlineVideo.image = null;
+
+        var link =
+            "https://androidvod.goonj.pk/download/" + splitedResult[0] + "_main_360." + splitedResult[1]; // RB-N5-24-11-22_main_360.m4v";
+        var downloadController = VideoDownloadController();
+        downloadController.startDownloadAndSave(getContext(), link, newFilName, offlineVideo);
     }
 
     override fun pauseStreaming(){
@@ -458,6 +511,16 @@ class PlayerViewImpl: BaseObservableView<PlayerView.Listener>, PlayerView, View.
             }, 3000);
         }
         mPlayerManager.updateNetworkState(isConnected);
+    }
+
+    override fun permissionResult(isGranted: Boolean) {
+        if(isGranted) {
+            startDownload(mModel.filename!!);
+        }else{
+            for (listener in getListeners()) {
+                listener.requestRequiredPermissions();
+            }
+        }
     }
 
     fun getHeight(context: Context): Int {

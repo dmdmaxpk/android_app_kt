@@ -11,8 +11,9 @@ class TabModel: java.io.Serializable {
     private  var desc: String? = null;
     private  var style: String? = null
     private var resourceId: String? = null;
+    private var imageUrl: String? = null;
 
-    constructor(tabName: String, slug: String?, carousel: String, category: String, url: String?, desc: String?, style: String?, resourceId: String?) {
+    constructor(tabName: String, slug: String?, carousel: String, category: String, url: String?, desc: String?, style: String?, resourceId: String?, imageUrl: String?) {
         this.tabName = tabName
         this.slug = slug
         this.carousel = carousel
@@ -21,15 +22,17 @@ class TabModel: java.io.Serializable {
         this.desc = desc
         this.style = style
         this.resourceId = resourceId
+        this.imageUrl = imageUrl
     }
 
-    constructor(tabName: String, carousel: String, category: String, style: String, url: String, resourceId: String?) {
+    constructor(tabName: String, carousel: String, category: String, style: String, url: String, resourceId: String?, imageUrl: String?) {
         this.tabName = tabName
         this.carousel = carousel
         this.category = category
         this.style = style
         this.url = url
         this.resourceId = resourceId
+        this.imageUrl = imageUrl
     }
 
     fun getStyle(): String? {
@@ -64,9 +67,13 @@ class TabModel: java.io.Serializable {
         return resourceId;
     }
 
+    fun getImageUrl(): String? {
+        return this.imageUrl;
+    }
+
     companion object {
         fun getEpisodeTab(): TabModel{
-            return TabModel("episode", PaywallComedyFragment.SLUG, "null", "episode", null, null, null, null);
+            return TabModel("episode", PaywallComedyFragment.SLUG, "null", "episode", null, null, null, null, null);
         }
     }
 }

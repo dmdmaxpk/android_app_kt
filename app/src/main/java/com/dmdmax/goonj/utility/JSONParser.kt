@@ -101,7 +101,8 @@ class JSONParser {
                             if (rootArray.getJSONObject(i).has("url")) rootArray.getJSONObject(i).getString("url") else null,
                             if (rootArray.getJSONObject(i).has("desc")) rootArray.getJSONObject(i).getString("desc") else null,
                             if (rootArray.getJSONObject(i).has("style")) rootArray.getJSONObject(i).getString("style") else null,
-                            if (rootArray.getJSONObject(i).has("resource_id")) rootArray.getJSONObject(i).getString("resource_id") else null)
+                            if (rootArray.getJSONObject(i).has("resource_id")) rootArray.getJSONObject(i).getString("resource_id") else null,
+                            if (rootArray.getJSONObject(i).has("imageUrl")) rootArray.getJSONObject(i).getString("imageUrl") else null)
                     )
                 }
             } catch (e: Exception) {

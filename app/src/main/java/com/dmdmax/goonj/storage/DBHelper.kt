@@ -3,29 +3,30 @@ package com.dmdmax.goonj.storage
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
-import com.dmdmax.goonj.models.Anchor
-import com.dmdmax.goonj.models.Program
-import com.dmdmax.goonj.models.Topic
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
+import android.graphics.BitmapFactory
+import com.dmdmax.goonj.models.OfflineVideos
 import com.dmdmax.goonj.utility.Logger
-import java.net.URLEncoder
+import java.io.ByteArrayOutputStream
 import java.util.*
+
 
 open class DBHelper: SQLiteOpenHelper {
 
     companion object {
         const val DATABASE_NAME = "GoonjDatabase.db"
-        private const val TABLE_FOLLOWING = "tableUserFollowing"
-        private const val COLUMN_ID = "_id"
-        private const val COLUMN_TITLE = "title"
-        private const val COLUMN_TAG = "tag"
+        private const val TABLE_OFFLINE_VIDEOS = "tableOfflineVidoes"
 
-        object Tags {
-            val TAG_TOPIC = 0
-            val TAG_ANCHOR = 1
-            val TAG_PROGRAM = 2
-            val TAG_CATEGORY = 3
-        }
+        private const val COLUMN_OFFLINE_VIDEO_ID = "videoId";
+        private const val COLUMN_OFFLINE_VIDEO_THUMBNAIL = "thumbnail"
+        private const val COLUMN_OFFLINE_VIDEO_TITLE = "title"
+        private const val COLUMN_OFFLINE_VIDEO_DESCRIPTION = "description"
+        private const val COLUMN_OFFLINE_VIDEO_LOCAL_PATH = "localPath"
+        private const val COLUMN_OFFLINE_VIDEO_IS_ACTIVE = "isActive"
+        private const val COLUMN_OFFLINE_VIDEO_DOWNLOAD_ID = "downloadId"
     }
 
     constructor(context: Context) : super(context, DBHelper.DATABASE_NAME, null, 1) {
@@ -34,57 +35,66 @@ open class DBHelper: SQLiteOpenHelper {
 
     override fun onCreate(db: SQLiteDatabase?) {
         try {
-            db!!.execSQL("CREATE TABLE $TABLE_FOLLOWING($COLUMN_ID VARCHAR(10) PRIMARY KEY, $COLUMN_TITLE VARCHAR(150), $COLUMN_TAG TINYINT)")
+            db!!.execSQL("CREATE TABLE $TABLE_OFFLINE_VIDEOS(" +
+                    "$COLUMN_OFFLINE_VIDEO_ID TEXT PRIMARY KEY, " +
+                    "$COLUMN_OFFLINE_VIDEO_THUMBNAIL BLOB, " +
+                    "$COLUMN_OFFLINE_VIDEO_TITLE VARCHAR(255), " +
+                    "$COLUMN_OFFLINE_VIDEO_DESCRIPTION TEXT, " +
+                    "$COLUMN_OFFLINE_VIDEO_LOCAL_PATH TEXT, " +
+                    "$COLUMN_OFFLINE_VIDEO_IS_ACTIVE INTEGER, " +
+                    "$COLUMN_OFFLINE_VIDEO_DOWNLOAD_ID INTEGER" +
+                    ")")
+            //db!!.execSQL("CREATE TABLE $TABLE_FOLLOWING($COLUMN_ID VARCHAR(10) PRIMARY KEY, $COLUMN_TITLE VARCHAR(150), $COLUMN_TAG TINYINT)")
         } catch (e: Exception) {
             Logger.println("DB Exception: " + e.message)
         }
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db!!.execSQL("DROP TABLE IF EXISTS $TABLE_FOLLOWING")
+        db!!.execSQL("DROP TABLE IF EXISTS $TABLE_OFFLINE_VIDEOS")
         onCreate(db)
     }
 
-    fun insertUserFollowing(title: String?, tag: Int) {
+    @Throws(SQLiteException::class)
+    fun addEntry(id: String, thumbnail: Bitmap?, title: String, desc: String, localPath: String, downloadId: Long) {
         val db = writableDatabase
-        try {
-            val contentValues = ContentValues()
-            contentValues.put(COLUMN_TITLE, title)
-            contentValues.put(COLUMN_TAG, tag)
-            db.insert(TABLE_FOLLOWING, null, contentValues)
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        } finally {
-            db.close()
-        }
+
+        val cv = ContentValues()
+        cv.put(COLUMN_OFFLINE_VIDEO_ID, id)
+
+        if(thumbnail != null)
+            cv.put(COLUMN_OFFLINE_VIDEO_THUMBNAIL, getBytes(thumbnail))
+
+        cv.put(COLUMN_OFFLINE_VIDEO_TITLE, title)
+        cv.put(COLUMN_OFFLINE_VIDEO_DESCRIPTION, desc)
+        cv.put(COLUMN_OFFLINE_VIDEO_LOCAL_PATH, localPath)
+        cv.put(COLUMN_OFFLINE_VIDEO_IS_ACTIVE, 0)
+        cv.put(COLUMN_OFFLINE_VIDEO_DOWNLOAD_ID, downloadId)
+        db.insert(TABLE_OFFLINE_VIDEOS, null, cv)
+        Logger.println("Record Added");
+        Logger.println("$id - $title - $desc - $localPath - $downloadId");
     }
 
-
-    fun deleteUserFollowing(title: String): Int {
-        val db = writableDatabase
-        var effectedRows = 0
-        try {
-            effectedRows = db.delete(TABLE_FOLLOWING, COLUMN_TITLE + " = ? ", arrayOf(title))
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        } finally {
-            db.close()
-        }
-        return effectedRows
+    fun updateStatus(downloadId: Long) {
+        writableDatabase.execSQL("UPDATE $TABLE_OFFLINE_VIDEOS SET $COLUMN_OFFLINE_VIDEO_IS_ACTIVE = 1 WHERE $COLUMN_OFFLINE_VIDEO_DOWNLOAD_ID = $downloadId")
+        Logger.println("Status Updated");
     }
 
-    fun getUserFollowings(tag: Int): ArrayList<String>? {
+    fun getOfflineVideos(): ArrayList<OfflineVideos>? {
         val db = readableDatabase
-        val list = ArrayList<String>()
+        val list = ArrayList<OfflineVideos>()
         try {
-            val cur = db.rawQuery(
-                "SELECT " + COLUMN_TITLE + " from " + TABLE_FOLLOWING + " WHERE " + COLUMN_TAG + "=" + tag,
-                null
-            )
-            while (cur.moveToNext()) {
-                list.add(cur.getString(cur.getColumnIndex(COLUMN_TITLE)))
+            val cursor = db.rawQuery("SELECT * FROM $TABLE_OFFLINE_VIDEOS WHERE $COLUMN_OFFLINE_VIDEO_IS_ACTIVE = 1", null);
+            while (cursor.moveToNext()) {
+                val obj = OfflineVideos();
+                obj.id = cursor.getString(0);
+                obj.image = cursor.getBlob(1);
+                obj.title = cursor.getString(2);
+                obj.desc = cursor.getString(3);
+                obj.localPath = cursor.getString(4);
+                list.add(obj);
             }
-            cur.close()
+            cursor.close()
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         } finally {
@@ -93,135 +103,13 @@ open class DBHelper: SQLiteOpenHelper {
         return list
     }
 
-    fun getAnchors(): List<Anchor>? {
-        val db = readableDatabase
-        val list: ArrayList<Anchor> = ArrayList<Anchor>()
-        try {
-            val cur = db.rawQuery(
-                "SELECT " + COLUMN_TITLE + " from " + TABLE_FOLLOWING + " WHERE " + COLUMN_TAG + "=" + Tags.TAG_ANCHOR,
-                null
-            )
-            while (cur.moveToNext()) {
-                list.add(Anchor(cur.getString(cur.getColumnIndex(COLUMN_TITLE))))
-            }
-            cur.close()
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        } finally {
-            db.close()
-        }
-        return list
+    open fun getBytes(bitmap: Bitmap): ByteArray? {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(CompressFormat.WEBP, 0, stream)
+        return stream.toByteArray()
     }
 
-    fun getTopics(): List<Topic>? {
-        val db = readableDatabase
-        val list: ArrayList<Topic> = ArrayList<Topic>()
-        try {
-            val cur = db.rawQuery(
-                "SELECT " + COLUMN_TITLE + " from " + TABLE_FOLLOWING + " WHERE " + COLUMN_TAG + "=" + Tags.TAG_TOPIC,
-                null
-            )
-            while (cur.moveToNext()) {
-                list.add(Topic(cur.getString(cur.getColumnIndex(COLUMN_TITLE))))
-            }
-            cur.close()
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        } finally {
-            db.close()
-        }
-        return list
-    }
-
-    fun getPrograms(): List<Program>? {
-        val db = readableDatabase
-        val list: ArrayList<Program> = ArrayList<Program>()
-        try {
-            val cur = db.rawQuery(
-                "SELECT " + COLUMN_TITLE + " from " + TABLE_FOLLOWING + " WHERE " + COLUMN_TAG + "=" + Tags.TAG_PROGRAM,
-                null
-            )
-            while (cur.moveToNext()) {
-                list.add(Program(cur.getString(cur.getColumnIndex(COLUMN_TITLE))))
-            }
-            cur.close()
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        } finally {
-            db.close()
-        }
-        return list
-    }
-
-    fun isAnchorTopicProgramFollowed(title: String): Boolean {
-        val db = readableDatabase
-        try {
-            val cur = db.rawQuery(
-                "SELECT * from " + TABLE_FOLLOWING + " WHERE " + COLUMN_TITLE + "= '" + title + "'",
-                null
-            )
-            return if (cur != null && cur.count > 0) {
-                cur.close()
-                true
-            } else {
-                cur!!.close()
-                false
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        } finally {
-            db.close()
-        }
-        return false
-    }
-
-    fun getUserFollowingCommaSeparatedString(): String? {
-        return if (getRows() == 0) "" else "anchor=" + getUserFollowingString(Tags.TAG_ANCHOR) + "&topics=" + getUserFollowingString(
-            Tags.TAG_TOPIC
-        ) + "&program=" + getUserFollowingString(Tags.TAG_PROGRAM)
-    }
-
-    private fun getRows(): Int {
-        val db = readableDatabase
-        try {
-            val cur = db.rawQuery("SELECT COUNT(*) from " + TABLE_FOLLOWING, null)
-            if (cur != null && cur.moveToNext()) {
-                val rows = cur.getInt(0)
-                cur.close()
-                return rows
-            }
-            return 0
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        } finally {
-            db.close()
-        }
-        return 0
-    }
-
-    fun getUserFollowingString(tag: Int): String {
-        val db = readableDatabase
-        var allFollowings = ""
-        try {
-            val cur = db.rawQuery(
-                "SELECT " + COLUMN_TITLE + " from " + TABLE_FOLLOWING + " WHERE " + COLUMN_TAG + "=" + tag,
-                null
-            )
-            while (cur.moveToNext()) {
-                allFollowings =
-                    if (!cur.isLast) allFollowings + cur.getString(cur.getColumnIndex(COLUMN_TITLE)) + "," else allFollowings + cur.getString(
-                        cur.getColumnIndex(
-                            COLUMN_TITLE
-                        )
-                    )
-            }
-            cur.close()
-            return URLEncoder.encode(allFollowings, "utf-8")
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        } finally {
-            db.close()
-        }
-        return ""
+    open fun getImage(image: ByteArray): Bitmap? {
+        return BitmapFactory.decodeByteArray(image, 0, image.size)
     }
 }
