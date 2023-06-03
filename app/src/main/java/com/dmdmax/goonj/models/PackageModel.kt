@@ -10,13 +10,14 @@ class PackageModel: Serializable {
     lateinit var slug: String
     lateinit var desc: String
     lateinit var paywallId: String
+    lateinit var serviceId: String
     var default: Boolean = false;
 
     constructor(){
 
     }
 
-    constructor(id: String, name: String, price: String, desc: String, slug: String, default: Boolean){
+    constructor(id: String, name: String, price: String, desc: String, slug: String, default: Boolean, serviceId: String){
         this.id = id;
         this.name = name;
         this.price = price;
@@ -24,5 +25,6 @@ class PackageModel: Serializable {
         this.text = desc;
         this.slug = slug;
         this.default = default;
+        this.serviceId = serviceId;
     }
 }

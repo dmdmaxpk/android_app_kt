@@ -135,7 +135,8 @@ public class Constants {
             const val PAYWALL = "paywall"
             const val SEND_OTP = "payment/otp/send"
             const val VERIFY_OTP = "payment/otp/verify"
-            const val SUBSCRIBE = "payment/subscribe"
+            const val SUBSCRIBE = "payment/subscribeNow"
+            const val CMS_TOKEN = "payment/cms-token"
             const val RECHARGE = "payment/recharge"
             const val UN_SUBSCRIBE = "payment/unsubscribe"
 

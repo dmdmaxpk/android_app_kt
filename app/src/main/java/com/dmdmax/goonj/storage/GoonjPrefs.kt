@@ -332,6 +332,14 @@ class GoonjPrefs {
         }
     }
 
+    fun setServiceId(value: String?) {
+        editor!!.putString("defaultPackageServiceId", value).commit()
+    }
+
+    fun getServiceId(): String? {
+        return prefs!!.getString("defaultPackageServiceId", "");
+    }
+
     fun getSubscribedPackageId(slug: String): String? {
         return if (slug == PaywallGoonjFragment.SLUG) {
             getLiveSubscribedPackageId()

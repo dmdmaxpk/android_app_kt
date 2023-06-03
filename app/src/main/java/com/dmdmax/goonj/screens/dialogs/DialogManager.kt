@@ -3,18 +3,25 @@ package com.dmdmax.goonj.screens.dialogs
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.net.Uri
+import android.net.UrlQuerySanitizer
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.*
 import com.dmdmax.goonj.R
 import com.dmdmax.goonj.models.City
 import com.dmdmax.goonj.network.client.NetworkOperationListener
 import com.dmdmax.goonj.network.client.RestClient
 import com.dmdmax.goonj.utility.Constants
+import com.dmdmax.goonj.utility.Logger
 import org.json.JSONArray
+import java.net.URL
 
 
 class DialogManager {
@@ -175,6 +182,63 @@ class DialogManager {
         builder.setView(view)
         builder.setPositiveButton("Subscribe", null)
         builder.setNegativeButton("Cancel", null)
+        return builder.create()
+    }
+
+    interface RedirectListener {
+        fun onRedirect(respCode: String)
+    }
+    fun getCMSDialog(context: Context?, token: String, listener: RedirectListener): AlertDialog {
+        val view: View = LayoutInflater.from(context).inflate(R.layout.cms_dialog, null);
+        val webView: WebView = view.findViewById(R.id.cms);
+        val pb: ProgressBar = view.findViewById(R.id.cms_pb);
+
+        webView.clearHistory()
+        webView.clearCache(true)
+        webView.webChromeClient = WebChromeClient()
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                // https://goonj.pk/?respCode=03&cid=51850-16051522-1
+                Logger.println("New URL $url")
+
+                if(url.contains("respCode")) {
+                    val sanitizer = UrlQuerySanitizer(url)
+                    val code = sanitizer.getValue("respCode")
+                    listener.onRedirect(code);
+                    return false
+                }else{
+                    view.loadUrl(url)
+                    return true
+                }
+            }
+
+            override fun onPageFinished(view: WebView, url: String) {
+                pb.visibility = View.GONE
+                webView.visibility = View.VISIBLE
+            }
+
+            override fun onReceivedError(
+                view: WebView,
+                errorCode: Int,
+                description: String,
+                failingUrl: String
+            ) {
+                Toast.makeText(
+                    context,
+                    "Error: $description",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        val settings = webView.settings
+        settings.domStorageEnabled = true
+        settings.javaScriptEnabled = true
+        settings.javaScriptCanOpenWindowsAutomatically = true
+        webView.loadUrl("https://apis.telenor.com.pk/cms/v1/redirect?token=$token");
+
+        val builder = AlertDialog.Builder(context, R.style.CustomAlertDialogTheme)
+        builder.setCancelable(false)
+        builder.setView(view)
         return builder.create()
     }
 

@@ -85,7 +85,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
         mEasypaisaNumber.setOnClickListener(this);
         //mEasypaisaNumber.visibility = View.INVISIBLE;
 
-        mPaywall = arguments!!.getSerializable(ARGS_TAB) as Paywall
+        mPaywall = requireArguments().getSerializable(ARGS_TAB) as Paywall
 
         fetchPackages();
     }
@@ -125,7 +125,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
         }).exec()*/
 
 
-        RestClient(context!!, Constants.API_BASE_URL + Constants.Companion.EndPoints.PACKAGE, RestClient.Companion.Method.GET, null, object: NetworkOperationListener {
+        RestClient(requireContext(), Constants.API_BASE_URL + Constants.Companion.EndPoints.PACKAGE, RestClient.Companion.Method.GET, null, object: NetworkOperationListener {
             override fun onSuccess(response: String?) {
                 val list = arrayListOf<PackageModel>()
                 Logger.println("fetchPackages: $response");
@@ -138,7 +138,8 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
                             rootObj.getJSONObject(i).getString("price_point_pkr"),
                             rootObj.getJSONObject(i).getString("package_desc"),
                             rootObj.getJSONObject(i).getString("slug"),
-                            rootObj.getJSONObject(i).getBoolean("default")
+                            rootObj.getJSONObject(i).getBoolean("default"),
+                            rootObj.getJSONObject(i).getString("pid")
                         )
                     )
                 }
@@ -161,6 +162,7 @@ class PaywallGoonjFragment: BaseFragment(), View.OnClickListener, PaywallBilling
                 mPackageName.text = mDefaultPackage.name;
                 mPackagePrice.text = mDefaultPackage.text;
                 mPrefs.setSubscribedPackageId(mDefaultPackage.id, SLUG);
+                mPrefs.setServiceId(mDefaultPackage.serviceId)
             }
 
             override fun onFailed(code: Int, reason: String?) {
