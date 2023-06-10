@@ -131,10 +131,13 @@ class VerificationActivity : BaseActivity(), VerificationView.Listener {
 
                         val dialog: AlertDialog = DialogManager().getCMSDialog(this@VerificationActivity, token, object : DialogManager.RedirectListener {
                             override fun onRedirect(respCode: String) {
+                                Logger.println("Response Code: ${respCode}")
                                 when (respCode) {
                                     "00", "03" -> {
                                         // 00 > success /trial | 03 - > already exist
                                         mView.getPrefs().setMsisdn(msisdn, PaywallGoonjFragment.SLUG)
+                                        mView.getPrefs().setStreamable(true, PaywallGoonjFragment.SLUG)
+                                        mView.getPrefs().setSubscriptionStatus(PaymentHelper.Companion.PaymentStatus.STATUS_BILLED, PaywallGoonjFragment.SLUG)
 
                                         if(PlayerActivity.ARGS_CHANNEL != null || PlayerActivity.ARGS_VIDEO != null){
                                             getCompositionRoot().getViewFactory().toPlayerScreen(null, null);
@@ -145,13 +148,21 @@ class VerificationActivity : BaseActivity(), VerificationView.Listener {
                                     }
                                     "02" -> {
                                         // low balance
+                                        mView.getPrefs().setMsisdn(msisdn, PaywallGoonjFragment.SLUG)
+                                        mView.getPrefs().setStreamable(false, PaywallGoonjFragment.SLUG)
+                                        mView.getPrefs().setSubscriptionStatus(PaymentHelper.Companion.PaymentStatus.NOT_SUBSCRIBED, PaywallGoonjFragment.SLUG)
+
                                         Toaster.printToast(this@VerificationActivity, "You don't have sufficient balance, try again later");
                                         finish();
 
                                     }
                                     else -> {
                                         // error
-                                        Toaster.printToast(this@VerificationActivity, "Something went wrong, try again later");
+                                        mView.getPrefs().setMsisdn(msisdn, PaywallGoonjFragment.SLUG)
+                                        mView.getPrefs().setStreamable(false, PaywallGoonjFragment.SLUG)
+                                        mView.getPrefs().setSubscriptionStatus(PaymentHelper.Companion.PaymentStatus.NOT_SUBSCRIBED, PaywallGoonjFragment.SLUG)
+
+                                        Toaster.printToast(this@VerificationActivity, "Sing-in failed");
                                         finish();
                                     }
                                 }
