@@ -5,7 +5,7 @@
     "kind": "Directory"
   },
   "applicationId": "com.dmdmax.goonj",
-  "variantName": "release",
+  "variantName": "debug",
   "elements": [
     {
       "type": "SINGLE",
@@ -13,7 +13,7 @@
       "attributes": [],
       "versionCode": 3047,
       "versionName": "3.0.4.7",
-      "outputFile": "app-release.apk"
+      "outputFile": "app-debug.apk"
     }
   ],
   "elementType": "File"

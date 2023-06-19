@@ -167,7 +167,6 @@ class VerificationActivity : BaseActivity(), VerificationView.Listener {
                                     }
                                 }
                             }
-
                         });
                         dialog.show();
 
