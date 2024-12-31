@@ -99,7 +99,7 @@ class VerificationActivity : BaseActivity(), VerificationView.Listener {
 
         if(verified) {
             if(response != null) {
-                if(allowedToStream && JSONObject(response).getString("subscription_status").equals("billed") || JSONObject(response).getString("subscription_status").equals("trial")){
+                if(allowedToStream && JSONObject(response).has("subscription_status") && (JSONObject(response).getString("subscription_status").equals("billed") || JSONObject(response).getString("subscription_status").equals("trial"))){
                     mView.getPrefs().setMsisdn(msisdn, PaywallGoonjFragment.SLUG)
 
                     if(PlayerActivity.ARGS_CHANNEL != null || PlayerActivity.ARGS_VIDEO != null){
@@ -153,6 +153,19 @@ class VerificationActivity : BaseActivity(), VerificationView.Listener {
                                         mView.getPrefs().setSubscriptionStatus(PaymentHelper.Companion.PaymentStatus.NOT_SUBSCRIBED, PaywallGoonjFragment.SLUG)
 
                                         Toaster.printToast(this@VerificationActivity, "You don't have sufficient balance, try again later");
+                                        finish();
+
+                                    }
+                                    "06" -> {
+                                        // trial activated
+                                        mView.getPrefs().setMsisdn(msisdn, PaywallGoonjFragment.SLUG)
+                                        mView.getPrefs().setStreamable(true, PaywallGoonjFragment.SLUG)
+                                        mView.getPrefs().setSubscriptionStatus(PaymentHelper.Companion.PaymentStatus.STATUS_BILLED, PaywallGoonjFragment.SLUG)
+
+                                        if(PlayerActivity.ARGS_CHANNEL != null || PlayerActivity.ARGS_VIDEO != null){
+                                            getCompositionRoot().getViewFactory().toPlayerScreen(null, null);
+                                        }
+                                        Toaster.printToast(this@VerificationActivity, "Signed in successfully");
                                         finish();
 
                                     }

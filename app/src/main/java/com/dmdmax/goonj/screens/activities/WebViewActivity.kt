@@ -35,17 +35,22 @@ class WebViewActivity : BaseActivity() {
     private fun loadLink(page: String?) {
         if (page == "terms") {
             startWebView(Constants.TERMS_URL)
-            EventManager.getInstance(this).fireEvent("Terms_And_Condition${EventManager.Events.VIEW}");
-        }
-        if (page == "privacy-policy") {
-            if(paywallSource != null && paywallSource.equals(PaywallBinjeeFragment.SLUG)){
+            EventManager.getInstance(this)
+                .fireEvent("Terms_And_Condition${EventManager.Events.VIEW}");
+        }else if (page == "privacy-policy") {
+            if (paywallSource != null && paywallSource.equals(PaywallBinjeeFragment.SLUG)) {
                 // Go to binjee privacy policy
                 startWebView("https://goonj.binjee.com/privacy")
-            }else{
+            } else {
                 startWebView(Constants.PRIVACY_POLICY_URL)
             }
 
-            EventManager.getInstance(this).fireEvent("${paywallSource?.capitalize()}_Privacy_Policy${EventManager.Events.VIEW}");
+            EventManager.getInstance(this)
+                .fireEvent("${paywallSource?.capitalize()}_Privacy_Policy${EventManager.Events.VIEW}");
+        }else if(page == "unsub") {
+            startWebView("https://goonj.pk/unsub")
+            EventManager.getInstance(this)
+                .fireEvent("UNSUB${EventManager.Events.VIEW}");
         }
     }
 

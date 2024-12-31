@@ -38,6 +38,8 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
     private lateinit var mAppVersion: TextView;
     private lateinit var mContactUsMobileNumber: TextView;
 
+    private lateinit var mUnsubTxt: TextView;
+
     constructor(inflater: LayoutInflater, parent: ViewGroup?) {
         setRootView(inflater.inflate(R.layout.activity_subscription, parent, false));
     }
@@ -52,6 +54,8 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
         mViewTermsConditions = findViewById(R.id.view_terms_conditions);
         mAppVersion = findViewById(R.id.app_version);
         mContactUsMobileNumber = findViewById(R.id.contact_us_mobile_number);
+
+        mUnsubTxt = findViewById(R.id.click_to_unsub);
 
         try {
             val pInfo: PackageInfo = getContext().packageManager.getPackageInfo(
@@ -84,6 +88,12 @@ class SubscriptionStatusViewImpl: BaseObservableView<SubscriptionStatusView.List
 
         mBackArrow.setOnClickListener {
             (getContext() as BaseActivity).finish();
+        }
+
+        mUnsubTxt.setOnClickListener {
+            val intent = Intent(getContext(), WebViewActivity::class.java)
+            intent.putExtra("page", "unsub")
+            getContext().startActivity(intent);
         }
 
         //displayPaywallDetails();

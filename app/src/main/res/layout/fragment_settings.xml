@@ -2,82 +2,89 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/back_gradient"
+    android:baselineAligned="false"
+    android:orientation="vertical"
     android:paddingTop="50dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingLeft="50dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:src="@drawable/user_dummy"
             android:layout_width="50dp"
-            android:layout_height="50dp"/>
+            android:layout_height="50dp"
+            android:src="@drawable/user_dummy" />
+
         <LinearLayout
-            android:paddingLeft="10dp"
-            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
+
             <TextView
-                android:text="Username"
                 android:id="@+id/user_name"
-                android:textSize="16sp"
-                android:textColor="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="20dp"
         android:id="@+id/my_profile"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingLeft="35dp">
+
         <ImageView
-            android:src="@drawable/user"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:cropToPadding="true"
             android:padding="15dp"
-            android:cropToPadding="true"/>
+            android:src="@drawable/user" />
+
         <TextView
-            android:text="My Profile"
-            android:fontFamily="@font/montserrat_bold"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="My Profile"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/my_subscriptions"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingLeft="35dp">
+
         <ImageView
-            android:src="@drawable/user"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:cropToPadding="true"
             android:padding="15dp"
-            android:cropToPadding="true"/>
+            android:src="@drawable/user" />
+
         <TextView
-            android:text="Others"
-            android:fontFamily="@font/montserrat_bold"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Others"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>
 
